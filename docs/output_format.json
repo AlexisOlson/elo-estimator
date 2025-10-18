@@ -1,0 +1,76 @@
+{
+  "format_version": "1.0",
+  "description": "Desired output format for chess position evaluations",
+  "example_output": [
+    {
+      "game_id": "carlsen-praggnanandhaa-2023",
+      "ply": 1,
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "white_player": "Carlsen, Magnus",
+      "white_elo": 2835,
+      "black_player": "Praggnanandhaa, R",
+      "black_elo": 2707,
+      "to_move": "white",
+      "played_move": "e4",
+      "evaluation": {
+        "visits": 10000,
+        "wdl": {
+          "win": 0.48,
+          "draw": 0.37,
+          "loss": 0.15
+        }
+      },
+      "candidate_moves": [
+        {
+          "move": "e4",
+          "san": "e4",
+          "visits": 7234,
+          "wdl": {"win": 0.48, "draw": 0.37, "loss": 0.15},
+          "policy": 0.42,
+          "q_value": 0.395,
+          "rank": 1
+        },
+        {
+          "move": "d4",
+          "san": "d4",
+          "visits": 1566,
+          "wdl": {"win": 0.46, "draw": 0.38, "loss": 0.16},
+          "policy": 0.18,
+          "q_value": 0.380,
+          "rank": 2
+        },
+        {
+          "move": "Nf3",
+          "san": "Nf3",
+          "visits": 892,
+          "wdl": {"win": 0.45, "draw": 0.39, "loss": 0.16},
+          "policy": 0.15,
+          "q_value": 0.375,
+          "rank": 3
+        }
+      ]
+    }
+  ],
+  "field_descriptions": {
+    "game_id": "Unique identifier for the game",
+    "ply": "Move number (half-move count)",
+    "fen": "Forsyth-Edwards Notation of the position",
+    "white_elo": "White player's FIDE rating",
+    "black_elo": "Black player's FIDE rating",
+    "to_move": "Whose turn it is",
+    "played_move": "The move that was actually played",
+    "visits": "Total nodes evaluated for this position",
+    "wdl": "Win/Draw/Loss probabilities from Leela",
+    "candidate_moves": "Top N moves considered by Leela",
+    "policy": "Neural network policy head output (prior probability)",
+    "q_value": "Q-value from MCTS search",
+    "rank": "Move ranking (1=best according to visits)"
+  },
+  "output_format": "JSON Lines (.jsonl) - one JSON object per line",
+  "notes": [
+    "Each position should be one line in the output file",
+    "Use visits as primary ranking criteria for candidate moves",
+    "Include top 5-10 candidate moves per position",
+    "Preserve game metadata (player names, ratings) for each position"
+  ]
+}

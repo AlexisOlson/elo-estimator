@@ -1,0 +1,17 @@
+# Build artifacts
+lc0/build/
+lc0/build-*/
+*.o
+*.obj
+*.exe
+
+# Large data files (don't commit to git!)
+pgn-data/raw/*.pgn
+pgn-data/processed/*.pgn
+networks/*.pb.gz
+networks/*.pb
+
+# Python
+scripts/venv/
+scripts/__pycache__/
+*.pyc
