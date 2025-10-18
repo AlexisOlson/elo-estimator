@@ -115,6 +115,7 @@ elo-estimator/
 │   └── lc0_config.json           # lc0 engine configuration
 └── docs/                          # Documentation
     ├── PROJECT_BRIEF.md          # Project overview (brief)
+    ├── config_example.md         # Config file structure documentation
     ├── output_format.json        # Output format specification
     └── sample_input.pgn          # Sample PGN data
 ```
@@ -288,6 +289,8 @@ python scripts\analyze_pgn.py --help
 ```
 
 ## Configuration
+
+For detailed configuration file structure and all available options, see **[docs/config_example.md](docs/config_example.md)**.
 
 ### Network Selection
 - **Small** (128x10 blocks): Fast testing, lower accuracy

@@ -82,7 +82,6 @@ def analyze_pgn(
     
     lc0_path = pathlib.Path(config["lc0_path"])
     network_path = pathlib.Path(config["weights"])
-    backend = config.get("backend", "cuda-auto")
     options: Dict[str, Any] = config.get("options", {})
     search_cfg: Dict[str, Any] = config.get("search", {})
     search_type = str(search_cfg.get("type", "nodes"))
@@ -110,7 +109,6 @@ def analyze_pgn(
     lc0_cmd = [
         str(lc0_path),
         f"--weights={network_path}",
-        f"--backend={backend}",
         *extra_args,
     ]
     

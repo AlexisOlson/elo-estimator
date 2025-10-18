@@ -1,12 +1,17 @@
 {
   "lc0_path": "../lc0/build/lc0.exe",
-  "weights": "../networks/791556.pb.gz",
+  "weights": "../networks/BT4-1024x15x32h-swa-6147500.pb.gz",
   "search": {
     "type": "nodes",
     "value": 1000
   },
-  "SmartPruningFactor": 0.0,
   "max_candidates": 5,
-  "backend": "cuda-fp16",
-  "extra_args": ["--threads=1"]
+  "extra_args": [
+    "--backend=cuda-fp16",
+    "--threads=1",
+    "--minibatch-size=22",
+    "--wdl-draw-rate-reference=0.67",
+    "--wdl-calibration-elo=3300",
+    "--smart-pruning-factor=0.0"
+  ]
 }
