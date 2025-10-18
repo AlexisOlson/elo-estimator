@@ -5,6 +5,7 @@
     "type": "nodes",
     "value": 1000
   },
+  "SmartPruningFactor": 0.0,
   "max_candidates": 5,
   "backend": "cuda-fp16",
   "extra_args": ["--threads=1"]

@@ -435,9 +435,67 @@ def _resolve_path(base: pathlib.Path, target: pathlib.Path) -> pathlib.Path:
     return (base / target).resolve()
 
 
+def _apply_config_override(config: Dict[str, Any], key: str, value: str):
+    """Apply a config override from command line.
+    
+    Supports nested keys with dot notation (e.g., 'search.value').
+    Automatically converts value to appropriate type (int, float, bool, str).
+    """
+    # Split key by dots for nested access
+    keys = key.split(".")
+    
+    # Navigate to the parent dict
+    current = config
+    for k in keys[:-1]:
+        if k not in current:
+            current[k] = {}
+        current = current[k]
+    
+    # Convert value to appropriate type
+    final_key = keys[-1]
+    converted_value: Any
+    
+    # Try to parse as int
+    try:
+        converted_value = int(value)
+    except ValueError:
+        # Try to parse as float
+        try:
+            converted_value = float(value)
+        except ValueError:
+            # Try to parse as boolean
+            if value.lower() in ("true", "yes", "1"):
+                converted_value = True
+            elif value.lower() in ("false", "no", "0"):
+                converted_value = False
+            else:
+                # Keep as string
+                converted_value = value
+    
+    current[final_key] = converted_value
+
+
 def main():
     parser = argparse.ArgumentParser(
-        description="Analyze PGN with lc0, writing SAN notation directly (no temp files)"
+        description="Analyze PGN with lc0, writing SAN notation directly (no temp files)",
+        epilog="""
+Examples:
+  # Basic usage with default config
+  %(prog)s game.pgn output.json
+  
+  # Override search to 10 nodes
+  %(prog)s game.pgn output.json --search.nodes=10
+  
+  # Combine search and lc0 options
+  %(prog)s game.pgn output.json --search.nodes=50 --lc0.backend=cuda-fp16 --lc0.threads=4
+  
+  # Alternative: use --lc0-args for multiple lc0 options
+  %(prog)s game.pgn output.json --search.nodes=50 --lc0-args backend=cuda-fp16 threads=4
+  
+  # Use --set for any config override
+  %(prog)s game.pgn output.json --set search.value=100 --set max_candidates=3
+""",
+        formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("pgn", type=pathlib.Path, help="PGN file to analyze")
     parser.add_argument("output", type=pathlib.Path, help="Output JSON file")
@@ -447,8 +505,58 @@ def main():
         default=pathlib.Path("config/lc0_config.json"),
         help="Path to JSON config describing lc0 execution parameters",
     )
+    parser.add_argument(
+        "--lc0-args",
+        nargs="*",
+        help="lc0 command-line arguments in KEY=VALUE format (e.g., --lc0-args backend=cuda-fp16 threads=4). Overrides config.extra_args.",
+        default=None,
+    )
+    parser.add_argument(
+        "--set",
+        action="append",
+        metavar="KEY=VALUE",
+        help="Override config values (e.g., --set search.value=10 --set max_candidates=3). Can be used multiple times.",
+        default=None,
+    )
     
-    args = parser.parse_args()
+    parser.epilog += """
+    
+Additional options:
+  --search.nodes=N      Set UCI search to N nodes (shortcut for --set search.type=nodes --set search.value=N)
+  --search.movetime=N   Set UCI search to N milliseconds
+  --search.depth=N      Set UCI search to depth N
+  --lc0.OPTION=VALUE    Set lc0 option (e.g., --lc0.threads=4, --lc0.backend=cuda-fp16)
+"""
+    
+    # Add support for --search.* and --lc0.* arguments
+    args, unknown = parser.parse_known_args()
+    
+    # Parse --search.* arguments from unknown args
+    search_overrides = {}
+    lc0_overrides = {}
+    remaining_unknown = []
+    
+    for arg in unknown:
+        if arg.startswith("--search."):
+            # Handle --search.nodes=10 or --search.nodes 10
+            if "=" in arg:
+                key, value = arg[2:].split("=", 1)  # Remove -- prefix
+                search_overrides[key] = value
+            else:
+                remaining_unknown.append(arg)
+        elif arg.startswith("--lc0."):
+            # Handle --lc0.backend=cuda or --lc0.threads=4
+            if "=" in arg:
+                key, value = arg[6:].split("=", 1)  # Remove --lc0. prefix
+                lc0_overrides[key] = value
+            else:
+                remaining_unknown.append(arg)
+        else:
+            remaining_unknown.append(arg)
+    
+    # Report any truly unknown arguments
+    if remaining_unknown:
+        parser.error(f"Unrecognized arguments: {' '.join(remaining_unknown)}")
     
     if not args.config.exists():
         raise SystemExit(f"Config file not found: {args.config}")
@@ -457,6 +565,49 @@ def main():
         raw_config = json.load(cfg_file)
 
     resolved_config = _resolve_config_paths(raw_config, args.config)
+
+    # Process --lc0-args (KEY=VALUE format)
+    # These become lc0 command-line arguments like --key=value
+    extra_args = []
+    if args.lc0_args is not None:
+        for arg in args.lc0_args:
+            if "=" in arg:
+                key, value = arg.split("=", 1)
+                extra_args.append(f"--{key}={value}")
+            else:
+                # If no =, treat as a flag
+                extra_args.append(f"--{arg}")
+        resolved_config["extra_args"] = extra_args
+    
+    # Process --lc0.* arguments (alternative syntax)
+    if lc0_overrides:
+        if "extra_args" not in resolved_config:
+            resolved_config["extra_args"] = []
+        for key, value in lc0_overrides.items():
+            resolved_config["extra_args"].append(f"--{key}={value}")
+    
+    # Apply config overrides from --set arguments
+    if args.set:
+        for override in args.set:
+            if "=" not in override:
+                raise SystemExit(f"Invalid --set format: '{override}'. Expected KEY=VALUE")
+            key, value = override.split("=", 1)
+            _apply_config_override(resolved_config, key, value)
+    
+    # Apply --search.* arguments to override search config
+    if search_overrides:
+        if "search" not in resolved_config:
+            resolved_config["search"] = {}
+        for key, value in search_overrides.items():
+            # Extract search type from key (handles "search.nodes" or just "nodes")
+            search_type = key.split(".", 1)[-1]  # Get last part after split
+            
+            if search_type == "infinite":
+                resolved_config["search"]["type"] = "infinite"
+                resolved_config["search"]["value"] = 0
+            else:
+                resolved_config["search"]["type"] = search_type
+                resolved_config["search"]["value"] = int(value)
 
     required_keys = {"lc0_path", "weights"}
     missing = [key for key in required_keys if key not in resolved_config]

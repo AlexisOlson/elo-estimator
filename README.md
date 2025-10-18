@@ -244,7 +244,62 @@ python scripts/analyze_pgn.py \
   --output output/test_analysis.json
 ```
 
+```
+
 Expected: Creates `output/test_analysis.json` with position evaluations from the first 10 games.
+
+### Command-Line Overrides
+
+The `analyze_pgn.py` script supports convenient command-line overrides for common parameters:
+
+**Quick search parameter changes:**
+```powershell
+# Override nodes (visits) to 50
+python scripts\analyze_pgn.py pgn-data\samples\first10.pgn output\quick_test.json --search.nodes=50
+
+# Override search time instead of nodes
+python scripts\analyze_pgn.py game.pgn output.json --search.movetime=1000  # 1 second per position
+```
+
+**Override lc0 engine options:**
+```powershell
+# Change backend and threads
+python scripts\analyze_pgn.py game.pgn output.json --lc0.backend=cuda-fp16 --lc0.threads=4
+
+# Or use --lc0-args for multiple options
+python scripts\analyze_pgn.py game.pgn output.json --lc0-args backend=cuda-fp16 threads=4
+```
+
+**Combine multiple overrides:**
+```powershell
+# Quick analysis: 50 nodes, 3 candidate moves, 2 threads
+python scripts\analyze_pgn.py game.pgn output.json --search.nodes=50 --lc0.threads=2 --set max_candidates=3
+```
+
+**General config override:**
+```powershell
+# Override any config value using --set
+python scripts\analyze_pgn.py game.pgn output.json --set search.value=100 --set max_candidates=5
+```
+
+For complete documentation, run:
+```powershell
+python scripts\analyze_pgn.py --help
+```
+
+## Configuration
+
+### Network Selection
+- **Small** (128x10 blocks): Fast testing, lower accuracy
+- **Medium** (256x20 blocks): **Recommended** - good speed/accuracy balance
+- **Large** (768x15 blocks): Highest accuracy, much slower
+
+### Node Count Selection
+Configure via `--search.nodes=N` or in the config file:
+- **1,000 nodes**: Ultra-fast, rough estimates
+- **10,000 nodes**: **Recommended** - good accuracy at ~0.1s/position
+- **100,000 nodes**: Very accurate, ~10x slower
+````
 
 ## Configuration
 
