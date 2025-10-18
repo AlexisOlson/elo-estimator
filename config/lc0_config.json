@@ -1,0 +1,11 @@
+{
+  "lc0_path": "../lc0/build/lc0.exe",
+  "weights": "../networks/791556.pb.gz",
+  "search": {
+    "type": "nodes",
+    "value": 1000
+  },
+  "max_candidates": 5,
+  "backend": "cuda-fp16",
+  "extra_args": ["--threads=1"]
+}

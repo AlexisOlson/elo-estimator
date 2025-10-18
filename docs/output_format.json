@@ -1,73 +1,150 @@
 {
   "format_version": "1.0",
   "description": "Desired output format for chess position evaluations",
-  "example_output": [
-    {
-      "game_id": "carlsen-praggnanandhaa-2023",
-      "ply": 1,
-      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-      "white_player": "Carlsen, Magnus",
-      "white_elo": 2835,
-      "black_player": "Praggnanandhaa, R",
-      "black_elo": 2707,
-      "to_move": "white",
-      "played_move": "e4",
-      "evaluation": {
-        "visits": 10000,
-        "wdl": {
-          "win": 0.48,
-          "draw": 0.37,
-          "loss": 0.15
-        }
-      },
-      "candidate_moves": [
-        {
-          "move": "e4",
-          "visits": 7234,
-          "wdl": {"win": 0.48, "draw": 0.37, "loss": 0.15},
-          "policy": 0.42,
-          "q_value": 0.395,
-          "rank": 1
-        },
-        {
-          "move": "d4",
-          "visits": 1566,
-          "wdl": {"win": 0.46, "draw": 0.38, "loss": 0.16},
-          "policy": 0.18,
-          "q_value": 0.380,
-          "rank": 2
-        },
-        {
-          "move": "Nf3",
-          "visits": 892,
-          "wdl": {"win": 0.45, "draw": 0.39, "loss": 0.16},
-          "policy": 0.15,
-          "q_value": 0.375,
-          "rank": 3
-        }
-      ]
-    }
-  ],
-  "field_descriptions": {
-    "game_id": "Unique identifier for the game",
-    "ply": "Move number (half-move count)",
-    "fen": "Forsyth-Edwards Notation of the position",
-    "white_elo": "White player's FIDE rating",
-    "black_elo": "Black player's FIDE rating",
-    "to_move": "Whose turn it is",
-    "played_move": "The move that was actually played",
-    "visits": "Total nodes evaluated for this position",
-    "wdl": "Win/Draw/Loss probabilities from Leela",
-    "candidate_moves": "Top N moves considered by Leela",
-    "policy": "Neural network policy head output (prior probability)",
-    "q_value": "Q-value from MCTS search",
-    "rank": "Move ranking (1=best according to visits)"
+  "structure": {
+    "games": "Array of game objects, each containing metadata and a list of moves",
+    "moves": "Array of move objects, each representing one ply with position analysis"
   },
-  "output_format": "JSON Lines (.jsonl) - one JSON object per line",
+  "example_output": {
+    "games": [
+      {
+        "game_index": 1,
+        "event": "BAN-ch 48th Dhaka (8)",
+        "site": "1",
+        "date": "2024.07.01",
+        "round": "1",
+        "white": "Ahmed,Sk Nasir",
+        "white_elo": 2132,
+        "black": "Hossain,Enamul",
+        "black_elo": 2357,
+        "result": "1/2-1/2",
+        "eco": "A22",
+        "moves": [
+          {
+            "ply": 1,
+            "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+            "to_move": "white",
+            "played_move": "e4",
+            "evaluation": {
+              "visits": 10000,
+              "wdl": [480, 370, 150],
+              "policy": 0.42,
+              "q_value": 0.395
+            },
+            "candidate_moves": [
+              {
+                "move": "e4",
+                "rank": 1,
+                "visits": 7234,
+                "wdl": [480, 370, 150],
+                "policy": 0.42,
+                "q_value": 0.395
+              },
+              {
+                "move": "d4",
+                "rank": 2,
+                "visits": 1566,
+                "wdl": [460, 380, 160],
+                "policy": 0.18,
+                "q_value": 0.380
+              },
+              {
+                "move": "Nf3",
+                "rank": 3,
+                "visits": 892,
+                "wdl": [450, 390, 160],
+                "policy": 0.15,
+                "q_value": 0.375
+              }
+            ]
+          },
+          {
+            "ply": 2,
+            "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+            "to_move": "black",
+            "played_move": "e5",
+            "evaluation": {
+              "visits": 10000,
+              "wdl": [150, 370, 480],
+              "policy": 0.38,
+              "q_value": -0.395
+            },
+            "candidate_moves": [
+              {
+                "move": "e5",
+                "rank": 1,
+                "visits": 6891,
+                "wdl": [150, 370, 480],
+                "policy": 0.38,
+                "q_value": -0.395
+              },
+              {
+                "move": "c5",
+                "rank": 2,
+                "visits": 2145,
+                "wdl": [160, 360, 480],
+                "policy": 0.22,
+                "q_value": -0.380
+              },
+              {
+                "move": "e6",
+                "rank": 3,
+                "visits": 964,
+                "wdl": [165, 355, 480],
+                "policy": 0.16,
+                "q_value": -0.372
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "field_descriptions": {
+    "game_level": {
+      "game_index": "Sequential game number in the output",
+      "event": "Tournament or match name",
+      "site": "Location or site identifier",
+      "date": "Date in YYYY.MM.DD format",
+      "round": "Round number",
+      "white": "White player name",
+      "white_elo": "White player's rating",
+      "black": "Black player name",
+      "black_elo": "Black player's rating",
+      "result": "Game result (1-0, 0-1, 1/2-1/2, or *)",
+      "eco": "ECO (Encyclopedia of Chess Openings) code",
+      "moves": "Array of move objects (see move_level below)"
+    },
+    "move_level": {
+      "ply": "Half-move number (1, 2, 3, ...). Ply 1 = White's first move, Ply 2 = Black's first move",
+      "fen": "Position before the move in Forsyth-Edwards Notation",
+      "to_move": "Side to move: 'white' or 'black'",
+      "played_move": "The move that was actually played (SAN notation)",
+      "evaluation": "Overall position evaluation (see evaluation_fields below)",
+      "candidate_moves": "Top N alternative moves analyzed (see candidate_fields below)"
+    },
+    "evaluation_fields": {
+      "visits": "Total MCTS nodes visited for this position",
+      "wdl": "Win/Draw/Loss in permille [W, D, L] from side-to-move perspective. Values sum to 1000.",
+      "policy": "Neural network policy (prior probability) for the best move",
+      "q_value": "Q-value from MCTS search for the best move (expected value from side-to-move perspective)"
+    },
+    "candidate_fields": {
+      "move": "Move in SAN (Standard Algebraic Notation)",
+      "rank": "Move ranking (1 = best according to visits)",
+      "visits": "MCTS nodes visited for this specific move",
+      "wdl": "Win/Draw/Loss in permille [W, D, L] for this move from side-to-move perspective",
+      "policy": "Neural network policy (prior probability) for this move",
+      "q_value": "Q-value from MCTS search (expected value from side-to-move perspective)"
+    }
+  },
   "notes": [
-    "Each position should be one line in the output file",
-    "Use visits as primary ranking criteria for candidate moves",
+    "WDL values are in permille (parts per thousand) and sum to 1000",
+    "WDL is always from the perspective of the side to move",
+    "For Black's moves, high win values indicate Black advantage",
+    "Q-values are also from side-to-move perspective (positive = advantage)",
+    "Candidate moves should be sorted by rank (visits)",
     "Include top 5-10 candidate moves per position",
-    "Preserve game metadata (player names, ratings) for each position"
+    "All moves use SAN (Standard Algebraic Notation), not UCI"
   ]
 }
