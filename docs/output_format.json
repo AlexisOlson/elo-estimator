@@ -23,7 +23,6 @@
       "candidate_moves": [
         {
           "move": "e4",
-          "san": "e4",
           "visits": 7234,
           "wdl": {"win": 0.48, "draw": 0.37, "loss": 0.15},
           "policy": 0.42,
@@ -32,7 +31,6 @@
         },
         {
           "move": "d4",
-          "san": "d4",
           "visits": 1566,
           "wdl": {"win": 0.46, "draw": 0.38, "loss": 0.16},
           "policy": 0.18,
@@ -41,7 +39,6 @@
         },
         {
           "move": "Nf3",
-          "san": "Nf3",
           "visits": 892,
           "wdl": {"win": 0.45, "draw": 0.39, "loss": 0.16},
           "policy": 0.15,

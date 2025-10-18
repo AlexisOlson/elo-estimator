@@ -96,35 +96,35 @@ Consolidate → Training dataset → ML model → Historical game analysis
 ## Project Structure
 
 ```
-chess-elo-estimation-project/
+elo-estimator/
 ├── lc0/                           # Modified Leela Chess Zero (forked)
 │   ├── src/                       # C++ source code
 │   └── build/                     # Compiled binaries
 ├── networks/                      # Leela neural network weights
-│   └── t1-256x20-*.pb.gz         # Recommended: medium-sized network
-├── data/
-│   ├── raw/                       # Original 40K training games
-│   ├── samples/                   # Small test files (10, 100 games)
-│   └── processed/                 # Split PGN batches for parallel processing
-├── output/
-│   ├── evaluations/               # JSONL files from lc0
-│   └── logs/                      # Processing logs
-├── scripts/                       # Python batch processing
-│   ├── split_pgn.py              # Split large PGN into batches
-│   ├── run_batch.py              # Execute lc0 on batch
-│   └── consolidate_results.py    # Merge JSONL outputs
-├── notebooks/                     # Jupyter analysis notebooks
+│   └── 791556.pb.gz              # Current network in use
+├── pgn-data/
+│   ├── raw/                       # Original training games
+│   └── samples/                   # Small test files for development
+├── output/                        # Analysis output files
+├── scripts/                       # Python processing scripts
+│   ├── parse_lc0_output.py       # Parse lc0 verbose output to JSONL
+│   ├── requirements.txt          # Python dependencies
+│   └── venv/                      # Python virtual environment
 └── docs/                          # Documentation
+    ├── PROJECT_BRIEF.md          # Project overview
+    ├── output_format.json        # Target output schema
+    └── sample_input.pgn          # Sample PGN for testing
 ```
 
 ## Current Status
 
 - [x] Project structure established
 - [x] Repository forked and cloned
-- [ ] lc0 builds successfully
-- [ ] Test on sample PGN (10 games)
-- [ ] Modify lc0 to export evaluation data
-- [ ] Validate output format
+- [x] lc0 builds successfully
+- [x] Test on sample PGN (10 games)
+- [x] Parse lc0 verbose output to JSONL format
+- [ ] Modify lc0 to export evaluation data directly
+- [ ] Validate output format matches training needs
 - [ ] Process first 100-game batch
 - [ ] Process full 40K training set
 - [ ] Train Elo estimation model
@@ -150,27 +150,27 @@ chess-elo-estimation-project/
 
 ```bash
 # Clone the project
-git clone https://github.com/YOUR-USERNAME/chess-elo-estimation-project.git
-cd chess-elo-estimation-project
+git clone https://github.com/AlexisOlson/elo-estimator.git
+cd elo-estimator
 
 # The lc0 submodule is already included
 cd lc0
-git checkout elo-estimation-export  # Our feature branch
+git checkout elo-estimator  # Our feature branch
 
-# Build lc0 (see docs/build_instructions.md for details)
+# Build lc0
 mkdir build && cd build
 cmake .. -DCUDA=on
 cmake --build . -j8
 
 # Set up Python environment
-cd ../scripts
+cd ../../scripts
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# Download a Leela network
+# Download a Leela network (if not already present)
 cd ../networks
-wget https://storage.lczero.org/files/networks-contrib/t1-256x20-distilled-swa-2432500.pb.gz
+# Network 791556.pb.gz should be placed here
 ```
 
 ### Quick Test
@@ -179,9 +179,9 @@ wget https://storage.lczero.org/files/networks-contrib/t1-256x20-distilled-swa-2
 # Test on sample data
 cd lc0/build
 ./lc0 selfplay \
-  --replay-pgn=../../data/samples/test_small.pgn \
+  --replay-pgn=../../pgn-data/samples/first10.pgn \
   --visits=10000 \
-  -w ../../networks/t1-256x20-distilled-swa-2432500.pb.gz
+  -w ../../networks/791556.pb.gz
 ```
 
 ## Configuration
@@ -243,13 +243,7 @@ This project builds on decades of chess rating research and is specifically desi
 
 ## License
 
-(To be determined - likely GPL v3.0 to match lc0)
-
-## Contact & Collaboration
-
-[Your contact information]
-
-Issues and pull requests welcome!
+GPL v3.0
 
 ---
 
