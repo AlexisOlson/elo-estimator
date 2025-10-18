@@ -15,3 +15,8 @@ networks/*.pb
 scripts/venv/
 scripts/__pycache__/
 *.pyc
+
+# IDEs and editors
+.venv/
+.claude/
+.vscode/
