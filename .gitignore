@@ -12,11 +12,18 @@ networks/*.pb.gz
 networks/*.pb
 
 # Python
+.venv/
 scripts/venv/
 scripts/__pycache__/
 *.pyc
+*.egg-info/
+dist/
+build/
 
 # IDEs and editors
-.venv/
-.claude/
 .vscode/
+.claude/
+*.swp
+*.swo
+*~
+.DS_Store

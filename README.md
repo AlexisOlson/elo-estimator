@@ -48,7 +48,7 @@ Key insight: Modern deep learning outperforms hand-crafted features, but no comp
 ## Technical Architecture
 
 ### Modified Leela Chess Zero Engine
-Based on [borg's action-replay-san branch](https://github.com/borg323/lc0/tree/action-replay-san):
+Based on an action-replay modification of Leela Chess Zero that enables exporting per-position analysis in a structured format:
 - Uses `selfplay` mode with `--replay-pgn` to process games in parallel
 - **Key Modification**: Export evaluation data per position in structured format
 - **Fixed nodes** (not time) for consistency: `--visits=10000` per position
@@ -97,38 +97,50 @@ Consolidate → Training dataset → ML model → Historical game analysis
 
 ```
 elo-estimator/
-├── lc0/                           # Modified Leela Chess Zero (forked)
+├── lc0/                           # Leela Chess Zero engine (git submodule)
 │   ├── src/                       # C++ source code
 │   └── build/                     # Compiled binaries
 ├── networks/                      # Leela neural network weights
-│   └── 791556.pb.gz              # Current network in use
+│   └── 791556.pb.gz              # Example network file
 ├── pgn-data/
-│   ├── raw/                       # Original training games
-│   └── samples/                   # Small test files for development
+│   ├── raw/                       # Original training games (gitignored)
+│   └── samples/                   # Sample PGN files for testing
 ├── output/                        # Analysis output files
 ├── scripts/                       # Python processing scripts
-│   ├── parse_lc0_output.py       # Parse lc0 verbose output to JSONL
+│   ├── analyze_pgn.py            # Main PGN analysis script
+│   ├── setup_venv.ps1            # Python environment setup (Windows)
 │   ├── requirements.txt          # Python dependencies
-│   └── venv/                      # Python virtual environment
+│   └── README.md                 # Scripts documentation
+├── config/                        # Configuration files
+│   └── lc0_config.json           # lc0 engine configuration
 └── docs/                          # Documentation
-    ├── PROJECT_BRIEF.md          # Project overview
-    ├── output_format.json        # Target output schema
-    └── sample_input.pgn          # Sample PGN for testing
+    ├── PROJECT_BRIEF.md          # Project overview (brief)
+    ├── output_format.json        # Output format specification
+    └── sample_input.pgn          # Sample PGN data
 ```
 
 ## Current Status
 
-- [x] Project structure established
-- [x] Repository forked and cloned
-- [x] lc0 builds successfully
-- [x] Test on sample PGN (10 games)
-- [x] Parse lc0 verbose output to JSONL format
-- [ ] Modify lc0 to export evaluation data directly
-- [ ] Validate output format matches training needs
-- [ ] Process first 100-game batch
-- [ ] Process full 40K training set
-- [ ] Train Elo estimation model
-- [ ] Apply to historical games
+**Development Stage**: Research/Prototype - Currently building analysis infrastructure
+
+✅ **Completed**:
+- Project structure established
+- lc0 submodule configured (tracking official v0.32.0 release)
+- lc0 builds successfully on Windows (MSVC + CUDA)
+- Python analysis script (`analyze_pgn.py`) working with UCI protocol
+- Sample PGN analysis tested (first 10 games)
+- Output format validated with actual lc0 evaluations
+
+🚧 **In Progress**:
+- Testing evaluation consistency across different positions
+- Performance optimization for batch processing
+
+📋 **Planned**:
+- Process larger game batches (100-1000 games)
+- Train Elo estimation model (ML component)
+- Validate model accuracy on held-out test set
+- Apply to historical games for calibration
+- Full 40K training dataset processing
 
 ## Getting Started
 
@@ -148,41 +160,91 @@ elo-estimator/
 
 ### Installation
 
+**1. Clone the Repository**
 ```bash
-# Clone the project
 git clone https://github.com/AlexisOlson/elo-estimator.git
 cd elo-estimator
 
-# The lc0 submodule is already included
+# Initialize and update the lc0 submodule
+git submodule update --init --recursive
+```
+
+**2. Build lc0**
+
+The project uses lc0 (Leela Chess Zero) as a git submodule. You need to build it:
+
+*Windows (PowerShell):*
+```powershell
 cd lc0
-git checkout elo-estimator  # Our feature branch
+Remove-Item -Recurse -Force build -ErrorAction SilentlyContinue
+meson setup build --backend vs2019 --buildtype release -Dgtest=false -Dcudnn=false
+meson compile -C build
+# Executable will be at: lc0\build\lc0.exe
+```
 
-# Build lc0
-mkdir build && cd build
-cmake .. -DCUDA=on
-cmake --build . -j8
+*Linux/Mac:*
+```bash
+cd lc0
+./build.sh
+# Executable will be at: lc0/build/lc0
+```
 
-# Set up Python environment
-cd ../../scripts
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
+**3. Set up Python Environment**
 
-# Download a Leela network (if not already present)
-cd ../networks
-# Network 791556.pb.gz should be placed here
+*Windows (PowerShell):*
+```powershell
+.\scripts\setup_venv.ps1
+.\.venv\Scripts\Activate.ps1
+```
+
+*Linux/Mac:*
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r scripts/requirements.txt
+```
+
+**4. Download a Leela Network**
+
+Download a neural network from [Leela Training](https://training.lczero.org/networks/) and place it in the `networks/` directory. 
+
+Recommended: BT4 networks (791556 or similar). The config assumes `networks/791556.pb.gz`.
+
+```bash
+# Example (Linux/Mac)
+cd networks
+wget https://training.lczero.org/get_network?sha=<network_hash> -O 791556.pb.gz
 ```
 
 ### Quick Test
 
-```bash
-# Test on sample data
-cd lc0/build
-./lc0 selfplay \
-  --replay-pgn=../../pgn-data/samples/first10.pgn \
-  --visits=10000 \
-  -w ../../networks/791556.pb.gz
+Run the analysis script on sample data to verify everything works:
+
+*Windows (PowerShell):*
+```powershell
+# Make sure Python venv is activated
+.\.venv\Scripts\Activate.ps1
+
+# Run analysis on sample PGN file
+python scripts\analyze_pgn.py `
+  --config config\lc0_config.json `
+  --pgn pgn-data\samples\first10.pgn `
+  --output output\test_analysis.json
 ```
+
+*Linux/Mac:*
+```bash
+# Make sure Python venv is activated
+source .venv/bin/activate
+
+# Run analysis on sample PGN file
+python scripts/analyze_pgn.py \
+  --config config/lc0_config.json \
+  --pgn pgn-data/samples/first10.pgn \
+  --output output/test_analysis.json
+```
+
+Expected: Creates `output/test_analysis.json` with position evaluations from the first 10 games.
 
 ## Configuration
 
@@ -218,7 +280,6 @@ Trade-off: More nodes = better evaluation but longer runtime
 
 ### Code & Tools
 - [lc0 (Leela Chess Zero)](https://github.com/LeelaChessZero/lc0)
-- [borg's action-replay-san branch](https://github.com/borg323/lc0/tree/action-replay-san)
 - [python-chess](https://python-chess.readthedocs.io/)
 - [Leela Networks](https://training.lczero.org/networks/)
 
@@ -238,12 +299,14 @@ This project builds on decades of chess rating research and is specifically desi
 
 **Core Concept**: Jeff Sonas (Chessmetrics creator)  
 **Engine Base**: Leela Chess Zero team  
-**Action-replay code**: borg (lc0 contributor)  
-**Implementation**: [Your Name]
+**Action-replay modification**: community-contributed change to lc0 enabling replay/export functionality  
+**Implementation**: Alexis Olson
 
 ## License
 
-GPL v3.0
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+
+The lc0 engine (included as a submodule) is also licensed under GPL v3.0 by the Leela Chess Zero contributors.
 
 ---
 
