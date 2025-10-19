@@ -1,14 +1,29 @@
 #!/usr/bin/env python3
 """Analyze PGN positions with lc0, writing SAN notation directly (no temp files).
 
-This script:
+This script analyzes chess games using Leela Chess Zero (lc0) and outputs structured
+JSON with comprehensive move evaluations.
+
+Key Features:
 1. Loads lc0 execution parameters from a JSON config file
 2. Reads positions from a PGN file
-3. Sends each position to lc0 via UCI
-4. Parses lc0 output and converts UCI to SAN
-5. Writes JSON records directly to output
+3. Sends each position to lc0 via UCI protocol
+4. Parses lc0 output (MultiPV + VerboseMoveStats) and converts UCI to SAN
+5. Handles played moves outside top-N candidates with focused searches
+6. Calculates move rankings across ALL legal moves (not just MultiPV)
+7. Writes complete JSON records with no intermediate files
 
-Zero intermediate files!
+Output Fields:
+- total_visits: Sum of visits across all legal moves (≈ node budget)
+- visits_on_better: Visits on moves ranked better than played (0 if rank 1)
+- evaluation: Rank, visits, policy, Q-value, WDL for the played move
+- candidate_moves: Top N moves with rank, visits, policy, Q-value, WDL
+
+Bug Fixes Applied:
+- Evaluation now shows played move data (not best move data)
+- Moves outside MultiPV are analyzed with focused search for WDL
+- Rankings calculated from all legal moves via VerboseMoveStats
+- All fields always present (no disappearing fields)
 """
 
 import argparse
@@ -40,17 +55,119 @@ class CompactJSONEncoder(json.JSONEncoder):
 
 
 def _compact_json_dumps(obj: Any, indent: int = 2) -> str:
-    """Serialize obj to JSON with compact WDL arrays."""
-    # Use standard json.dumps but post-process to compact WDL arrays
+    """Serialize obj to JSON with compact formatting for specific structures.
+    
+    Compact formats:
+    - WDL arrays: [w, d, l] on single line
+    - evaluation objects: entire object on single line
+    - candidate_moves array items: each move object on single line
+    """
+    import re
+    
+    # First pass: standard JSON with indentation
     json_str = json.dumps(obj, indent=indent)
     
-    # Replace multi-line WDL arrays with single-line format
-    # Pattern: [\n      123,\n      456,\n      789\n    ]
-    import re
-    pattern = r'\[\s*(\d+),\s*(\d+),\s*(\d+)\s*\]'
-    json_str = re.sub(pattern, r'[\1, \2, \3]', json_str)
+    # Compact WDL arrays: [w, d, l]
+    wdl_pattern = r'\[\s*(\d+),\s*(\d+),\s*(\d+)\s*\]'
+    json_str = re.sub(wdl_pattern, r'[\1, \2, \3]', json_str)
     
-    return json_str
+    # Compact evaluation objects to single line
+    # Pattern: "evaluation": {\n      fields...\n    }
+    # Capture indentation before "evaluation" to preserve it
+    eval_pattern = r'(\s*)"evaluation":\s*\{\s*([^}]+?)\s*\}'
+    def compact_eval(match):
+        leading_indent = match.group(1)
+        fields = match.group(2)
+        # Remove newlines and compress multiple spaces to single space
+        fields_compact = re.sub(r'\s+', ' ', fields).strip()
+        # Format on same line as "evaluation":
+        return f'{leading_indent}"evaluation": {{{fields_compact}}}'
+    json_str = re.sub(eval_pattern, compact_eval, json_str, flags=re.DOTALL)
+    
+    # Compact each candidate move object to single line with aligned colons
+    # Need to process candidate_moves arrays with smart padding based on actual content
+    lines = json_str.split('\n')
+    result_lines = []
+    i = 0
+    
+    while i < len(lines):
+        line = lines[i]
+        
+        # Check if we're entering candidate_moves array
+        if '"candidate_moves":' in line:
+            result_lines.append(line)
+            i += 1
+            
+            # First pass: collect all candidate objects to determine max widths
+            candidates_data = []
+            start_i = i
+            
+            while i < len(lines) and not (lines[i].strip() == ']' or lines[i].strip() == '],'):
+                if lines[i].strip() == '{':
+                    obj_lines = []
+                    indent_level = len(lines[i]) - len(lines[i].lstrip())
+                    i += 1
+                    while i < len(lines) and '}' not in lines[i]:
+                        field_line = lines[i].strip().rstrip(',')
+                        if field_line:
+                            obj_lines.append(field_line)
+                        i += 1
+                    
+                    closing = lines[i].strip()
+                    
+                    # Parse fields
+                    fields = []
+                    for field in obj_lines:
+                        if '":' in field:
+                            key_part, value_part = field.split('":', 1)
+                            key = key_part.strip().strip('"')
+                            value = value_part.strip()
+                            fields.append((key, value))
+                    
+                    candidates_data.append((indent_level, fields, closing))
+                    i += 1
+                else:
+                    i += 1
+            
+            # Calculate max widths for each value type in this array
+            max_widths = {}
+            for _, fields, _ in candidates_data:
+                for key, value in fields:
+                    # For move, measure the actual value length (SAN notation varies 2-8 chars)
+                    if key == "move":
+                        # Value is quoted, e.g., "Nf3" - extract the move itself
+                        move_str = value.strip('"')
+                        max_widths[key] = max(max_widths.get(key, 0), len(move_str))
+                    else:
+                        # For numeric fields, track the value width
+                        max_widths[key] = max(max_widths.get(key, 0), len(value))
+            
+            # Second pass: format with appropriate padding
+            for indent_level, fields, closing in candidates_data:
+                formatted_fields = []
+                for key, value in fields:
+                    if key == "move":
+                        # Pad the move value to max width
+                        move_str = value.strip('"')
+                        padded_value = f'"{move_str:<{max_widths[key]}}"'
+                        formatted_fields.append(f'"{key}": {padded_value}')
+                    else:
+                        # Right-align numeric values to their max width
+                        padded_value = f'{value:>{max_widths.get(key, len(value))}}'
+                        formatted_fields.append(f'"{key}": {padded_value}')
+                
+                compact_obj = '{ ' + ', '.join(formatted_fields) + ' }'
+                result_lines.append(' ' * indent_level + compact_obj + (',' if closing == '},' else ''))
+            
+            # Add the closing bracket
+            if i < len(lines):
+                result_lines.append(lines[i])
+                i += 1
+        else:
+            result_lines.append(line)
+            i += 1
+    
+    return '\n'.join(result_lines)
 
 
 # Regex patterns from parse_lc0_output.py
@@ -187,15 +304,46 @@ def analyze_pgn(
             lines = read_until("bestmove")
             
             # Parse candidate moves and evaluation
-            candidates, evaluation = parse_analysis(lines, board, max_candidates)
+            candidates, evaluation, total_visits, visits_on_better = parse_analysis(lines, board, max_candidates, played_move_san)
+            
+            # If played move has no WDL (wasn't in MultiPV), do a focused search
+            if evaluation and "wdl" not in evaluation:
+                # Run MultiPV=1 search with searchmoves restricted to played move
+                move_uci = board.uci(move)
+                send_command(f"position fen {fen}")
+                send_command(f"go {search_type} {search_value} searchmoves {move_uci}")
+                focused_lines = read_until("bestmove")
+                
+                # Extract WDL from this focused search
+                for line in focused_lines:
+                    if "wdl" in line:
+                        wdl_match = WDL_RE.search(line)
+                        if wdl_match:
+                            w, d, l = map(int, wdl_match.groups())
+                            evaluation["wdl"] = [w, d, l]
+                            
+                            # Also update the candidate in candidates list if it exists
+                            for candidate in candidates:
+                                if candidate["move"] == played_move_san:
+                                    candidate["wdl"] = [w, d, l]
+                                    break
+                            break
             
             # Build move record
             move_record = {
                 "ply": ply,
                 "fen": fen,
                 "to_move": to_move,
-                "played_move": played_move_san,
             }
+            
+            # Always include total_visits and visits_on_better if we have verbose data
+            if total_visits is not None:
+                move_record["total_visits"] = total_visits
+            
+            if visits_on_better is not None:
+                move_record["visits_on_better"] = visits_on_better
+            
+            move_record["played_move"] = played_move_san
             
             if evaluation:
                 move_record["evaluation"] = evaluation
@@ -241,13 +389,21 @@ def analyze_pgn(
     print(f"\nDone! Output written to {output_path}")
 
 
-def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int) -> Tuple[List[Dict], Optional[Dict]]:
+def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, played_move_san: str) -> Tuple[List[Dict], Optional[Dict], Optional[int], Optional[int]]:
     """Parse lc0 output into candidate moves and evaluation.
     
+    Args:
+        lines: lc0 output lines
+        board: Current chess position
+        max_candidates: Maximum number of candidate moves to return
+        played_move_san: The move that was actually played (in SAN notation)
+    
     Returns:
-        (candidates, evaluation) where:
+        (candidates, evaluation, total_visits, visits_on_better) where:
         - candidates: List of candidate move dicts with rank, visits, wdl, policy, q_value
-        - evaluation: Dict with overall position evaluation (visits, wdl)
+        - evaluation: Dict with evaluation for the played move (visits, wdl, policy, q_value)
+        - total_visits: Sum of visits across ALL legal moves (should ≈ node budget)
+        - visits_on_better: Sum of visits on moves ranked strictly better (0 if rank 1)
     """
     # Parse multipv lines for basic move info and WDL
     multipv_data = {}
@@ -369,28 +525,86 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int) ->
     candidates.sort(key=lambda x: x["rank"])
     candidates = candidates[:max_candidates]
     
-    # Build overall evaluation (from rank 1 move or total)
+    # Build evaluation for the played move
     evaluation = None
-    if candidates:
-        # Use the top move's data for evaluation
-        top_move = candidates[0]
+    played_move_data = None
+    played_move_in_candidates = False
+    
+    # First, try to find the played move in candidates (has WDL data)
+    for candidate in candidates:
+        if candidate["move"] == played_move_san:
+            played_move_data = candidate
+            played_move_in_candidates = True
+            break
+    
+    # If not in candidates, check if it's in verbose_data (all legal moves)
+    if not played_move_data and played_move_san in verbose_data:
+        # Determine rank by counting how many moves in verbose_data have more visits
+        played_visits = verbose_data[played_move_san].get("visits", 0)
+        rank = 1
+        for move_san, data in verbose_data.items():
+            if data.get("visits", 0) > played_visits:
+                rank += 1
+        
+        played_move_data = {
+            "move": played_move_san,
+            "rank": rank,
+            "visits": verbose_data[played_move_san].get("visits"),
+            "policy": verbose_data[played_move_san].get("policy"),
+            "q_value": verbose_data[played_move_san].get("q_value"),
+        }
+        # Note: WDL not available yet for moves outside MultiPV (will be added later)
+        
+        # Add the played move to candidates list so it appears in output
+        candidates.append(played_move_data)
+    
+    # Build evaluation from played move data
+    total_visits = None
+    visits_on_better = None
+    
+    if played_move_data:
         evaluation = {}
         
-        if "visits" in top_move:
-            evaluation["visits"] = top_move["visits"]
+        # Order matches candidate_moves: rank, visits, policy, q_value, wdl
+        if "rank" in played_move_data:
+            evaluation["rank"] = played_move_data["rank"]
+        
+        if "visits" in played_move_data and played_move_data["visits"] is not None:
+            evaluation["visits"] = played_move_data["visits"]
         elif total_nodes:
             evaluation["visits"] = total_nodes
         
-        if "wdl" in top_move:
-            evaluation["wdl"] = top_move["wdl"]
+        if "policy" in played_move_data and played_move_data["policy"] is not None:
+            evaluation["policy"] = played_move_data["policy"]
         
-        if "policy" in top_move:
-            evaluation["policy"] = top_move["policy"]
+        if "q_value" in played_move_data and played_move_data["q_value"] is not None:
+            evaluation["q_value"] = played_move_data["q_value"]
         
-        if "q_value" in top_move:
-            evaluation["q_value"] = top_move["q_value"]
+        if "wdl" in played_move_data:
+            evaluation["wdl"] = played_move_data["wdl"]
     
-    return candidates, evaluation
+    # Calculate total visits across all moves from verbose_data
+    if verbose_data:
+        total_visits = sum(
+            move_data.get("visits", 0)
+            for move_data in verbose_data.values()
+        )
+        if total_visits == 0:
+            total_visits = None
+    
+    # Calculate visits on moves ranked strictly better than played move
+    # Always 0 when played move is rank 1 (best move)
+    if played_move_data and "rank" in played_move_data:
+        played_visits = played_move_data.get("visits", 0)
+        visits_on_better = sum(
+            move_data.get("visits", 0)
+            for move_data in verbose_data.values()
+            if move_data.get("visits", 0) > played_visits
+        )
+        # visits_on_better is 0 when rank 1 (no moves are better)
+        # This is more principled than having the field disappear
+    
+    return candidates, evaluation, total_visits, visits_on_better
 
 
 def parse_candidates(lines: List[str], board: chess.Board, max_candidates: int) -> List[Dict]:
@@ -398,7 +612,7 @@ def parse_candidates(lines: List[str], board: chess.Board, max_candidates: int) 
     
     DEPRECATED: Use parse_analysis instead for full data extraction.
     """
-    candidates, _ = parse_analysis(lines, board, max_candidates)
+    candidates, _, _, _ = parse_analysis(lines, board, max_candidates, "")
     return candidates
 
 

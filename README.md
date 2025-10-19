@@ -57,20 +57,21 @@ Based on an action-replay modification of Leela Chess Zero that enables exportin
 ### Evaluation Output Format
 ```json
 {
-  "game_id": "training_001",
   "ply": 12,
   "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq -",
-  "white_elo": 2700,
-  "black_elo": 2650,
   "to_move": "white",
+  "total_visits": 10189,
+  "visits_on_better": 0,
   "played_move": "Nc3",
-  "candidates": [
-    {"move": "Nc3", "n": 8234, "w": 0.48, "d": 0.35, "l": 0.17, "p": 0.42, "q": 0.395},
-    {"move": "d4", "n": 1566, "w": 0.46, "d": 0.36, "l": 0.18, "p": 0.18, "q": 0.380},
-    {"move": "Bb5", "n": 200, "w": 0.45, "d": 0.35, "l": 0.20, "p": 0.08, "q": 0.375}
+  "evaluation": {"rank": 1, "visits": 8234, "policy": 0.42, "q_value": 0.395, "wdl": [480, 350, 170]},
+  "candidate_moves": [
+    { "move": "Nc3", "rank":  1, "visits": 8234, "policy": 0.42, "q_value": 0.395, "wdl": [480, 350, 170] },
+    { "move": "d4 ", "rank":  2, "visits": 1566, "policy": 0.18, "q_value": 0.380, "wdl": [460, 360, 180] },
+    { "move": "Bb5", "rank":  3, "visits":  389, "policy": 0.08, "q_value": 0.375, "wdl": [450, 350, 200] }
   ]
 }
 ```
+See [docs/output_format.json](docs/output_format.json) for complete field descriptions.
 
 ### Processing Pipeline
 ```

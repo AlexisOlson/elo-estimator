@@ -6,8 +6,6 @@ lc0/build-*/
 *.exe
 
 # Large data files (don't commit to git!)
-pgn-data/raw/*.pgn
-pgn-data/processed/*.pgn
 networks/*.pb.gz
 networks/*.pb
 
