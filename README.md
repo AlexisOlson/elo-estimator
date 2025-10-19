@@ -359,7 +359,7 @@ This project builds on decades of chess rating research and is specifically desi
 **Core Concept**: Jeff Sonas (Chessmetrics creator)  
 **Engine Base**: Leela Chess Zero team  
 **Action-replay modification**: community-contributed change to lc0 enabling replay/export functionality  
-**Implementation**: Alexis Olson
+**Development**: This project was almost entirely written by Claude Sonnet 4.5, with Alexis Olson serving as the driver and director
 
 ## License
 

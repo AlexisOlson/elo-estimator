@@ -48,3 +48,7 @@ We need to ADD:
 - lc0 repo: https://github.com/borg323/lc0/tree/action-replay-san
 - Leela networks: https://training.lczero.org/networks/
 - UCI protocol: http://wbec-ridderkerk.nl/html/UCIProtocol.html
+
+---
+
+**Note**: This project was almost entirely written by Claude Sonnet 4.5, with Alexis Olson serving as the driver and director.

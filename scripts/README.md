@@ -102,3 +102,7 @@ python scripts/analyze_pgn.py --help
 - The `analyze_pgn.py` script requires lc0 to be built and a network file present in the `networks/` directory.
 - Command-line overrides take precedence over config file values.
 - Use `--help` flag with any script for detailed usage information.
+
+---
+
+**Attribution**: This project was almost entirely written by Claude Sonnet 4.5, with Alexis Olson serving as the driver and director.
