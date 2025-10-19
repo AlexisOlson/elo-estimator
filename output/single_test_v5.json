@@ -23,15 +23,15 @@
           "evaluation": {"rank": 7, "visits": 9, "policy": 0.0725, "q_value": 0.01424, "wdl": [67, 881, 52]},
           "candidate_moves": [
             { "move": "Nf3", "rank":  1, "visits": 17, "policy": 0.1194, "q_value":  0.03075, "wdl": [75, 881, 44] },
-            { "move": "d4 ", "rank":  2, "visits": 15, "policy": 0.1227, "q_value":  0.03082, "wdl": [74, 883, 43] },
-            { "move": "c4 ", "rank":  3, "visits": 14, "policy": 0.1063, "q_value":  0.02356, "wdl": [70, 884, 46] },
-            { "move": "g3 ", "rank":  4, "visits": 10, "policy": 0.0858, "q_value":  0.01731, "wdl": [67, 883, 50] },
-            { "move": "e3 ", "rank":  5, "visits": 10, "policy": 0.0809, "q_value":  0.01465, "wdl": [68, 879, 53] },
-            { "move": "b3 ", "rank":  6, "visits":  6, "policy": 0.0635, "q_value":  0.00824, "wdl": [73, 862, 65] },
-            { "move": "e4 ", "rank":  7, "visits":  9, "policy": 0.0725, "q_value":  0.01424, "wdl": [67, 881, 52] },
-            { "move": "h3 ", "rank":  8, "visits":  4, "policy": 0.0501, "q_value": -0.00028, "wdl": [58, 883, 59] },
+            { "move": "d4" , "rank":  2, "visits": 15, "policy": 0.1227, "q_value":  0.03082, "wdl": [74, 883, 43] },
+            { "move": "c4" , "rank":  3, "visits": 14, "policy": 0.1063, "q_value":  0.02356, "wdl": [70, 884, 46] },
+            { "move": "g3" , "rank":  4, "visits": 10, "policy": 0.0858, "q_value":  0.01731, "wdl": [67, 883, 50] },
+            { "move": "e3" , "rank":  5, "visits": 10, "policy": 0.0809, "q_value":  0.01465, "wdl": [68, 879, 53] },
+            { "move": "b3" , "rank":  6, "visits":  6, "policy": 0.0635, "q_value":  0.00824, "wdl": [73, 862, 65] },
+            { "move": "e4" , "rank":  7, "visits":  9, "policy": 0.0725, "q_value":  0.01424, "wdl": [67, 881, 52] },
+            { "move": "h3" , "rank":  8, "visits":  4, "policy": 0.0501, "q_value": -0.00028, "wdl": [58, 883, 59] },
             { "move": "Nc3", "rank":  9, "visits":  4, "policy": 0.0495, "q_value": -0.0002 , "wdl": [59, 882, 59] },
-            { "move": "c3 ", "rank": 10, "visits":  3, "policy": 0.048 , "q_value": -0.00628, "wdl": [67, 858, 75] }
+            { "move": "c3" , "rank": 10, "visits":  3, "policy": 0.048 , "q_value": -0.00628, "wdl": [67, 858, 75] }
           ]
         },
         {
@@ -43,16 +43,16 @@
           "played_move": "e5",
           "evaluation": {"rank": 1, "visits": 100, "policy": 0.5994, "q_value": -0.00693, "wdl": [55, 883, 62]},
           "candidate_moves": [
-            { "move": "e5 ", "rank":  1, "visits": 100, "policy": 0.5994, "q_value": -0.00693, "wdl": [55, 883,  62] },
-            { "move": "c6 ", "rank":  2, "visits":   6, "policy": 0.0746, "q_value": -0.10594, "wdl": [41, 812, 147] },
-            { "move": "c5 ", "rank":  3, "visits":   5, "policy": 0.0585, "q_value": -0.1013 , "wdl": [39, 821, 140] },
-            { "move": "d6 ", "rank":  4, "visits":   1, "policy": 0.0279, "q_value": -0.20569, "wdl": [28, 738, 234] },
-            { "move": "e6 ", "rank":  5, "visits":   1, "policy": 0.0279, "q_value": -0.17096, "wdl": [30, 769, 201] },
+            { "move": "e5" , "rank":  1, "visits": 100, "policy": 0.5994, "q_value": -0.00693, "wdl": [55, 883,  62] },
+            { "move": "c6" , "rank":  2, "visits":   6, "policy": 0.0746, "q_value": -0.10594, "wdl": [41, 812, 147] },
+            { "move": "c5" , "rank":  3, "visits":   5, "policy": 0.0585, "q_value": -0.1013 , "wdl": [39, 821, 140] },
+            { "move": "d6" , "rank":  4, "visits":   1, "policy": 0.0279, "q_value": -0.20569, "wdl": [28, 738, 234] },
+            { "move": "e6" , "rank":  5, "visits":   1, "policy": 0.0279, "q_value": -0.17096, "wdl": [30, 769, 201] },
             { "move": "Nc6", "rank":  6, "visits":   1, "policy": 0.0274, "q_value": -0.17284, "wdl": [41, 745, 214] },
             { "move": "Nf6", "rank":  7, "visits":   0, "policy": 0.0236, "q_value":  0.0    , "wdl": [53, 873,  74] },
-            { "move": "d5 ", "rank":  8, "visits":   0, "policy": 0.0232, "q_value":  0.0    , "wdl": [53, 873,  74] },
-            { "move": "g6 ", "rank":  9, "visits":   0, "policy": 0.0189, "q_value":  0.0    , "wdl": [53, 873,  74] },
-            { "move": "a6 ", "rank": 10, "visits":   0, "policy": 0.0167, "q_value":  0.0    , "wdl": [53, 873,  74] }
+            { "move": "d5" , "rank":  8, "visits":   0, "policy": 0.0232, "q_value":  0.0    , "wdl": [53, 873,  74] },
+            { "move": "g6" , "rank":  9, "visits":   0, "policy": 0.0189, "q_value":  0.0    , "wdl": [53, 873,  74] },
+            { "move": "a6" , "rank": 10, "visits":   0, "policy": 0.0167, "q_value":  0.0    , "wdl": [53, 873,  74] }
           ]
         },
         {
@@ -67,13 +67,13 @@
             { "move": "Nf3", "rank": 1, "visits": 37, "policy": 0.1921, "q_value":  0.02898, "wdl": [70, 889, 41] },
             { "move": "Bc4", "rank": 2, "visits": 17, "policy": 0.1052, "q_value":  0.011  , "wdl": [69, 873, 58] },
             { "move": "Nc3", "rank": 3, "visits": 14, "policy": 0.0924, "q_value":  0.01138, "wdl": [63, 886, 51] },
-            { "move": "a4 ", "rank": 4, "visits": 11, "policy": 0.078 , "q_value": -0.0002 , "wdl": [59, 882, 59] },
-            { "move": "h3 ", "rank": 5, "visits":  8, "policy": 0.0603, "q_value": -0.00624, "wdl": [54, 886, 60] },
+            { "move": "a4" , "rank": 4, "visits": 11, "policy": 0.078 , "q_value": -0.0002 , "wdl": [59, 882, 59] },
+            { "move": "h3" , "rank": 5, "visits":  8, "policy": 0.0603, "q_value": -0.00624, "wdl": [54, 886, 60] },
             { "move": "Bd3", "rank": 6, "visits":  5, "policy": 0.0434, "q_value": -0.0126 , "wdl": [58, 871, 71] },
-            { "move": "a3 ", "rank": 7, "visits":  6, "policy": 0.047 , "q_value": -0.01237, "wdl": [46, 896, 58] },
+            { "move": "a3" , "rank": 7, "visits":  6, "policy": 0.047 , "q_value": -0.01237, "wdl": [46, 896, 58] },
             { "move": "Be2", "rank": 8, "visits":  6, "policy": 0.0453, "q_value": -0.01329, "wdl": [43, 901, 56] },
-            { "move": "d3 ", "rank": 8, "visits":  6, "policy": 0.0479, "q_value": -0.01408, "wdl": [61, 864, 75] },
-            { "move": "d4 ", "rank": 9, "visits":  4, "policy": 0.0435, "q_value": -0.01159, "wdl": [50, 886, 64] }
+            { "move": "d3" , "rank": 8, "visits":  6, "policy": 0.0479, "q_value": -0.01408, "wdl": [61, 864, 75] },
+            { "move": "d4" , "rank": 9, "visits":  4, "policy": 0.0435, "q_value": -0.01159, "wdl": [50, 886, 64] }
           ]
         },
         {
@@ -87,14 +87,14 @@
           "candidate_moves": [
             { "move": "Nc6", "rank":  1, "visits": 94, "policy": 0.644 , "q_value": -0.01773, "wdl": [46, 890,  64] },
             { "move": "Nf6", "rank":  2, "visits": 12, "policy": 0.1151, "q_value": -0.07247, "wdl": [27, 873, 100] },
-            { "move": "d6 ", "rank":  3, "visits":  0, "policy": 0.0134, "q_value":  0.0    , "wdl": [44, 888,  68] },
-            { "move": "d5 ", "rank":  4, "visits":  0, "policy": 0.0097, "q_value":  0.0    , "wdl": [44, 888,  68] },
+            { "move": "d6" , "rank":  3, "visits":  0, "policy": 0.0134, "q_value":  0.0    , "wdl": [44, 888,  68] },
+            { "move": "d5" , "rank":  4, "visits":  0, "policy": 0.0097, "q_value":  0.0    , "wdl": [44, 888,  68] },
             { "move": "Bd6", "rank":  5, "visits":  0, "policy": 0.0094, "q_value":  0.0    , "wdl": [44, 888,  68] },
             { "move": "Qe7", "rank":  6, "visits":  0, "policy": 0.0092, "q_value":  0.0    , "wdl": [44, 888,  68] },
             { "move": "Qf6", "rank":  7, "visits":  0, "policy": 0.0092, "q_value":  0.0    , "wdl": [44, 888,  68] },
-            { "move": "h6 ", "rank":  8, "visits":  0, "policy": 0.0091, "q_value":  0.0    , "wdl": [44, 888,  68] },
+            { "move": "h6" , "rank":  8, "visits":  0, "policy": 0.0091, "q_value":  0.0    , "wdl": [44, 888,  68] },
             { "move": "Bb4", "rank":  9, "visits":  0, "policy": 0.0089, "q_value":  0.0    , "wdl": [44, 888,  68] },
-            { "move": "a5 ", "rank": 10, "visits":  0, "policy": 0.0089, "q_value":  0.0    , "wdl": [44, 888,  68] }
+            { "move": "a5" , "rank": 10, "visits":  0, "policy": 0.0089, "q_value":  0.0    , "wdl": [44, 888,  68] }
           ]
         },
         {
@@ -108,14 +108,14 @@
           "candidate_moves": [
             { "move": "Bb5", "rank":  1, "visits": 29, "policy": 0.1907, "q_value":  0.03373, "wdl": [73, 888, 39] },
             { "move": "Bc4", "rank":  2, "visits": 24, "policy": 0.1691, "q_value":  0.02861, "wdl": [78, 873, 49] },
-            { "move": "h3 ", "rank":  3, "visits": 12, "policy": 0.0961, "q_value":  0.01666, "wdl": [65, 887, 48] },
-            { "move": "d4 ", "rank":  4, "visits":  8, "policy": 0.0774, "q_value":  0.01245, "wdl": [43, 926, 31] },
+            { "move": "h3" , "rank":  3, "visits": 12, "policy": 0.0961, "q_value":  0.01666, "wdl": [65, 887, 48] },
+            { "move": "d4" , "rank":  4, "visits":  8, "policy": 0.0774, "q_value":  0.01245, "wdl": [43, 926, 31] },
             { "move": "Nc3", "rank":  5, "visits":  8, "policy": 0.0669, "q_value":  0.01205, "wdl": [49, 914, 37] },
-            { "move": "a4 ", "rank":  6, "visits":  6, "policy": 0.0584, "q_value": -0.00258, "wdl": [47, 904, 49] },
-            { "move": "g3 ", "rank":  7, "visits":  4, "policy": 0.0408, "q_value": -0.00731, "wdl": [59, 874, 67] },
+            { "move": "a4" , "rank":  6, "visits":  6, "policy": 0.0584, "q_value": -0.00258, "wdl": [47, 904, 49] },
+            { "move": "g3" , "rank":  7, "visits":  4, "policy": 0.0408, "q_value": -0.00731, "wdl": [59, 874, 67] },
             { "move": "Bd3", "rank":  8, "visits":  4, "policy": 0.0405, "q_value": -0.00762, "wdl": [58, 876, 66] },
-            { "move": "d3 ", "rank":  9, "visits":  4, "policy": 0.0411, "q_value": -0.00982, "wdl": [61, 868, 71] },
-            { "move": "a3 ", "rank": 10, "visits":  3, "policy": 0.0382, "q_value": -0.01064, "wdl": [33, 924, 43] }
+            { "move": "d3" , "rank":  9, "visits":  4, "policy": 0.0411, "q_value": -0.00982, "wdl": [61, 868, 71] },
+            { "move": "a3" , "rank": 10, "visits":  3, "policy": 0.0382, "q_value": -0.01064, "wdl": [33, 924, 43] }
           ]
         },
         {
@@ -129,12 +129,12 @@
           "candidate_moves": [
             { "move": "Bc5", "rank":  1, "visits": 99, "policy": 0.4987, "q_value": -0.02691, "wdl": [52, 869,  79] },
             { "move": "Nf6", "rank":  2, "visits": 27, "policy": 0.2075, "q_value": -0.04762, "wdl": [40, 872,  88] },
-            { "move": "d6 ", "rank":  3, "visits":  2, "policy": 0.0314, "q_value": -0.15124, "wdl": [26, 797, 177] },
+            { "move": "d6" , "rank":  3, "visits":  2, "policy": 0.0314, "q_value": -0.15124, "wdl": [26, 797, 177] },
             { "move": "Be7", "rank":  4, "visits":  2, "policy": 0.0293, "q_value": -0.13713, "wdl": [23, 816, 161] },
-            { "move": "h6 ", "rank":  5, "visits":  0, "policy": 0.0175, "q_value":  0.0    , "wdl": [49, 868,  83] },
-            { "move": "a5 ", "rank":  6, "visits":  0, "policy": 0.0153, "q_value":  0.0    , "wdl": [49, 868,  83] },
-            { "move": "g6 ", "rank":  7, "visits":  0, "policy": 0.0126, "q_value":  0.0    , "wdl": [49, 868,  83] },
-            { "move": "a6 ", "rank":  8, "visits":  0, "policy": 0.0118, "q_value":  0.0    , "wdl": [49, 868,  83] },
+            { "move": "h6" , "rank":  5, "visits":  0, "policy": 0.0175, "q_value":  0.0    , "wdl": [49, 868,  83] },
+            { "move": "a5" , "rank":  6, "visits":  0, "policy": 0.0153, "q_value":  0.0    , "wdl": [49, 868,  83] },
+            { "move": "g6" , "rank":  7, "visits":  0, "policy": 0.0126, "q_value":  0.0    , "wdl": [49, 868,  83] },
+            { "move": "a6" , "rank":  8, "visits":  0, "policy": 0.0118, "q_value":  0.0    , "wdl": [49, 868,  83] },
             { "move": "Na5", "rank":  9, "visits":  0, "policy": 0.0085, "q_value":  0.0    , "wdl": [49, 868,  83] },
             { "move": "Bd6", "rank": 10, "visits":  0, "policy": 0.0085, "q_value":  0.0    , "wdl": [49, 868,  83] }
           ]
@@ -149,15 +149,15 @@
           "evaluation": {"rank": 1, "visits": 17, "policy": 0.1105, "q_value": 0.03558, "wdl": [84, 867, 49]},
           "candidate_moves": [
             { "move": "O-O", "rank":  1, "visits": 17, "policy": 0.1105, "q_value":  0.03558, "wdl": [84, 867, 49] },
-            { "move": "c3 ", "rank":  2, "visits": 16, "policy": 0.1064, "q_value":  0.03448, "wdl": [83, 869, 48] },
-            { "move": "d3 ", "rank":  3, "visits": 19, "policy": 0.1216, "q_value":  0.03615, "wdl": [86, 865, 49] },
-            { "move": "a4 ", "rank":  4, "visits": 16, "policy": 0.114 , "q_value":  0.02904, "wdl": [79, 871, 50] },
-            { "move": "h3 ", "rank":  5, "visits": 16, "policy": 0.1174, "q_value":  0.0242 , "wdl": [76, 872, 52] },
+            { "move": "c3" , "rank":  2, "visits": 16, "policy": 0.1064, "q_value":  0.03448, "wdl": [83, 869, 48] },
+            { "move": "d3" , "rank":  3, "visits": 19, "policy": 0.1216, "q_value":  0.03615, "wdl": [86, 865, 49] },
+            { "move": "a4" , "rank":  4, "visits": 16, "policy": 0.114 , "q_value":  0.02904, "wdl": [79, 871, 50] },
+            { "move": "h3" , "rank":  5, "visits": 16, "policy": 0.1174, "q_value":  0.0242 , "wdl": [76, 872, 52] },
             { "move": "Nc3", "rank":  6, "visits": 11, "policy": 0.0864, "q_value":  0.02119, "wdl": [73, 875, 52] },
-            { "move": "a3 ", "rank":  7, "visits":  9, "policy": 0.0723, "q_value":  0.01283, "wdl": [70, 873, 57] },
+            { "move": "a3" , "rank":  7, "visits":  9, "policy": 0.0723, "q_value":  0.01283, "wdl": [70, 873, 57] },
             { "move": "Bb3", "rank":  8, "visits":  5, "policy": 0.0426, "q_value":  0.00231, "wdl": [69, 864, 67] },
             { "move": "Qe2", "rank":  9, "visits":  3, "policy": 0.0306, "q_value": -0.01106, "wdl": [62, 864, 74] },
-            { "move": "d4 ", "rank": 10, "visits":  1, "policy": 0.0249, "q_value": -0.03086, "wdl": [49, 872, 79] }
+            { "move": "d4" , "rank": 10, "visits":  1, "policy": 0.0249, "q_value": -0.03086, "wdl": [49, 872, 79] }
           ]
         },
         {
@@ -169,16 +169,16 @@
           "played_move": "Nf6",
           "evaluation": {"rank": 1, "visits": 67, "policy": 0.4139, "q_value": -0.03286, "wdl": [48, 871, 81]},
           "candidate_moves": [
-            { "move": "Nf6 ", "rank":  1, "visits": 67, "policy": 0.4139, "q_value": -0.03286, "wdl": [48, 871,  81] },
-            { "move": "d6  ", "rank":  2, "visits": 51, "policy": 0.3282, "q_value": -0.03756, "wdl": [49, 865,  86] },
-            { "move": "Bb6 ", "rank":  3, "visits":  1, "policy": 0.0255, "q_value": -0.15832, "wdl": [25, 792, 183] },
-            { "move": "h6  ", "rank":  4, "visits":  0, "policy": 0.008 , "q_value":  0.0    , "wdl": [48, 868,  84] },
-            { "move": "a6  ", "rank":  5, "visits":  0, "policy": 0.0079, "q_value":  0.0    , "wdl": [48, 868,  84] },
-            { "move": "a5  ", "rank":  6, "visits":  0, "policy": 0.0079, "q_value":  0.0    , "wdl": [48, 868,  84] },
-            { "move": "Qe7 ", "rank":  7, "visits":  0, "policy": 0.0073, "q_value":  0.0    , "wdl": [48, 868,  84] },
-            { "move": "h5  ", "rank":  8, "visits":  0, "policy": 0.0073, "q_value":  0.0    , "wdl": [48, 868,  84] },
+            { "move": "Nf6" , "rank":  1, "visits": 67, "policy": 0.4139, "q_value": -0.03286, "wdl": [48, 871,  81] },
+            { "move": "d6"  , "rank":  2, "visits": 51, "policy": 0.3282, "q_value": -0.03756, "wdl": [49, 865,  86] },
+            { "move": "Bb6" , "rank":  3, "visits":  1, "policy": 0.0255, "q_value": -0.15832, "wdl": [25, 792, 183] },
+            { "move": "h6"  , "rank":  4, "visits":  0, "policy": 0.008 , "q_value":  0.0    , "wdl": [48, 868,  84] },
+            { "move": "a6"  , "rank":  5, "visits":  0, "policy": 0.0079, "q_value":  0.0    , "wdl": [48, 868,  84] },
+            { "move": "a5"  , "rank":  6, "visits":  0, "policy": 0.0079, "q_value":  0.0    , "wdl": [48, 868,  84] },
+            { "move": "Qe7" , "rank":  7, "visits":  0, "policy": 0.0073, "q_value":  0.0    , "wdl": [48, 868,  84] },
+            { "move": "h5"  , "rank":  8, "visits":  0, "policy": 0.0073, "q_value":  0.0    , "wdl": [48, 868,  84] },
             { "move": "Nge7", "rank":  9, "visits":  0, "policy": 0.0073, "q_value":  0.0    , "wdl": [48, 868,  84] },
-            { "move": "Be7 ", "rank": 10, "visits":  0, "policy": 0.0072, "q_value":  0.0    , "wdl": [48, 868,  84] }
+            { "move": "Be7" , "rank": 10, "visits":  0, "policy": 0.0072, "q_value":  0.0    , "wdl": [48, 868,  84] }
           ]
         },
         {
@@ -190,14 +190,14 @@
           "played_move": "d3",
           "evaluation": {"rank": 1, "visits": 40, "policy": 0.2651, "q_value": 0.04243, "wdl": [87, 868, 45]},
           "candidate_moves": [
-            { "move": "d3 ", "rank":  1, "visits": 40, "policy": 0.2651, "q_value":  0.04243, "wdl": [87, 868,  45] },
+            { "move": "d3" , "rank":  1, "visits": 40, "policy": 0.2651, "q_value":  0.04243, "wdl": [87, 868,  45] },
             { "move": "Re1", "rank":  2, "visits": 36, "policy": 0.2524, "q_value":  0.03524, "wdl": [83, 870,  47] },
             { "move": "Nc3", "rank":  3, "visits": 15, "policy": 0.1307, "q_value":  0.01846, "wdl": [67, 884,  49] },
             { "move": "Qe2", "rank":  4, "visits":  4, "policy": 0.0492, "q_value": -0.01566, "wdl": [56, 872,  72] },
             { "move": "Qe1", "rank":  5, "visits":  3, "policy": 0.0366, "q_value": -0.02869, "wdl": [52, 867,  81] },
             { "move": "Bd5", "rank":  6, "visits":  1, "policy": 0.0274, "q_value": -0.06059, "wdl": [31, 877,  92] },
-            { "move": "d4 ", "rank":  7, "visits":  1, "policy": 0.0255, "q_value": -0.08262, "wdl": [50, 817, 133] },
-            { "move": "c3 ", "rank":  8, "visits":  0, "policy": 0.018 , "q_value":  0.0    , "wdl": [79, 871,  50] },
+            { "move": "d4" , "rank":  7, "visits":  1, "policy": 0.0255, "q_value": -0.08262, "wdl": [50, 817, 133] },
+            { "move": "c3" , "rank":  8, "visits":  0, "policy": 0.018 , "q_value":  0.0    , "wdl": [79, 871,  50] },
             { "move": "Bb5", "rank":  9, "visits":  0, "policy": 0.0171, "q_value":  0.0    , "wdl": [79, 871,  50] },
             { "move": "Bb3", "rank": 10, "visits":  0, "policy": 0.0164, "q_value":  0.0    , "wdl": [79, 871,  50] }
           ]
@@ -211,11 +211,11 @@
           "played_move": "d6",
           "evaluation": {"rank": 1, "visits": 26, "policy": 0.1938, "q_value": -0.03829, "wdl": [47, 867, 86]},
           "candidate_moves": [
-            { "move": "d6 ", "rank":  1, "visits": 26, "policy": 0.1938, "q_value": -0.03829, "wdl": [47, 867,  86] },
-            { "move": "h6 ", "rank":  2, "visits": 24, "policy": 0.1749, "q_value": -0.0361 , "wdl": [44, 875,  81] },
-            { "move": "a6 ", "rank":  3, "visits": 18, "policy": 0.1381, "q_value": -0.04549, "wdl": [43, 868,  89] },
+            { "move": "d6" , "rank":  1, "visits": 26, "policy": 0.1938, "q_value": -0.03829, "wdl": [47, 867,  86] },
+            { "move": "h6" , "rank":  2, "visits": 24, "policy": 0.1749, "q_value": -0.0361 , "wdl": [44, 875,  81] },
+            { "move": "a6" , "rank":  3, "visits": 18, "policy": 0.1381, "q_value": -0.04549, "wdl": [43, 868,  89] },
             { "move": "O-O", "rank":  4, "visits": 19, "policy": 0.1437, "q_value": -0.04475, "wdl": [42, 871,  87] },
-            { "move": "a5 ", "rank":  5, "visits": 14, "policy": 0.1161, "q_value": -0.04975, "wdl": [44, 862,  94] },
+            { "move": "a5" , "rank":  5, "visits": 14, "policy": 0.1161, "q_value": -0.04975, "wdl": [44, 862,  94] },
             { "move": "Bb6", "rank":  6, "visits":  2, "policy": 0.0323, "q_value": -0.09295, "wdl": [32, 843, 125] },
             { "move": "Rb8", "rank":  7, "visits":  0, "policy": 0.0176, "q_value":  0.0    , "wdl": [44, 869,  87] },
             { "move": "Be7", "rank":  8, "visits":  0, "policy": 0.013 , "q_value":  0.0    , "wdl": [44, 869,  87] },
@@ -232,16 +232,16 @@
           "played_move": "c3",
           "evaluation": {"rank": 1, "visits": 32, "policy": 0.1621, "q_value": 0.05431, "wdl": [96, 862, 42]},
           "candidate_moves": [
-            { "move": "c3  ", "rank":  1, "visits": 32, "policy": 0.1621, "q_value":  0.05431, "wdl": [96, 862, 42] },
-            { "move": "Re1 ", "rank":  2, "visits": 24, "policy": 0.1224, "q_value":  0.04952, "wdl": [92, 866, 42] },
+            { "move": "c3"  , "rank":  1, "visits": 32, "policy": 0.1621, "q_value":  0.05431, "wdl": [96, 862, 42] },
+            { "move": "Re1" , "rank":  2, "visits": 24, "policy": 0.1224, "q_value":  0.04952, "wdl": [92, 866, 42] },
             { "move": "Nbd2", "rank":  3, "visits": 16, "policy": 0.0907, "q_value":  0.04101, "wdl": [86, 869, 45] },
-            { "move": "a4  ", "rank":  4, "visits": 14, "policy": 0.0883, "q_value":  0.02834, "wdl": [76, 876, 48] },
-            { "move": "Bb3 ", "rank":  5, "visits":  8, "policy": 0.0566, "q_value":  0.02032, "wdl": [75, 870, 55] },
-            { "move": "h3  ", "rank":  6, "visits":  7, "policy": 0.0532, "q_value":  0.01956, "wdl": [77, 866, 57] },
-            { "move": "Nc3 ", "rank":  7, "visits":  8, "policy": 0.0585, "q_value":  0.01255, "wdl": [64, 885, 51] },
-            { "move": "a3  ", "rank":  8, "visits":  7, "policy": 0.0509, "q_value":  0.0082 , "wdl": [62, 884, 54] },
-            { "move": "Be3 ", "rank":  9, "visits":  3, "policy": 0.0356, "q_value": -0.00116, "wdl": [54, 891, 55] },
-            { "move": "Bd2 ", "rank": 10, "visits":  4, "policy": 0.0336, "q_value": -0.00014, "wdl": [60, 879, 61] }
+            { "move": "a4"  , "rank":  4, "visits": 14, "policy": 0.0883, "q_value":  0.02834, "wdl": [76, 876, 48] },
+            { "move": "Bb3" , "rank":  5, "visits":  8, "policy": 0.0566, "q_value":  0.02032, "wdl": [75, 870, 55] },
+            { "move": "h3"  , "rank":  6, "visits":  7, "policy": 0.0532, "q_value":  0.01956, "wdl": [77, 866, 57] },
+            { "move": "Nc3" , "rank":  7, "visits":  8, "policy": 0.0585, "q_value":  0.01255, "wdl": [64, 885, 51] },
+            { "move": "a3"  , "rank":  8, "visits":  7, "policy": 0.0509, "q_value":  0.0082 , "wdl": [62, 884, 54] },
+            { "move": "Be3" , "rank":  9, "visits":  3, "policy": 0.0356, "q_value": -0.00116, "wdl": [54, 891, 55] },
+            { "move": "Bd2" , "rank": 10, "visits":  4, "policy": 0.0336, "q_value": -0.00014, "wdl": [60, 879, 61] }
           ]
         },
         {
@@ -253,10 +253,10 @@
           "played_move": "O-O",
           "evaluation": {"rank": 3, "visits": 19, "policy": 0.1393, "q_value": -0.04895, "wdl": [46, 859, 95]},
           "candidate_moves": [
-            { "move": "h6 ", "rank":  1, "visits": 25, "policy": 0.1901, "q_value": -0.05002, "wdl": [42, 866,  92] },
-            { "move": "a6 ", "rank":  2, "visits": 20, "policy": 0.1408, "q_value": -0.04403, "wdl": [44, 868,  88] },
+            { "move": "h6" , "rank":  1, "visits": 25, "policy": 0.1901, "q_value": -0.05002, "wdl": [42, 866,  92] },
+            { "move": "a6" , "rank":  2, "visits": 20, "policy": 0.1408, "q_value": -0.04403, "wdl": [44, 868,  88] },
             { "move": "O-O", "rank":  3, "visits": 19, "policy": 0.1393, "q_value": -0.04895, "wdl": [46, 859,  95] },
-            { "move": "a5 ", "rank":  4, "visits": 19, "policy": 0.153 , "q_value": -0.06024, "wdl": [43, 854, 103] },
+            { "move": "a5" , "rank":  4, "visits": 19, "policy": 0.153 , "q_value": -0.06024, "wdl": [43, 854, 103] },
             { "move": "Bb6", "rank":  5, "visits":  9, "policy": 0.0791, "q_value": -0.06265, "wdl": [39, 859, 102] },
             { "move": "Bd7", "rank":  6, "visits":  4, "policy": 0.043 , "q_value": -0.086  , "wdl": [38, 838, 124] },
             { "move": "Be6", "rank":  7, "visits":  3, "policy": 0.0308, "q_value": -0.06604, "wdl": [35, 864, 101] },
@@ -274,16 +274,16 @@
           "played_move": "Nbd2",
           "evaluation": {"rank": 4, "visits": 20, "policy": 0.1147, "q_value": 0.04696, "wdl": [87, 873, 40]},
           "candidate_moves": [
-            { "move": "Re1 ", "rank":  1, "visits": 23, "policy": 0.1406, "q_value": 0.05351, "wdl": [ 94, 865, 41] },
-            { "move": "h3  ", "rank":  2, "visits": 24, "policy": 0.1397, "q_value": 0.05364, "wdl": [ 92, 870, 38] },
-            { "move": "Bg5 ", "rank":  3, "visits": 21, "policy": 0.1114, "q_value": 0.05826, "wdl": [122, 814, 64] },
+            { "move": "Re1" , "rank":  1, "visits": 23, "policy": 0.1406, "q_value": 0.05351, "wdl": [ 94, 865, 41] },
+            { "move": "h3"  , "rank":  2, "visits": 24, "policy": 0.1397, "q_value": 0.05364, "wdl": [ 92, 870, 38] },
+            { "move": "Bg5" , "rank":  3, "visits": 21, "policy": 0.1114, "q_value": 0.05826, "wdl": [122, 814, 64] },
             { "move": "Nbd2", "rank":  4, "visits": 20, "policy": 0.1147, "q_value": 0.04696, "wdl": [ 87, 873, 40] },
-            { "move": "a4  ", "rank":  5, "visits": 13, "policy": 0.0859, "q_value": 0.03572, "wdl": [ 84, 868, 48] },
-            { "move": "Bb3 ", "rank":  6, "visits":  8, "policy": 0.0616, "q_value": 0.02238, "wdl": [ 73, 876, 51] },
-            { "move": "b4  ", "rank":  7, "visits":  6, "policy": 0.0493, "q_value": 0.02325, "wdl": [ 79, 865, 56] },
-            { "move": "a3  ", "rank":  8, "visits":  4, "policy": 0.0363, "q_value": 0.00242, "wdl": [ 63, 876, 61] },
-            { "move": "Qc2 ", "rank":  9, "visits":  0, "policy": 0.0211, "q_value": 0.0    , "wdl": [ 94, 858, 48] },
-            { "move": "Qe2 ", "rank": 10, "visits":  0, "policy": 0.0204, "q_value": 0.0    , "wdl": [ 94, 858, 48] }
+            { "move": "a4"  , "rank":  5, "visits": 13, "policy": 0.0859, "q_value": 0.03572, "wdl": [ 84, 868, 48] },
+            { "move": "Bb3" , "rank":  6, "visits":  8, "policy": 0.0616, "q_value": 0.02238, "wdl": [ 73, 876, 51] },
+            { "move": "b4"  , "rank":  7, "visits":  6, "policy": 0.0493, "q_value": 0.02325, "wdl": [ 79, 865, 56] },
+            { "move": "a3"  , "rank":  8, "visits":  4, "policy": 0.0363, "q_value": 0.00242, "wdl": [ 63, 876, 61] },
+            { "move": "Qc2" , "rank":  9, "visits":  0, "policy": 0.0211, "q_value": 0.0    , "wdl": [ 94, 858, 48] },
+            { "move": "Qe2" , "rank": 10, "visits":  0, "policy": 0.0204, "q_value": 0.0    , "wdl": [ 94, 858, 48] }
           ]
         },
         {
@@ -295,9 +295,9 @@
           "played_move": "a6",
           "evaluation": {"rank": 1, "visits": 31, "policy": 0.1848, "q_value": -0.03169, "wdl": [42, 884, 74]},
           "candidate_moves": [
-            { "move": "a6 ", "rank":  1, "visits": 31, "policy": 0.1848, "q_value": -0.03169, "wdl": [42, 884,  74] },
-            { "move": "h6 ", "rank":  2, "visits": 22, "policy": 0.1493, "q_value": -0.04503, "wdl": [40, 875,  85] },
-            { "move": "a5 ", "rank":  3, "visits": 23, "policy": 0.1564, "q_value": -0.05008, "wdl": [44, 862,  94] },
+            { "move": "a6" , "rank":  1, "visits": 31, "policy": 0.1848, "q_value": -0.03169, "wdl": [42, 884,  74] },
+            { "move": "h6" , "rank":  2, "visits": 22, "policy": 0.1493, "q_value": -0.04503, "wdl": [40, 875,  85] },
+            { "move": "a5" , "rank":  3, "visits": 23, "policy": 0.1564, "q_value": -0.05008, "wdl": [44, 862,  94] },
             { "move": "Bb6", "rank":  4, "visits":  8, "policy": 0.0652, "q_value": -0.06177, "wdl": [35, 868,  97] },
             { "move": "Re8", "rank":  5, "visits":  7, "policy": 0.0541, "q_value": -0.06081, "wdl": [38, 863,  99] },
             { "move": "Ne7", "rank":  6, "visits":  6, "policy": 0.0579, "q_value": -0.06902, "wdl": [34, 863, 103] },
@@ -317,11 +317,11 @@
           "evaluation": {"rank": 4, "visits": 16, "policy": 0.1118, "q_value": 0.02634, "wdl": [69, 888, 43]},
           "candidate_moves": [
             { "move": "Re1", "rank":  1, "visits": 30, "policy": 0.1964, "q_value":  0.03328, "wdl": [74, 885, 41] },
-            { "move": "h3 ", "rank":  2, "visits": 26, "policy": 0.1698, "q_value":  0.02986, "wdl": [69, 892, 39] },
-            { "move": "a4 ", "rank":  3, "visits": 23, "policy": 0.1472, "q_value":  0.03123, "wdl": [70, 891, 39] },
+            { "move": "h3" , "rank":  2, "visits": 26, "policy": 0.1698, "q_value":  0.02986, "wdl": [69, 892, 39] },
+            { "move": "a4" , "rank":  3, "visits": 23, "policy": 0.1472, "q_value":  0.03123, "wdl": [70, 891, 39] },
             { "move": "Bb3", "rank":  4, "visits": 16, "policy": 0.1118, "q_value":  0.02634, "wdl": [69, 888, 43] },
-            { "move": "b4 ", "rank":  5, "visits": 12, "policy": 0.0773, "q_value":  0.03568, "wdl": [79, 878, 43] },
-            { "move": "a3 ", "rank":  6, "visits":  7, "policy": 0.054 , "q_value":  0.01233, "wdl": [67, 879, 54] },
+            { "move": "b4" , "rank":  5, "visits": 12, "policy": 0.0773, "q_value":  0.03568, "wdl": [79, 878, 43] },
+            { "move": "a3" , "rank":  6, "visits":  7, "policy": 0.054 , "q_value":  0.01233, "wdl": [67, 879, 54] },
             { "move": "Rb1", "rank":  7, "visits":  1, "policy": 0.0269, "q_value": -0.03387, "wdl": [47, 872, 81] },
             { "move": "Qe2", "rank":  8, "visits":  0, "policy": 0.0229, "q_value":  0.0    , "wdl": [72, 886, 42] },
             { "move": "Qc2", "rank":  9, "visits":  0, "policy": 0.0211, "q_value":  0.0    , "wdl": [72, 886, 42] },
@@ -338,12 +338,12 @@
           "evaluation": {"rank": 4, "visits": 9, "policy": 0.0754, "q_value": -0.04679, "wdl": [47, 859, 94]},
           "candidate_moves": [
             { "move": "Be6", "rank":  1, "visits": 34, "policy": 0.2152, "q_value": -0.01854, "wdl": [44, 893,  63] },
-            { "move": "h6 ", "rank":  2, "visits": 29, "policy": 0.194 , "q_value": -0.02063, "wdl": [43, 893,  64] },
+            { "move": "h6" , "rank":  2, "visits": 29, "policy": 0.194 , "q_value": -0.02063, "wdl": [43, 893,  64] },
             { "move": "Re8", "rank":  3, "visits": 13, "policy": 0.0911, "q_value": -0.02956, "wdl": [43, 884,  73] },
             { "move": "Ba7", "rank":  4, "visits":  9, "policy": 0.0754, "q_value": -0.04679, "wdl": [47, 859,  94] },
-            { "move": "a5 ", "rank":  5, "visits":  6, "policy": 0.0574, "q_value": -0.06563, "wdl": [37, 860, 103] },
+            { "move": "a5" , "rank":  5, "visits":  6, "policy": 0.0574, "q_value": -0.06563, "wdl": [37, 860, 103] },
             { "move": "Kh8", "rank":  6, "visits":  2, "policy": 0.0301, "q_value": -0.06714, "wdl": [48, 837, 115] },
-            { "move": "b5 ", "rank":  7, "visits":  2, "policy": 0.0287, "q_value": -0.08253, "wdl": [31, 856, 113] },
+            { "move": "b5" , "rank":  7, "visits":  2, "policy": 0.0287, "q_value": -0.08253, "wdl": [31, 856, 113] },
             { "move": "Bd7", "rank":  8, "visits":  2, "policy": 0.0273, "q_value": -0.0896 , "wdl": [32, 846, 122] },
             { "move": "Rb8", "rank":  9, "visits":  2, "policy": 0.027 , "q_value": -0.08976, "wdl": [30, 850, 120] },
             { "move": "Ne7", "rank": 10, "visits":  0, "policy": 0.0244, "q_value":  0.0    , "wdl": [43, 883,  74] }
@@ -358,12 +358,12 @@
           "played_move": "h3",
           "evaluation": {"rank": 1, "visits": 52, "policy": 0.3187, "q_value": 0.04864, "wdl": [84, 880, 36]},
           "candidate_moves": [
-            { "move": "h3 ", "rank":  1, "visits": 52, "policy": 0.3187, "q_value":  0.04864, "wdl": [ 84, 880, 36] },
+            { "move": "h3" , "rank":  1, "visits": 52, "policy": 0.3187, "q_value":  0.04864, "wdl": [ 84, 880, 36] },
             { "move": "Re1", "rank":  2, "visits": 28, "policy": 0.1741, "q_value":  0.04112, "wdl": [100, 841, 59] },
-            { "move": "a4 ", "rank":  3, "visits": 14, "policy": 0.0957, "q_value":  0.03258, "wdl": [ 76, 881, 43] },
+            { "move": "a4" , "rank":  3, "visits": 14, "policy": 0.0957, "q_value":  0.03258, "wdl": [ 76, 881, 43] },
             { "move": "Nc4", "rank":  4, "visits":  9, "policy": 0.0753, "q_value":  0.00523, "wdl": [ 62, 881, 57] },
             { "move": "Bc2", "rank":  5, "visits":  5, "policy": 0.0435, "q_value":  0.01612, "wdl": [ 82, 852, 66] },
-            { "move": "a3 ", "rank":  6, "visits":  5, "policy": 0.043 , "q_value":  0.00757, "wdl": [ 70, 868, 62] },
+            { "move": "a3" , "rank":  6, "visits":  5, "policy": 0.043 , "q_value":  0.00757, "wdl": [ 70, 868, 62] },
             { "move": "Rb1", "rank":  7, "visits":  3, "policy": 0.0298, "q_value": -0.00947, "wdl": [ 65, 861, 74] },
             { "move": "Qe2", "rank":  8, "visits":  3, "policy": 0.0271, "q_value": -0.01393, "wdl": [ 66, 854, 80] },
             { "move": "Ba4", "rank":  9, "visits":  2, "policy": 0.0238, "q_value": -0.02314, "wdl": [ 62, 853, 85] },
@@ -380,12 +380,12 @@
           "evaluation": {"rank": 2, "visits": 32, "policy": 0.1861, "q_value": -0.02971, "wdl": [40, 890, 70]},
           "candidate_moves": [
             { "move": "Be6", "rank":  1, "visits": 41, "policy": 0.2649, "q_value": -0.03745, "wdl": [38, 887,  75] },
-            { "move": "h6 ", "rank":  2, "visits": 32, "policy": 0.1861, "q_value": -0.02971, "wdl": [40, 890,  70] },
+            { "move": "h6" , "rank":  2, "visits": 32, "policy": 0.1861, "q_value": -0.02971, "wdl": [40, 890,  70] },
             { "move": "Re8", "rank":  3, "visits": 14, "policy": 0.0922, "q_value": -0.04091, "wdl": [35, 889,  76] },
             { "move": "Kh8", "rank":  4, "visits":  4, "policy": 0.0392, "q_value": -0.10648, "wdl": [39, 815, 146] },
             { "move": "Ne7", "rank":  5, "visits":  4, "policy": 0.0456, "q_value": -0.08152, "wdl": [37, 844, 119] },
             { "move": "Nh5", "rank":  6, "visits":  3, "policy": 0.0378, "q_value": -0.13927, "wdl": [33, 795, 172] },
-            { "move": "a5 ", "rank":  7, "visits":  3, "policy": 0.0381, "q_value": -0.1225 , "wdl": [28, 822, 150] },
+            { "move": "a5" , "rank":  7, "visits":  3, "policy": 0.0381, "q_value": -0.1225 , "wdl": [28, 822, 150] },
             { "move": "Na5", "rank":  8, "visits":  3, "policy": 0.0372, "q_value": -0.13419, "wdl": [33, 800, 167] },
             { "move": "Bd7", "rank":  9, "visits":  1, "policy": 0.025 , "q_value": -0.14937, "wdl": [27, 797, 176] },
             { "move": "Rb8", "rank": 10, "visits":  0, "policy": 0.0247, "q_value":  0.0    , "wdl": [37, 876,  87] }
@@ -401,9 +401,9 @@
           "evaluation": {"rank": 1, "visits": 73, "policy": 0.4116, "q_value": 0.04283, "wdl": [78, 887, 35]},
           "candidate_moves": [
             { "move": "Re1", "rank":  1, "visits": 73, "policy": 0.4116, "q_value":  0.04283, "wdl": [78, 887,  35] },
-            { "move": "a4 ", "rank":  2, "visits": 19, "policy": 0.1158, "q_value":  0.02838, "wdl": [69, 891,  40] },
+            { "move": "a4" , "rank":  2, "visits": 19, "policy": 0.1158, "q_value":  0.02838, "wdl": [69, 891,  40] },
             { "move": "Nc4", "rank":  3, "visits":  7, "policy": 0.0608, "q_value": -0.00088, "wdl": [56, 887,  57] },
-            { "move": "a3 ", "rank":  4, "visits":  6, "policy": 0.0516, "q_value":  0.00135, "wdl": [54, 893,  53] },
+            { "move": "a3" , "rank":  4, "visits":  6, "policy": 0.0516, "q_value":  0.00135, "wdl": [54, 893,  53] },
             { "move": "Bc2", "rank":  5, "visits":  7, "policy": 0.0533, "q_value":  0.0239 , "wdl": [86, 852,  62] },
             { "move": "Rb1", "rank":  6, "visits":  4, "policy": 0.0341, "q_value": -0.01369, "wdl": [48, 891,  61] },
             { "move": "Ba4", "rank":  7, "visits":  2, "policy": 0.0327, "q_value": -0.03587, "wdl": [54, 856,  90] },
@@ -424,12 +424,12 @@
             { "move": "Be6", "rank":  1, "visits": 63, "policy": 0.3634, "q_value": -0.03754, "wdl": [35, 892,  73] },
             { "move": "Re8", "rank":  2, "visits": 38, "policy": 0.2014, "q_value": -0.02885, "wdl": [38, 896,  66] },
             { "move": "Na5", "rank":  3, "visits":  3, "policy": 0.0368, "q_value": -0.11156, "wdl": [37, 815, 148] },
-            { "move": "a5 ", "rank":  4, "visits":  3, "policy": 0.0383, "q_value": -0.16296, "wdl": [23, 791, 186] },
+            { "move": "a5" , "rank":  4, "visits":  3, "policy": 0.0383, "q_value": -0.16296, "wdl": [23, 791, 186] },
             { "move": "Ne7", "rank":  5, "visits":  2, "policy": 0.0316, "q_value": -0.12798, "wdl": [27, 818, 155] },
             { "move": "Nh7", "rank":  6, "visits":  2, "policy": 0.0278, "q_value": -0.1464 , "wdl": [27, 799, 174] },
             { "move": "Bd7", "rank":  7, "visits":  1, "policy": 0.0254, "q_value": -0.16379, "wdl": [23, 790, 187] },
             { "move": "Rb8", "rank":  8, "visits":  0, "policy": 0.0227, "q_value":  0.0    , "wdl": [35, 885,  80] },
-            { "move": "b5 ", "rank":  9, "visits":  0, "policy": 0.0227, "q_value":  0.0    , "wdl": [35, 885,  80] },
+            { "move": "b5" , "rank":  9, "visits":  0, "policy": 0.0227, "q_value":  0.0    , "wdl": [35, 885,  80] },
             { "move": "Kh8", "rank": 10, "visits":  0, "policy": 0.0201, "q_value":  0.0    , "wdl": [35, 885,  80] }
           ]
         },
@@ -443,10 +443,10 @@
           "evaluation": {"rank": 1, "visits": 55, "policy": 0.3564, "q_value": 0.03878, "wdl": [72, 895, 33]},
           "candidate_moves": [
             { "move": "Nf1", "rank":  1, "visits": 55, "policy": 0.3564, "q_value":  0.03878, "wdl": [72, 895, 33] },
-            { "move": "a4 ", "rank":  2, "visits": 15, "policy": 0.1125, "q_value":  0.02288, "wdl": [62, 899, 39] },
+            { "move": "a4" , "rank":  2, "visits": 15, "policy": 0.1125, "q_value":  0.02288, "wdl": [62, 899, 39] },
             { "move": "Bc2", "rank":  3, "visits":  9, "policy": 0.0661, "q_value":  0.03085, "wdl": [73, 885, 42] },
             { "move": "Ba4", "rank":  4, "visits":  8, "policy": 0.0614, "q_value":  0.02877, "wdl": [66, 896, 38] },
-            { "move": "a3 ", "rank":  5, "visits":  6, "policy": 0.06  , "q_value": -0.00095, "wdl": [51, 897, 52] },
+            { "move": "a3" , "rank":  5, "visits":  6, "policy": 0.06  , "q_value": -0.00095, "wdl": [51, 897, 52] },
             { "move": "Nc4", "rank":  6, "visits":  5, "policy": 0.0429, "q_value":  0.01253, "wdl": [55, 903, 42] },
             { "move": "Rb1", "rank":  7, "visits":  3, "policy": 0.0328, "q_value": -0.01688, "wdl": [41, 901, 58] },
             { "move": "Qc2", "rank":  8, "visits":  2, "policy": 0.0319, "q_value": -0.03392, "wdl": [43, 880, 77] },
@@ -468,10 +468,10 @@
             { "move": "Ne7", "rank":  3, "visits":   3, "policy": 0.0412, "q_value": -0.15508, "wdl": [24, 796, 180] },
             { "move": "Bd7", "rank":  4, "visits":   2, "policy": 0.029 , "q_value": -0.15081, "wdl": [26, 797, 177] },
             { "move": "Rb8", "rank":  5, "visits":   2, "policy": 0.0257, "q_value": -0.13556, "wdl": [25, 814, 161] },
-            { "move": "b5 ", "rank":  6, "visits":   1, "policy": 0.0256, "q_value": -0.24298, "wdl": [18, 721, 261] },
-            { "move": "a5 ", "rank":  7, "visits":   1, "policy": 0.0252, "q_value": -0.19101, "wdl": [21, 767, 212] },
+            { "move": "b5" , "rank":  6, "visits":   1, "policy": 0.0256, "q_value": -0.24298, "wdl": [18, 721, 261] },
+            { "move": "a5" , "rank":  7, "visits":   1, "policy": 0.0252, "q_value": -0.19101, "wdl": [21, 767, 212] },
             { "move": "Bb6", "rank":  8, "visits":   1, "policy": 0.0246, "q_value": -0.22814, "wdl": [19, 734, 247] },
-            { "move": "d5 ", "rank":  9, "visits":   0, "policy": 0.0156, "q_value":  0.0    , "wdl": [34, 883,  83] },
+            { "move": "d5" , "rank":  9, "visits":   0, "policy": 0.0156, "q_value":  0.0    , "wdl": [34, 883,  83] },
             { "move": "Bc5", "rank": 10, "visits":   0, "policy": 0.0107, "q_value":  0.0    , "wdl": [34, 883,  83] }
           ]
         },
@@ -484,16 +484,16 @@
           "played_move": "Ng3",
           "evaluation": {"rank": 2, "visits": 19, "policy": 0.1321, "q_value": 0.03722, "wdl": [72, 893, 35]},
           "candidate_moves": [
-            { "move": "Be3 ", "rank":  1, "visits": 40, "policy": 0.2676, "q_value": 0.04515, "wdl": [71, 903, 26] },
-            { "move": "Ng3 ", "rank":  2, "visits": 19, "policy": 0.1321, "q_value": 0.03722, "wdl": [72, 893, 35] },
-            { "move": "Ba4 ", "rank":  3, "visits": 13, "policy": 0.1046, "q_value": 0.02154, "wdl": [64, 893, 43] },
-            { "move": "Bc2 ", "rank":  4, "visits": 10, "policy": 0.0727, "q_value": 0.04233, "wdl": [88, 867, 45] },
+            { "move": "Be3" , "rank":  1, "visits": 40, "policy": 0.2676, "q_value": 0.04515, "wdl": [71, 903, 26] },
+            { "move": "Ng3" , "rank":  2, "visits": 19, "policy": 0.1321, "q_value": 0.03722, "wdl": [72, 893, 35] },
+            { "move": "Ba4" , "rank":  3, "visits": 13, "policy": 0.1046, "q_value": 0.02154, "wdl": [64, 893, 43] },
+            { "move": "Bc2" , "rank":  4, "visits": 10, "policy": 0.0727, "q_value": 0.04233, "wdl": [88, 867, 45] },
             { "move": "Bxe6", "rank":  5, "visits":  8, "policy": 0.0694, "q_value": 0.02449, "wdl": [59, 906, 35] },
-            { "move": "Bd2 ", "rank":  6, "visits":  4, "policy": 0.0393, "q_value": 0.02074, "wdl": [64, 892, 44] },
-            { "move": "a4  ", "rank":  7, "visits":  4, "policy": 0.0346, "q_value": 0.01653, "wdl": [57, 902, 41] },
-            { "move": "Ne3 ", "rank":  8, "visits":  4, "policy": 0.0342, "q_value": 0.00894, "wdl": [59, 891, 50] },
-            { "move": "Qc2 ", "rank":  9, "visits":  3, "policy": 0.024 , "q_value": 0.02636, "wdl": [64, 899, 37] },
-            { "move": "a3  ", "rank": 10, "visits":  1, "policy": 0.0237, "q_value": 0.00288, "wdl": [48, 907, 45] }
+            { "move": "Bd2" , "rank":  6, "visits":  4, "policy": 0.0393, "q_value": 0.02074, "wdl": [64, 892, 44] },
+            { "move": "a4"  , "rank":  7, "visits":  4, "policy": 0.0346, "q_value": 0.01653, "wdl": [57, 902, 41] },
+            { "move": "Ne3" , "rank":  8, "visits":  4, "policy": 0.0342, "q_value": 0.00894, "wdl": [59, 891, 50] },
+            { "move": "Qc2" , "rank":  9, "visits":  3, "policy": 0.024 , "q_value": 0.02636, "wdl": [64, 899, 37] },
+            { "move": "a3"  , "rank": 10, "visits":  1, "policy": 0.0237, "q_value": 0.00288, "wdl": [48, 907, 45] }
           ]
         },
         {
@@ -505,16 +505,16 @@
           "played_move": "d5",
           "evaluation": {"rank": 1, "visits": 80, "policy": 0.4027, "q_value": -0.02271, "wdl": [42, 893, 65]},
           "candidate_moves": [
-            { "move": "d5  ", "rank":  1, "visits": 80, "policy": 0.4027, "q_value": -0.02271, "wdl": [42, 893,  65] },
+            { "move": "d5"  , "rank":  1, "visits": 80, "policy": 0.4027, "q_value": -0.02271, "wdl": [42, 893,  65] },
             { "move": "Bxb3", "rank":  2, "visits": 30, "policy": 0.2123, "q_value": -0.05901, "wdl": [27, 887,  86] },
-            { "move": "Qd7 ", "rank":  3, "visits":  6, "policy": 0.0483, "q_value": -0.06719, "wdl": [39, 855, 106] },
-            { "move": "Rb8 ", "rank":  4, "visits":  2, "policy": 0.0262, "q_value": -0.09302, "wdl": [30, 847, 123] },
-            { "move": "Bb6 ", "rank":  5, "visits":  1, "policy": 0.0257, "q_value": -0.21008, "wdl": [20, 750, 230] },
-            { "move": "b5  ", "rank":  6, "visits":  2, "policy": 0.0249, "q_value": -0.17184, "wdl": [19, 790, 191] },
-            { "move": "Rc8 ", "rank":  7, "visits":  0, "policy": 0.0149, "q_value":  0.0    , "wdl": [37, 887,  76] },
-            { "move": "a5  ", "rank":  8, "visits":  0, "policy": 0.0134, "q_value":  0.0    , "wdl": [37, 887,  76] },
-            { "move": "Kh8 ", "rank":  9, "visits":  0, "policy": 0.0101, "q_value":  0.0    , "wdl": [37, 887,  76] },
-            { "move": "Ne7 ", "rank": 10, "visits":  0, "policy": 0.0096, "q_value":  0.0    , "wdl": [37, 887,  76] }
+            { "move": "Qd7" , "rank":  3, "visits":  6, "policy": 0.0483, "q_value": -0.06719, "wdl": [39, 855, 106] },
+            { "move": "Rb8" , "rank":  4, "visits":  2, "policy": 0.0262, "q_value": -0.09302, "wdl": [30, 847, 123] },
+            { "move": "Bb6" , "rank":  5, "visits":  1, "policy": 0.0257, "q_value": -0.21008, "wdl": [20, 750, 230] },
+            { "move": "b5"  , "rank":  6, "visits":  2, "policy": 0.0249, "q_value": -0.17184, "wdl": [19, 790, 191] },
+            { "move": "Rc8" , "rank":  7, "visits":  0, "policy": 0.0149, "q_value":  0.0    , "wdl": [37, 887,  76] },
+            { "move": "a5"  , "rank":  8, "visits":  0, "policy": 0.0134, "q_value":  0.0    , "wdl": [37, 887,  76] },
+            { "move": "Kh8" , "rank":  9, "visits":  0, "policy": 0.0101, "q_value":  0.0    , "wdl": [37, 887,  76] },
+            { "move": "Ne7" , "rank": 10, "visits":  0, "policy": 0.0096, "q_value":  0.0    , "wdl": [37, 887,  76] }
           ]
         },
         {
@@ -527,15 +527,15 @@
           "evaluation": {"rank": 2, "visits": 19, "policy": 0.1398, "q_value": 0.0231, "wdl": [74, 875, 51]},
           "candidate_moves": [
             { "move": "exd5", "rank":  1, "visits": 40, "policy": 0.2729, "q_value":  0.0347 , "wdl": [70, 894, 36] },
-            { "move": "Qe2 ", "rank":  2, "visits": 19, "policy": 0.1398, "q_value":  0.0231 , "wdl": [74, 875, 51] },
-            { "move": "Bd2 ", "rank":  3, "visits": 16, "policy": 0.1158, "q_value":  0.02205, "wdl": [68, 886, 46] },
-            { "move": "Qc2 ", "rank":  4, "visits": 13, "policy": 0.1087, "q_value":  0.01069, "wdl": [51, 909, 40] },
-            { "move": "Ba4 ", "rank":  5, "visits":  6, "policy": 0.059 , "q_value":  0.0079 , "wdl": [50, 908, 42] },
-            { "move": "Be3 ", "rank":  6, "visits":  5, "policy": 0.0435, "q_value":  0.00693, "wdl": [36, 934, 30] },
-            { "move": "Bc2 ", "rank":  7, "visits":  4, "policy": 0.0431, "q_value": -0.02708, "wdl": [28, 917, 55] },
-            { "move": "a4  ", "rank":  8, "visits":  0, "policy": 0.0173, "q_value":  0.0    , "wdl": [64, 895, 41] },
-            { "move": "Qd2 ", "rank":  9, "visits":  0, "policy": 0.0162, "q_value":  0.0    , "wdl": [64, 895, 41] },
-            { "move": "d4  ", "rank": 10, "visits":  0, "policy": 0.0137, "q_value":  0.0    , "wdl": [64, 895, 41] }
+            { "move": "Qe2" , "rank":  2, "visits": 19, "policy": 0.1398, "q_value":  0.0231 , "wdl": [74, 875, 51] },
+            { "move": "Bd2" , "rank":  3, "visits": 16, "policy": 0.1158, "q_value":  0.02205, "wdl": [68, 886, 46] },
+            { "move": "Qc2" , "rank":  4, "visits": 13, "policy": 0.1087, "q_value":  0.01069, "wdl": [51, 909, 40] },
+            { "move": "Ba4" , "rank":  5, "visits":  6, "policy": 0.059 , "q_value":  0.0079 , "wdl": [50, 908, 42] },
+            { "move": "Be3" , "rank":  6, "visits":  5, "policy": 0.0435, "q_value":  0.00693, "wdl": [36, 934, 30] },
+            { "move": "Bc2" , "rank":  7, "visits":  4, "policy": 0.0431, "q_value": -0.02708, "wdl": [28, 917, 55] },
+            { "move": "a4"  , "rank":  8, "visits":  0, "policy": 0.0173, "q_value":  0.0    , "wdl": [64, 895, 41] },
+            { "move": "Qd2" , "rank":  9, "visits":  0, "policy": 0.0162, "q_value":  0.0    , "wdl": [64, 895, 41] },
+            { "move": "d4"  , "rank": 10, "visits":  0, "policy": 0.0137, "q_value":  0.0    , "wdl": [64, 895, 41] }
           ]
         },
         {
@@ -547,16 +547,16 @@
           "played_move": "Qd7",
           "evaluation": {"rank": 2, "visits": 24, "policy": 0.1299, "q_value": -0.00884, "wdl": [55, 881, 64]},
           "candidate_moves": [
-            { "move": "Bc5 ", "rank":  1, "visits": 34, "policy": 0.217 , "q_value": -0.0267 , "wdl": [50, 873,  77] },
-            { "move": "Qd7 ", "rank":  2, "visits": 24, "policy": 0.1299, "q_value": -0.00884, "wdl": [55, 881,  64] },
-            { "move": "Qd6 ", "rank":  3, "visits": 20, "policy": 0.1285, "q_value": -0.02948, "wdl": [45, 880,  75] },
+            { "move": "Bc5" , "rank":  1, "visits": 34, "policy": 0.217 , "q_value": -0.0267 , "wdl": [50, 873,  77] },
+            { "move": "Qd7" , "rank":  2, "visits": 24, "policy": 0.1299, "q_value": -0.00884, "wdl": [55, 881,  64] },
+            { "move": "Qd6" , "rank":  3, "visits": 20, "policy": 0.1285, "q_value": -0.02948, "wdl": [45, 880,  75] },
             { "move": "dxe4", "rank":  4, "visits":  9, "policy": 0.0655, "q_value": -0.04125, "wdl": [31, 896,  73] },
-            { "move": "d4  ", "rank":  5, "visits":  4, "policy": 0.0599, "q_value": -0.12335, "wdl": [36, 805, 159] },
-            { "move": "b5  ", "rank":  6, "visits":  6, "policy": 0.0518, "q_value": -0.04952, "wdl": [30, 891,  79] },
-            { "move": "Rb8 ", "rank":  7, "visits":  6, "policy": 0.0436, "q_value": -0.04523, "wdl": [47, 861,  92] },
-            { "move": "Rc8 ", "rank":  8, "visits":  3, "policy": 0.0308, "q_value": -0.06378, "wdl": [39, 858, 103] },
-            { "move": "Bb6 ", "rank":  9, "visits":  2, "policy": 0.0305, "q_value": -0.12345, "wdl": [28, 821, 151] },
-            { "move": "Qe7 ", "rank": 10, "visits":  3, "policy": 0.0293, "q_value": -0.07984, "wdl": [40, 840, 120] }
+            { "move": "d4"  , "rank":  5, "visits":  4, "policy": 0.0599, "q_value": -0.12335, "wdl": [36, 805, 159] },
+            { "move": "b5"  , "rank":  6, "visits":  6, "policy": 0.0518, "q_value": -0.04952, "wdl": [30, 891,  79] },
+            { "move": "Rb8" , "rank":  7, "visits":  6, "policy": 0.0436, "q_value": -0.04523, "wdl": [47, 861,  92] },
+            { "move": "Rc8" , "rank":  8, "visits":  3, "policy": 0.0308, "q_value": -0.06378, "wdl": [39, 858, 103] },
+            { "move": "Bb6" , "rank":  9, "visits":  2, "policy": 0.0305, "q_value": -0.12345, "wdl": [28, 821, 151] },
+            { "move": "Qe7" , "rank": 10, "visits":  3, "policy": 0.0293, "q_value": -0.07984, "wdl": [40, 840, 120] }
           ]
         },
         {
@@ -568,16 +568,16 @@
           "played_move": "Nh4",
           "evaluation": {"rank": 3, "visits": 23, "policy": 0.139, "q_value": 0.04105, "wdl": [90, 861, 49]},
           "candidate_moves": [
-            { "move": "Ba4 ", "rank":  1, "visits": 22, "policy": 0.1599, "q_value":  0.0173 , "wdl": [67, 883, 50] },
-            { "move": "Bc2 ", "rank":  2, "visits": 17, "policy": 0.1161, "q_value":  0.03479, "wdl": [93, 849, 58] },
-            { "move": "Nh4 ", "rank":  3, "visits": 23, "policy": 0.139 , "q_value":  0.04105, "wdl": [90, 861, 49] },
-            { "move": "Be3 ", "rank":  4, "visits": 15, "policy": 0.1029, "q_value":  0.01546, "wdl": [48, 919, 33] },
-            { "move": "Bd2 ", "rank":  5, "visits": 10, "policy": 0.0829, "q_value": -0.00142, "wdl": [55, 889, 56] },
+            { "move": "Ba4" , "rank":  1, "visits": 22, "policy": 0.1599, "q_value":  0.0173 , "wdl": [67, 883, 50] },
+            { "move": "Bc2" , "rank":  2, "visits": 17, "policy": 0.1161, "q_value":  0.03479, "wdl": [93, 849, 58] },
+            { "move": "Nh4" , "rank":  3, "visits": 23, "policy": 0.139 , "q_value":  0.04105, "wdl": [90, 861, 49] },
+            { "move": "Be3" , "rank":  4, "visits": 15, "policy": 0.1029, "q_value":  0.01546, "wdl": [48, 919, 33] },
+            { "move": "Bd2" , "rank":  5, "visits": 10, "policy": 0.0829, "q_value": -0.00142, "wdl": [55, 889, 56] },
             { "move": "exd5", "rank":  6, "visits": 14, "policy": 0.0789, "q_value":  0.02116, "wdl": [80, 861, 59] },
-            { "move": "Rd1 ", "rank":  7, "visits":  2, "policy": 0.035 , "q_value":  0.00603, "wdl": [68, 870, 62] },
-            { "move": "Kh2 ", "rank":  8, "visits":  0, "policy": 0.0232, "q_value":  0.0    , "wdl": [74, 875, 51] },
-            { "move": "Bd1 ", "rank":  9, "visits":  0, "policy": 0.0231, "q_value":  0.0    , "wdl": [74, 875, 51] },
-            { "move": "Nh2 ", "rank": 10, "visits":  0, "policy": 0.0181, "q_value":  0.0    , "wdl": [74, 875, 51] }
+            { "move": "Rd1" , "rank":  7, "visits":  2, "policy": 0.035 , "q_value":  0.00603, "wdl": [68, 870, 62] },
+            { "move": "Kh2" , "rank":  8, "visits":  0, "policy": 0.0232, "q_value":  0.0    , "wdl": [74, 875, 51] },
+            { "move": "Bd1" , "rank":  9, "visits":  0, "policy": 0.0231, "q_value":  0.0    , "wdl": [74, 875, 51] },
+            { "move": "Nh2" , "rank": 10, "visits":  0, "policy": 0.0181, "q_value":  0.0    , "wdl": [74, 875, 51] }
           ]
         },
         {
@@ -591,14 +591,14 @@
           "candidate_moves": [
             { "move": "dxe4", "rank":  1, "visits": 48, "policy": 0.2625, "q_value": -0.00793, "wdl": [53, 886,  61] },
             { "move": "Rad8", "rank":  2, "visits": 34, "policy": 0.1046, "q_value":  0.0305 , "wdl": [80, 870,  50] },
-            { "move": "Bc5 ", "rank":  3, "visits": 12, "policy": 0.1054, "q_value": -0.05339, "wdl": [40, 867,  93] },
-            { "move": "Ne7 ", "rank":  4, "visits": 11, "policy": 0.0859, "q_value": -0.0294 , "wdl": [55, 861,  84] },
+            { "move": "Bc5" , "rank":  3, "visits": 12, "policy": 0.1054, "q_value": -0.05339, "wdl": [40, 867,  93] },
+            { "move": "Ne7" , "rank":  4, "visits": 11, "policy": 0.0859, "q_value": -0.0294 , "wdl": [55, 861,  84] },
             { "move": "Bxh3", "rank":  5, "visits":  6, "policy": 0.1134, "q_value": -0.18547, "wdl": [47, 721, 232] },
-            { "move": "Qd8 ", "rank":  6, "visits":  2, "policy": 0.0373, "q_value": -0.13522, "wdl": [33, 798, 169] },
-            { "move": "Kh8 ", "rank":  7, "visits":  2, "policy": 0.0366, "q_value": -0.13623, "wdl": [35, 794, 171] },
-            { "move": "Kh7 ", "rank":  8, "visits":  3, "policy": 0.0333, "q_value": -0.08746, "wdl": [52, 809, 139] },
-            { "move": "d4  ", "rank":  9, "visits":  3, "policy": 0.0313, "q_value": -0.04898, "wdl": [75, 801, 124] },
-            { "move": "a5  ", "rank": 10, "visits":  0, "policy": 0.0221, "q_value":  0.0    , "wdl": [59, 863,  78] }
+            { "move": "Qd8" , "rank":  6, "visits":  2, "policy": 0.0373, "q_value": -0.13522, "wdl": [33, 798, 169] },
+            { "move": "Kh8" , "rank":  7, "visits":  2, "policy": 0.0366, "q_value": -0.13623, "wdl": [35, 794, 171] },
+            { "move": "Kh7" , "rank":  8, "visits":  3, "policy": 0.0333, "q_value": -0.08746, "wdl": [52, 809, 139] },
+            { "move": "d4"  , "rank":  9, "visits":  3, "policy": 0.0313, "q_value": -0.04898, "wdl": [75, 801, 124] },
+            { "move": "a5"  , "rank": 10, "visits":  0, "policy": 0.0221, "q_value":  0.0    , "wdl": [59, 863,  78] }
           ]
         },
         {
@@ -615,11 +615,11 @@
             { "move": "Bxe6", "rank":  3, "visits": 12, "policy": 0.0891, "q_value": -0.00169, "wdl": [52, 894, 54] },
             { "move": "Ngf5", "rank":  4, "visits":  0, "policy": 0.0063, "q_value":  0.0    , "wdl": [60, 888, 52] },
             { "move": "Qxe4", "rank":  5, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 888, 52] },
-            { "move": "Bf4 ", "rank":  6, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 888, 52] },
-            { "move": "Bc2 ", "rank":  7, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 888, 52] },
-            { "move": "Be3 ", "rank":  8, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 888, 52] },
-            { "move": "Rb1 ", "rank":  9, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 888, 52] },
-            { "move": "Rd1 ", "rank": 10, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 888, 52] }
+            { "move": "Bf4" , "rank":  6, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 888, 52] },
+            { "move": "Bc2" , "rank":  7, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 888, 52] },
+            { "move": "Be3" , "rank":  8, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 888, 52] },
+            { "move": "Rb1" , "rank":  9, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 888, 52] },
+            { "move": "Rd1" , "rank": 10, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 888, 52] }
           ]
         },
         {
@@ -636,11 +636,11 @@
             { "move": "fxe6", "rank":  3, "visits":  5, "policy": 0.144 , "q_value": -0.39113, "wdl": [ 7, 595, 398] },
             { "move": "Qxd3", "rank":  4, "visits":  1, "policy": 0.0322, "q_value": -0.99788, "wdl": [ 0,   2, 998] },
             { "move": "exd3", "rank":  5, "visits":  0, "policy": 0.0106, "q_value":  0.0    , "wdl": [60, 884,  56] },
-            { "move": "e3  ", "rank":  6, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 884,  56] },
-            { "move": "Nd5 ", "rank":  7, "visits":  0, "policy": 0.0057, "q_value":  0.0    , "wdl": [60, 884,  56] },
-            { "move": "Qc8 ", "rank":  8, "visits":  0, "policy": 0.0057, "q_value":  0.0    , "wdl": [60, 884,  56] },
-            { "move": "Qe7 ", "rank":  9, "visits":  0, "policy": 0.0057, "q_value":  0.0    , "wdl": [60, 884,  56] },
-            { "move": "Bb8 ", "rank": 10, "visits":  0, "policy": 0.0057, "q_value":  0.0    , "wdl": [60, 884,  56] }
+            { "move": "e3"  , "rank":  6, "visits":  0, "policy": 0.0061, "q_value":  0.0    , "wdl": [60, 884,  56] },
+            { "move": "Nd5" , "rank":  7, "visits":  0, "policy": 0.0057, "q_value":  0.0    , "wdl": [60, 884,  56] },
+            { "move": "Qc8" , "rank":  8, "visits":  0, "policy": 0.0057, "q_value":  0.0    , "wdl": [60, 884,  56] },
+            { "move": "Qe7" , "rank":  9, "visits":  0, "policy": 0.0057, "q_value":  0.0    , "wdl": [60, 884,  56] },
+            { "move": "Bb8" , "rank": 10, "visits":  0, "policy": 0.0057, "q_value":  0.0    , "wdl": [60, 884,  56] }
           ]
         },
         {
@@ -654,14 +654,14 @@
           "candidate_moves": [
             { "move": "dxe4", "rank":  1, "visits": 124, "policy": 0.6592, "q_value": -0.01747, "wdl": [35, 913,  52] },
             { "move": "Nxe4", "rank":  2, "visits":   4, "policy": 0.0874, "q_value": -0.22716, "wdl": [ 8, 756, 236] },
-            { "move": "Rd1 ", "rank":  3, "visits":   0, "policy": 0.0087, "q_value":  0.0    , "wdl": [34, 908,  58] },
+            { "move": "Rd1" , "rank":  3, "visits":   0, "policy": 0.0087, "q_value":  0.0    , "wdl": [34, 908,  58] },
             { "move": "Ngf5", "rank":  4, "visits":   0, "policy": 0.008 , "q_value":  0.0    , "wdl": [34, 908,  58] },
-            { "move": "Nh5 ", "rank":  5, "visits":   0, "policy": 0.0078, "q_value":  0.0    , "wdl": [34, 908,  58] },
-            { "move": "d4  ", "rank":  6, "visits":   0, "policy": 0.0078, "q_value":  0.0    , "wdl": [34, 908,  58] },
+            { "move": "Nh5" , "rank":  5, "visits":   0, "policy": 0.0078, "q_value":  0.0    , "wdl": [34, 908,  58] },
+            { "move": "d4"  , "rank":  6, "visits":   0, "policy": 0.0078, "q_value":  0.0    , "wdl": [34, 908,  58] },
             { "move": "Nhf5", "rank":  7, "visits":   0, "policy": 0.0078, "q_value":  0.0    , "wdl": [34, 908,  58] },
-            { "move": "Bd2 ", "rank":  8, "visits":   0, "policy": 0.0077, "q_value":  0.0    , "wdl": [34, 908,  58] },
-            { "move": "Bf4 ", "rank":  9, "visits":   0, "policy": 0.0077, "q_value":  0.0    , "wdl": [34, 908,  58] },
-            { "move": "Nh1 ", "rank": 10, "visits":   0, "policy": 0.0077, "q_value":  0.0    , "wdl": [34, 908,  58] }
+            { "move": "Bd2" , "rank":  8, "visits":   0, "policy": 0.0077, "q_value":  0.0    , "wdl": [34, 908,  58] },
+            { "move": "Bf4" , "rank":  9, "visits":   0, "policy": 0.0077, "q_value":  0.0    , "wdl": [34, 908,  58] },
+            { "move": "Nh1" , "rank": 10, "visits":   0, "policy": 0.0077, "q_value":  0.0    , "wdl": [34, 908,  58] }
           ]
         },
         {
@@ -673,16 +673,16 @@
           "played_move": "Rd8",
           "evaluation": {"rank": 1, "visits": 67, "policy": 0.4091, "q_value": 0.02552, "wdl": [54, 918, 28]},
           "candidate_moves": [
-            { "move": "Rd8 ", "rank":  1, "visits": 67, "policy": 0.4091, "q_value":  0.02552, "wdl": [54, 918,  28] },
-            { "move": "Ne7 ", "rank":  2, "visits": 28, "policy": 0.1574, "q_value":  0.033  , "wdl": [59, 915,  26] },
-            { "move": "Kh7 ", "rank":  3, "visits":  5, "policy": 0.0464, "q_value": -0.00762, "wdl": [35, 922,  43] },
-            { "move": "Bc5 ", "rank":  4, "visits":  4, "policy": 0.0441, "q_value": -0.04284, "wdl": [27, 903,  70] },
-            { "move": "Rd6 ", "rank":  5, "visits":  1, "policy": 0.0405, "q_value": -0.58597, "wdl": [13, 388, 599] },
-            { "move": "Qe8 ", "rank":  6, "visits":  0, "policy": 0.0201, "q_value":  0.0    , "wdl": [53, 912,  35] },
+            { "move": "Rd8" , "rank":  1, "visits": 67, "policy": 0.4091, "q_value":  0.02552, "wdl": [54, 918,  28] },
+            { "move": "Ne7" , "rank":  2, "visits": 28, "policy": 0.1574, "q_value":  0.033  , "wdl": [59, 915,  26] },
+            { "move": "Kh7" , "rank":  3, "visits":  5, "policy": 0.0464, "q_value": -0.00762, "wdl": [35, 922,  43] },
+            { "move": "Bc5" , "rank":  4, "visits":  4, "policy": 0.0441, "q_value": -0.04284, "wdl": [27, 903,  70] },
+            { "move": "Rd6" , "rank":  5, "visits":  1, "policy": 0.0405, "q_value": -0.58597, "wdl": [13, 388, 599] },
+            { "move": "Qe8" , "rank":  6, "visits":  0, "policy": 0.0201, "q_value":  0.0    , "wdl": [53, 912,  35] },
             { "move": "Ree8", "rank":  7, "visits":  0, "policy": 0.0164, "q_value":  0.0    , "wdl": [53, 912,  35] },
-            { "move": "a5  ", "rank":  8, "visits":  0, "policy": 0.0132, "q_value":  0.0    , "wdl": [53, 912,  35] },
+            { "move": "a5"  , "rank":  8, "visits":  0, "policy": 0.0132, "q_value":  0.0    , "wdl": [53, 912,  35] },
             { "move": "Rae8", "rank":  9, "visits":  0, "policy": 0.0122, "q_value":  0.0    , "wdl": [53, 912,  35] },
-            { "move": "Bb6 ", "rank": 10, "visits":  0, "policy": 0.0104, "q_value":  0.0    , "wdl": [53, 912,  35] }
+            { "move": "Bb6" , "rank": 10, "visits":  0, "policy": 0.0104, "q_value":  0.0    , "wdl": [53, 912,  35] }
           ]
         },
         {
@@ -695,15 +695,15 @@
           "evaluation": {"rank": 2, "visits": 22, "policy": 0.1396, "q_value": -0.03329, "wdl": [23, 921, 56]},
           "candidate_moves": [
             { "move": "Nhf5", "rank":  1, "visits": 50, "policy": 0.2874, "q_value": -0.01712, "wdl": [35, 913,  52] },
-            { "move": "Be3 ", "rank":  2, "visits": 22, "policy": 0.1396, "q_value": -0.03329, "wdl": [23, 921,  56] },
-            { "move": "Nf3 ", "rank":  3, "visits":  9, "policy": 0.0725, "q_value": -0.04953, "wdl": [22, 907,  71] },
+            { "move": "Be3" , "rank":  2, "visits": 22, "policy": 0.1396, "q_value": -0.03329, "wdl": [23, 921,  56] },
+            { "move": "Nf3" , "rank":  3, "visits":  9, "policy": 0.0725, "q_value": -0.04953, "wdl": [22, 907,  71] },
             { "move": "Ngf5", "rank":  4, "visits":  8, "policy": 0.0717, "q_value": -0.05527, "wdl": [24, 897,  79] },
-            { "move": "Qf3 ", "rank":  5, "visits":  8, "policy": 0.0716, "q_value": -0.07375, "wdl": [22, 882,  96] },
-            { "move": "Kf1 ", "rank":  6, "visits":  3, "policy": 0.044 , "q_value": -0.13424, "wdl": [17, 832, 151] },
-            { "move": "Nf1 ", "rank":  7, "visits":  3, "policy": 0.0356, "q_value": -0.0772 , "wdl": [16, 891,  93] },
-            { "move": "Nh5 ", "rank":  8, "visits":  3, "policy": 0.0311, "q_value": -0.07892, "wdl": [17, 887,  96] },
-            { "move": "a4  ", "rank":  9, "visits":  1, "policy": 0.0261, "q_value": -0.28522, "wdl": [ 9, 697, 294] },
-            { "move": "Rb1 ", "rank": 10, "visits":  2, "policy": 0.0251, "q_value": -0.04573, "wdl": [21, 913,  66] }
+            { "move": "Qf3" , "rank":  5, "visits":  8, "policy": 0.0716, "q_value": -0.07375, "wdl": [22, 882,  96] },
+            { "move": "Kf1" , "rank":  6, "visits":  3, "policy": 0.044 , "q_value": -0.13424, "wdl": [17, 832, 151] },
+            { "move": "Nf1" , "rank":  7, "visits":  3, "policy": 0.0356, "q_value": -0.0772 , "wdl": [16, 891,  93] },
+            { "move": "Nh5" , "rank":  8, "visits":  3, "policy": 0.0311, "q_value": -0.07892, "wdl": [17, 887,  96] },
+            { "move": "a4"  , "rank":  9, "visits":  1, "policy": 0.0261, "q_value": -0.28522, "wdl": [ 9, 697, 294] },
+            { "move": "Rb1" , "rank": 10, "visits":  2, "policy": 0.0251, "q_value": -0.04573, "wdl": [21, 913,  66] }
           ]
         },
         {
@@ -716,15 +716,15 @@
           "evaluation": {"rank": 1, "visits": 89, "policy": 0.5198, "q_value": 0.04737, "wdl": [74, 900, 26]},
           "candidate_moves": [
             { "move": "Bxe3", "rank":  1, "visits": 89, "policy": 0.5198, "q_value":  0.04737, "wdl": [74, 900,  26] },
-            { "move": "Qd3 ", "rank":  2, "visits": 19, "policy": 0.1725, "q_value": -0.00093, "wdl": [28, 943,  29] },
-            { "move": "Rd6 ", "rank":  3, "visits":  1, "policy": 0.0334, "q_value": -0.26011, "wdl": [20, 700, 280] },
-            { "move": "Qe8 ", "rank":  4, "visits":  0, "policy": 0.0125, "q_value":  0.0    , "wdl": [65, 906,  29] },
-            { "move": "Kh7 ", "rank":  5, "visits":  0, "policy": 0.0112, "q_value":  0.0    , "wdl": [65, 906,  29] },
-            { "move": "Nd4 ", "rank":  6, "visits":  0, "policy": 0.0084, "q_value":  0.0    , "wdl": [65, 906,  29] },
-            { "move": "Qc8 ", "rank":  7, "visits":  0, "policy": 0.0081, "q_value":  0.0    , "wdl": [65, 906,  29] },
-            { "move": "Bb6 ", "rank":  8, "visits":  0, "policy": 0.0077, "q_value":  0.0    , "wdl": [65, 906,  29] },
+            { "move": "Qd3" , "rank":  2, "visits": 19, "policy": 0.1725, "q_value": -0.00093, "wdl": [28, 943,  29] },
+            { "move": "Rd6" , "rank":  3, "visits":  1, "policy": 0.0334, "q_value": -0.26011, "wdl": [20, 700, 280] },
+            { "move": "Qe8" , "rank":  4, "visits":  0, "policy": 0.0125, "q_value":  0.0    , "wdl": [65, 906,  29] },
+            { "move": "Kh7" , "rank":  5, "visits":  0, "policy": 0.0112, "q_value":  0.0    , "wdl": [65, 906,  29] },
+            { "move": "Nd4" , "rank":  6, "visits":  0, "policy": 0.0084, "q_value":  0.0    , "wdl": [65, 906,  29] },
+            { "move": "Qc8" , "rank":  7, "visits":  0, "policy": 0.0081, "q_value":  0.0    , "wdl": [65, 906,  29] },
+            { "move": "Bb6" , "rank":  8, "visits":  0, "policy": 0.0077, "q_value":  0.0    , "wdl": [65, 906,  29] },
             { "move": "Ree8", "rank":  9, "visits":  0, "policy": 0.0076, "q_value":  0.0    , "wdl": [65, 906,  29] },
-            { "move": "Qd4 ", "rank": 10, "visits":  0, "policy": 0.007 , "q_value":  0.0    , "wdl": [65, 906,  29] }
+            { "move": "Qd4" , "rank": 10, "visits":  0, "policy": 0.007 , "q_value":  0.0    , "wdl": [65, 906,  29] }
           ]
         },
         {
@@ -738,14 +738,14 @@
           "candidate_moves": [
             { "move": "Qxe3", "rank":  1, "visits": 111, "policy": 0.7107, "q_value": -0.05054, "wdl": [26, 897, 77] },
             { "move": "fxe3", "rank":  2, "visits":   0, "policy": 0.0118, "q_value":  0.0    , "wdl": [26, 898, 76] },
-            { "move": "Kf1 ", "rank":  3, "visits":   0, "policy": 0.0086, "q_value":  0.0    , "wdl": [26, 898, 76] },
-            { "move": "Ng6 ", "rank":  4, "visits":   0, "policy": 0.0086, "q_value":  0.0    , "wdl": [26, 898, 76] },
-            { "move": "Nf1 ", "rank":  5, "visits":   0, "policy": 0.0085, "q_value":  0.0    , "wdl": [26, 898, 76] },
-            { "move": "Nh1 ", "rank":  6, "visits":   0, "policy": 0.0085, "q_value":  0.0    , "wdl": [26, 898, 76] },
-            { "move": "Qf3 ", "rank":  7, "visits":   0, "policy": 0.0085, "q_value":  0.0    , "wdl": [26, 898, 76] },
-            { "move": "a3  ", "rank":  8, "visits":   0, "policy": 0.0085, "q_value":  0.0    , "wdl": [26, 898, 76] },
-            { "move": "b4  ", "rank":  9, "visits":   0, "policy": 0.0085, "q_value":  0.0    , "wdl": [26, 898, 76] },
-            { "move": "a4  ", "rank": 10, "visits":   0, "policy": 0.0085, "q_value":  0.0    , "wdl": [26, 898, 76] }
+            { "move": "Kf1" , "rank":  3, "visits":   0, "policy": 0.0086, "q_value":  0.0    , "wdl": [26, 898, 76] },
+            { "move": "Ng6" , "rank":  4, "visits":   0, "policy": 0.0086, "q_value":  0.0    , "wdl": [26, 898, 76] },
+            { "move": "Nf1" , "rank":  5, "visits":   0, "policy": 0.0085, "q_value":  0.0    , "wdl": [26, 898, 76] },
+            { "move": "Nh1" , "rank":  6, "visits":   0, "policy": 0.0085, "q_value":  0.0    , "wdl": [26, 898, 76] },
+            { "move": "Qf3" , "rank":  7, "visits":   0, "policy": 0.0085, "q_value":  0.0    , "wdl": [26, 898, 76] },
+            { "move": "a3"  , "rank":  8, "visits":   0, "policy": 0.0085, "q_value":  0.0    , "wdl": [26, 898, 76] },
+            { "move": "b4"  , "rank":  9, "visits":   0, "policy": 0.0085, "q_value":  0.0    , "wdl": [26, 898, 76] },
+            { "move": "a4"  , "rank": 10, "visits":   0, "policy": 0.0085, "q_value":  0.0    , "wdl": [26, 898, 76] }
           ]
         },
         {
@@ -757,16 +757,16 @@
           "played_move": "Qd2",
           "evaluation": {"rank": 2, "visits": 33, "policy": 0.277, "q_value": 0.02652, "wdl": [49, 929, 22]},
           "candidate_moves": [
-            { "move": "Rd6 ", "rank":  1, "visits": 40, "policy": 0.1743, "q_value":  0.09346, "wdl": [120, 853, 27] },
-            { "move": "Qd2 ", "rank":  2, "visits": 33, "policy": 0.277 , "q_value":  0.02652, "wdl": [ 49, 929, 22] },
-            { "move": "Ne7 ", "rank":  3, "visits": 16, "policy": 0.1177, "q_value":  0.0296 , "wdl": [ 62, 905, 33] },
-            { "move": "Qd3 ", "rank":  4, "visits": 10, "policy": 0.1088, "q_value": -0.014  , "wdl": [ 23, 940, 37] },
-            { "move": "Kh7 ", "rank":  5, "visits":  6, "policy": 0.0617, "q_value":  0.01399, "wdl": [ 41, 932, 27] },
+            { "move": "Rd6" , "rank":  1, "visits": 40, "policy": 0.1743, "q_value":  0.09346, "wdl": [120, 853, 27] },
+            { "move": "Qd2" , "rank":  2, "visits": 33, "policy": 0.277 , "q_value":  0.02652, "wdl": [ 49, 929, 22] },
+            { "move": "Ne7" , "rank":  3, "visits": 16, "policy": 0.1177, "q_value":  0.0296 , "wdl": [ 62, 905, 33] },
+            { "move": "Qd3" , "rank":  4, "visits": 10, "policy": 0.1088, "q_value": -0.014  , "wdl": [ 23, 940, 37] },
+            { "move": "Kh7" , "rank":  5, "visits":  6, "policy": 0.0617, "q_value":  0.01399, "wdl": [ 41, 932, 27] },
             { "move": "Ree8", "rank":  6, "visits":  0, "policy": 0.0167, "q_value":  0.0    , "wdl": [ 75, 898, 27] },
-            { "move": "a5  ", "rank":  7, "visits":  0, "policy": 0.016 , "q_value":  0.0    , "wdl": [ 75, 898, 27] },
-            { "move": "b6  ", "rank":  8, "visits":  0, "policy": 0.0154, "q_value":  0.0    , "wdl": [ 75, 898, 27] },
-            { "move": "Qe8 ", "rank":  9, "visits":  0, "policy": 0.0148, "q_value":  0.0    , "wdl": [ 75, 898, 27] },
-            { "move": "Na5 ", "rank": 10, "visits":  0, "policy": 0.0119, "q_value":  0.0    , "wdl": [ 75, 898, 27] }
+            { "move": "a5"  , "rank":  7, "visits":  0, "policy": 0.016 , "q_value":  0.0    , "wdl": [ 75, 898, 27] },
+            { "move": "b6"  , "rank":  8, "visits":  0, "policy": 0.0154, "q_value":  0.0    , "wdl": [ 75, 898, 27] },
+            { "move": "Qe8" , "rank":  9, "visits":  0, "policy": 0.0148, "q_value":  0.0    , "wdl": [ 75, 898, 27] },
+            { "move": "Na5" , "rank": 10, "visits":  0, "policy": 0.0119, "q_value":  0.0    , "wdl": [ 75, 898, 27] }
           ]
         },
         {
@@ -780,14 +780,14 @@
           "candidate_moves": [
             { "move": "Nhf5", "rank":  1, "visits": 52, "policy": 0.2806, "q_value": -0.01545, "wdl": [35, 915, 50] },
             { "move": "Qxd2", "rank":  2, "visits": 30, "policy": 0.1741, "q_value": -0.01856, "wdl": [17, 948, 35] },
-            { "move": "Qe2 ", "rank":  3, "visits": 16, "policy": 0.1187, "q_value": -0.05156, "wdl": [11, 927, 62] },
-            { "move": "Nf3 ", "rank":  4, "visits": 10, "policy": 0.0875, "q_value": -0.06444, "wdl": [12, 912, 76] },
+            { "move": "Qe2" , "rank":  3, "visits": 16, "policy": 0.1187, "q_value": -0.05156, "wdl": [11, 927, 62] },
+            { "move": "Nf3" , "rank":  4, "visits": 10, "policy": 0.0875, "q_value": -0.06444, "wdl": [12, 912, 76] },
             { "move": "Rab1", "rank":  5, "visits":  8, "policy": 0.0772, "q_value": -0.07796, "wdl": [ 9, 904, 87] },
-            { "move": "Re2 ", "rank":  6, "visits":  3, "policy": 0.0458, "q_value": -0.08578, "wdl": [ 9, 897, 94] },
-            { "move": "Nf1 ", "rank":  7, "visits":  0, "policy": 0.0215, "q_value":  0.0    , "wdl": [23, 923, 54] },
+            { "move": "Re2" , "rank":  6, "visits":  3, "policy": 0.0458, "q_value": -0.08578, "wdl": [ 9, 897, 94] },
+            { "move": "Nf1" , "rank":  7, "visits":  0, "policy": 0.0215, "q_value":  0.0    , "wdl": [23, 923, 54] },
             { "move": "Ngf5", "rank":  8, "visits":  0, "policy": 0.0201, "q_value":  0.0    , "wdl": [23, 923, 54] },
             { "move": "Rad1", "rank":  9, "visits":  0, "policy": 0.0148, "q_value":  0.0    , "wdl": [23, 923, 54] },
-            { "move": "b3  ", "rank": 10, "visits":  0, "policy": 0.0109, "q_value":  0.0    , "wdl": [23, 923, 54] }
+            { "move": "b3"  , "rank": 10, "visits":  0, "policy": 0.0109, "q_value":  0.0    , "wdl": [23, 923, 54] }
           ]
         },
         {
@@ -799,16 +799,16 @@
           "played_move": "Qxe3",
           "evaluation": {"rank": 7, "visits": 8, "policy": 0.0674, "q_value": -0.01165, "wdl": [15, 958, 27]},
           "candidate_moves": [
-            { "move": "h5  ", "rank":  1, "visits": 32, "policy": 0.1581, "q_value":  0.04548, "wdl": [76, 894,  30] },
+            { "move": "h5"  , "rank":  1, "visits": 32, "policy": 0.1581, "q_value":  0.04548, "wdl": [76, 894,  30] },
             { "move": "Qxb2", "rank":  2, "visits": 20, "policy": 0.114 , "q_value":  0.01652, "wdl": [86, 844,  70] },
-            { "move": "Ne7 ", "rank":  3, "visits": 12, "policy": 0.0857, "q_value":  0.02416, "wdl": [54, 916,  30] },
-            { "move": "Kh7 ", "rank":  4, "visits": 10, "policy": 0.0767, "q_value": -0.0035 , "wdl": [29, 939,  32] },
-            { "move": "g6  ", "rank":  5, "visits":  9, "policy": 0.0724, "q_value": -0.00192, "wdl": [29, 940,  31] },
-            { "move": "Rd3 ", "rank":  6, "visits": 10, "policy": 0.0821, "q_value": -0.013  , "wdl": [18, 951,  31] },
+            { "move": "Ne7" , "rank":  3, "visits": 12, "policy": 0.0857, "q_value":  0.02416, "wdl": [54, 916,  30] },
+            { "move": "Kh7" , "rank":  4, "visits": 10, "policy": 0.0767, "q_value": -0.0035 , "wdl": [29, 939,  32] },
+            { "move": "g6"  , "rank":  5, "visits":  9, "policy": 0.0724, "q_value": -0.00192, "wdl": [29, 940,  31] },
+            { "move": "Rd3" , "rank":  6, "visits": 10, "policy": 0.0821, "q_value": -0.013  , "wdl": [18, 951,  31] },
             { "move": "Qxe3", "rank":  7, "visits":  8, "policy": 0.0674, "q_value": -0.01165, "wdl": [15, 958,  27] },
             { "move": "Ree8", "rank":  8, "visits":  4, "policy": 0.038 , "q_value": -0.01934, "wdl": [17, 947,  36] },
-            { "move": "Rd7 ", "rank":  9, "visits":  5, "policy": 0.0348, "q_value": -0.00103, "wdl": [44, 911,  45] },
-            { "move": "Kf8 ", "rank": 10, "visits":  1, "policy": 0.0337, "q_value": -0.48067, "wdl": [ 8, 503, 489] }
+            { "move": "Rd7" , "rank":  9, "visits":  5, "policy": 0.0348, "q_value": -0.00103, "wdl": [44, 911,  45] },
+            { "move": "Kf8" , "rank": 10, "visits":  1, "policy": 0.0337, "q_value": -0.48067, "wdl": [ 8, 503, 489] }
           ]
         }
       ]

@@ -237,133 +237,145 @@ def analyze_pgn(
     # Collect all game data
     all_games = []
     
-    # Helper function to save progress
-    def save_progress():
-        """Save current progress to output file."""
-        with output_path.open("w", encoding="utf-8") as out_file:
-            json_str = _compact_json_dumps({"games": all_games}, indent=2)
-            out_file.write(json_str)
-            out_file.write("\n")
+    # Open output file for incremental writing
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    out_file = output_path.open("w", encoding="utf-8")
+    out_file.write('{\n  "games": [\n')
+    out_file.flush()
     
-    # Analyze each game
-    for game_idx, game in enumerate(games):
-        white_player = game.headers.get("White", "")
-        black_player = game.headers.get("Black", "")
-        white_elo = _parse_elo(game.headers.get("WhiteElo"))
-        black_elo = _parse_elo(game.headers.get("BlackElo"))
-        
-        event = game.headers.get("Event", "")
-        date = game.headers.get("Date", "")
-        site = game.headers.get("Site", "")
-        round_num = game.headers.get("Round", "")
-        result = game.headers.get("Result", "*")
-        eco = game.headers.get("ECO", "")
-        
-        board = game.board()
-        ply = 1
-        moves = []
-
-        # Prepare moves list so we know total plies for nicer tick output
-        moves_list = list(game.mainline_moves())
-        total_plies = len(moves_list)
-
-        # Print game header (kept as a normal print). Per-ply ticking below is flushed.
-        print(f"Analyzing game {game_idx + 1} ({total_plies} plies)...")
-
-        for move_idx, move in enumerate(moves_list, start=1):
-            fen = board.fen()
-            to_move = "white" if board.turn == chess.WHITE else "black"
-            played_move_san = board.san(move)
-
-            # Print a short ticking status for each ply
-            print(f"  Game {game_idx + 1} ply {move_idx}/{total_plies}: {played_move_san}", end='\r', flush=True)
+    # Helper function to write a single game incrementally
+    def write_game(game_record, is_first):
+        """Write a single game to the output file."""
+        if not is_first:
+            out_file.write(',\n')
+        json_str = _compact_json_dumps(game_record, indent=2)
+        # Indent the entire game object by 4 spaces
+        indented = '\n'.join('    ' + line if line else line for line in json_str.split('\n'))
+        out_file.write(indented)
+        out_file.flush()
+    
+    try:
+        # Analyze each game
+        for game_idx, game in enumerate(games):
+            white_player = game.headers.get("White", "")
+            black_player = game.headers.get("Black", "")
+            white_elo = _parse_elo(game.headers.get("WhiteElo"))
+            black_elo = _parse_elo(game.headers.get("BlackElo"))
             
-            # Send position to lc0
-            send_command(f"position fen {fen}")
-            send_command(f"go {search_type} {search_value}")
+            event = game.headers.get("Event", "")
+            date = game.headers.get("Date", "")
+            site = game.headers.get("Site", "")
+            round_num = game.headers.get("Round", "")
+            result = game.headers.get("Result", "*")
+            eco = game.headers.get("ECO", "")
             
-            # Read analysis output
-            lines = read_until("bestmove")
-            
-            # Parse candidate moves and evaluation
-            candidates, evaluation, total_visits, visits_on_better = parse_analysis(lines, board, max_candidates, played_move_san)
-            
-            # If played move has no WDL (wasn't in MultiPV), do a focused search
-            if evaluation and "wdl" not in evaluation:
-                # Run MultiPV=1 search with searchmoves restricted to played move
-                move_uci = board.uci(move)
-                send_command(f"position fen {fen}")
-                send_command(f"go {search_type} {search_value} searchmoves {move_uci}")
-                focused_lines = read_until("bestmove")
+            board = game.board()
+            ply = 1
+            moves = []
+
+            # Prepare moves list so we know total plies for nicer tick output
+            moves_list = list(game.mainline_moves())
+            total_plies = len(moves_list)
+
+            # Print game header (kept as a normal print). Per-ply ticking below is flushed.
+            print(f"Analyzing game {game_idx + 1} ({total_plies} plies)...")
+
+            for move_idx, move in enumerate(moves_list, start=1):
+                fen = board.fen()
+                to_move = "white" if board.turn == chess.WHITE else "black"
+                played_move_san = board.san(move)
+
+                # Print a short ticking status for each ply
+                print(f"  Game {game_idx + 1} ply {move_idx}/{total_plies}: {played_move_san}", end='\r', flush=True)
                 
-                # Extract WDL from this focused search
-                for line in focused_lines:
-                    if "wdl" in line:
-                        wdl_match = WDL_RE.search(line)
-                        if wdl_match:
-                            w, d, l = map(int, wdl_match.groups())
-                            evaluation["wdl"] = [w, d, l]
-                            
-                            # Also update the candidate in candidates list if it exists
-                            for candidate in candidates:
-                                if candidate["move"] == played_move_san:
-                                    candidate["wdl"] = [w, d, l]
-                                    break
-                            break
+                # Send position to lc0
+                send_command(f"position fen {fen}")
+                send_command(f"go {search_type} {search_value}")
+                
+                # Read analysis output
+                lines = read_until("bestmove")
+                
+                # Parse candidate moves and evaluation
+                candidates, evaluation, total_visits, visits_on_better = parse_analysis(lines, board, max_candidates, played_move_san)
+                
+                # If played move has no WDL (wasn't in MultiPV), do a focused search
+                if evaluation and "wdl" not in evaluation:
+                    # Run MultiPV=1 search with searchmoves restricted to played move
+                    move_uci = board.uci(move)
+                    send_command(f"position fen {fen}")
+                    send_command(f"go {search_type} {search_value} searchmoves {move_uci}")
+                    focused_lines = read_until("bestmove")
+                    
+                    # Extract WDL from this focused search
+                    for line in focused_lines:
+                        if "wdl" in line:
+                            wdl_match = WDL_RE.search(line)
+                            if wdl_match:
+                                w, d, l = map(int, wdl_match.groups())
+                                evaluation["wdl"] = [w, d, l]
+                                
+                                # Also update the candidate in candidates list if it exists
+                                for candidate in candidates:
+                                    if candidate["move"] == played_move_san:
+                                        candidate["wdl"] = [w, d, l]
+                                        break
+                                break
+                
+                # Build move record
+                move_record = {
+                    "ply": ply,
+                    "fen": fen,
+                    "to_move": to_move,
+                }
+                
+                # Always include total_visits and visits_on_better if we have verbose data
+                if total_visits is not None:
+                    move_record["total_visits"] = total_visits
+                
+                if visits_on_better is not None:
+                    move_record["visits_on_better"] = visits_on_better
+                
+                move_record["played_move"] = played_move_san
+                
+                if evaluation:
+                    move_record["evaluation"] = evaluation
+                
+                if candidates:
+                    move_record["candidate_moves"] = candidates
+                
+                moves.append(move_record)
+                
+                # Make move and continue
+                board.push(move)
+                ply += 1
             
-            # Build move record
-            move_record = {
-                "ply": ply,
-                "fen": fen,
-                "to_move": to_move,
+            print(f"  Analyzed {ply - 1} positions")
+            
+            # Build game record with metadata and moves
+            game_record = {
+                "game_index": game_idx + 1,
+                "event": event,
+                "site": site,
+                "date": date,
+                "round": round_num,
+                "white": white_player,
+                "white_elo": white_elo,
+                "black": black_player,
+                "black_elo": black_elo,
+                "result": result,
+                "eco": eco,
+                "moves": moves,
             }
+            all_games.append(game_record)
             
-            # Always include total_visits and visits_on_better if we have verbose data
-            if total_visits is not None:
-                move_record["total_visits"] = total_visits
-            
-            if visits_on_better is not None:
-                move_record["visits_on_better"] = visits_on_better
-            
-            move_record["played_move"] = played_move_san
-            
-            if evaluation:
-                move_record["evaluation"] = evaluation
-            
-            if candidates:
-                move_record["candidate_moves"] = candidates
-            
-            moves.append(move_record)
-            
-            # Make move and continue
-            board.push(move)
-            ply += 1
-        
-        print(f"  Analyzed {ply - 1} positions")
-        
-        # Build game record with metadata and moves
-        game_record = {
-            "game_index": game_idx + 1,
-            "event": event,
-            "site": site,
-            "date": date,
-            "round": round_num,
-            "white": white_player,
-            "white_elo": white_elo,
-            "black": black_player,
-            "black_elo": black_elo,
-            "result": result,
-            "eco": eco,
-            "moves": moves,
-        }
-        all_games.append(game_record)
-        
-        # Save progress after each game
-        save_progress()
-        print(f"  Progress saved ({game_idx + 1}/{len(games)} games completed)")
+            # Write game incrementally
+            write_game(game_record, is_first=(game_idx == 0))
+            print(f"  Progress saved ({game_idx + 1}/{len(games)} games completed)")
     
-    # Final save (redundant but ensures final state is written)
-    save_progress()
+    finally:
+        # Close the JSON structure
+        out_file.write('\n  ]\n}\n')
+        out_file.close()
     
     # Cleanup
     send_command("quit")
