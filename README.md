@@ -122,7 +122,7 @@ elo-estimator/
 
 ## Release Status
 
-**Release Stage**: v1.0 – feature complete for Elo estimation workflows
+**Release Stage**: v1.1 – feature complete for Elo estimation workflows
 
 ✅ **Completed**:
 - Project structure established
@@ -132,7 +132,8 @@ elo-estimator/
 - Sample PGN analysis tested (first 10 games)
 - Output format validated with actual lc0 evaluations
 - Process larger game batches (1000 games)
-- Configuration, docs, and examples synchronized for the v1.0 release
+- Improved error handling and robustness
+- Configuration, docs, and examples synchronized for production use
 
 🚧 **In Progress**:
 - Testing evaluation consistency across different positions
@@ -411,4 +412,9 @@ The lc0 engine (included as a submodule) is also licensed under GPL v3.0 by the 
 
 ---
 
-**Note**: v1.0 is stable for analysis workflows, but this remains research software. Expect occasional parameter refinements as new data and engine builds are incorporated.
+## Known Limitations & Future Work
+
+- **Engine**: Currently Leela-only; Stockfish support could be added for comparison
+- **Formats**: PGN input only; no direct support for EPD or FEN lists
+
+**Note**: v1.1 is stable for analysis workflows, but this remains research software. Expect occasional parameter refinements as new data and engine builds are incorporated.
