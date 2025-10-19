@@ -22,7 +22,8 @@ Output Fields:
 Bug Fixes Applied:
 - Evaluation now shows played move data (not best move data)
 - Moves outside MultiPV are analyzed with focused search for WDL
-- Rankings calculated from all legal moves via VerboseMoveStats
+- Rankings recalculated from VerboseMoveStats to match LC0's final state
+- Rankings use same criteria as LC0: visits > Q-value > policy
 - All fields always present (no disappearing fields)
 """
 
@@ -38,22 +39,6 @@ import chess
 import chess.pgn
 
 
-# Custom JSON encoder for compact WDL arrays
-class CompactJSONEncoder(json.JSONEncoder):
-    """JSON encoder that formats WDL arrays on single lines."""
-    
-    def encode(self, obj):
-        if isinstance(obj, list) and len(obj) == 3 and all(isinstance(x, int) for x in obj):
-            # Compact format for WDL arrays
-            return f"[{obj[0]}, {obj[1]}, {obj[2]}]"
-        return super().encode(obj)
-    
-    def iterencode(self, obj, _one_shot=False):
-        """Encode while keeping WDL arrays compact."""
-        for chunk in super().iterencode(obj, _one_shot):
-            yield chunk
-
-
 def _compact_json_dumps(obj: Any, indent: int = 2) -> str:
     """Serialize obj to JSON with compact formatting for specific structures.
     
@@ -62,8 +47,6 @@ def _compact_json_dumps(obj: Any, indent: int = 2) -> str:
     - evaluation objects: entire object on single line
     - candidate_moves array items: each move object on single line
     """
-    import re
-    
     # First pass: standard JSON with indentation
     json_str = json.dumps(obj, indent=indent)
     
@@ -84,99 +67,80 @@ def _compact_json_dumps(obj: Any, indent: int = 2) -> str:
         return f'{leading_indent}"evaluation": {{{fields_compact}}}'
     json_str = re.sub(eval_pattern, compact_eval, json_str, flags=re.DOTALL)
     
-    # Compact each candidate move object to single line with aligned colons
-    # Need to process candidate_moves arrays with smart padding based on actual content
+    # Compact candidate_moves arrays with aligned decimal points and commas
     lines = json_str.split('\n')
     result_lines = []
-    i = 0
+    line_idx = 0
     
-    while i < len(lines):
-        line = lines[i]
+    while line_idx < len(lines):
+        if '"candidate_moves":' not in lines[line_idx]:
+            result_lines.append(lines[line_idx])
+            line_idx += 1
+            continue
+            
+        result_lines.append(lines[line_idx])
+        line_idx += 1
         
-        # Check if we're entering candidate_moves array
-        if '"candidate_moves":' in line:
-            result_lines.append(line)
-            i += 1
-            
-            # First pass: collect all candidate objects to determine max widths
-            candidates_data = []
-            start_i = i
-            
-            while i < len(lines) and not (lines[i].strip() == ']' or lines[i].strip() == '],'):
-                if lines[i].strip() == '{':
-                    obj_lines = []
-                    indent_level = len(lines[i]) - len(lines[i].lstrip())
-                    i += 1
-                    while i < len(lines) and '}' not in lines[i]:
-                        field_line = lines[i].strip().rstrip(',')
-                        if field_line:
-                            obj_lines.append(field_line)
-                        i += 1
-                    
-                    closing = lines[i].strip()
-                    
-                    # Parse fields
-                    fields = []
-                    for field in obj_lines:
-                        if '":' in field:
-                            key_part, value_part = field.split('":', 1)
-                            key = key_part.strip().strip('"')
-                            value = value_part.strip()
-                            fields.append((key, value))
-                    
-                    candidates_data.append((indent_level, fields, closing))
-                    i += 1
-                else:
-                    i += 1
-            
-            # Calculate max widths for each value type in this array
-            max_widths = {}
-            for _, fields, _ in candidates_data:
-                for key, value in fields:
-                    # For move, measure the actual value length (SAN notation varies 2-8 chars)
-                    if key == "move":
-                        # Value is quoted, e.g., "Nf3" - extract the move itself
-                        move_str = value.strip('"')
-                        max_widths[key] = max(max_widths.get(key, 0), len(move_str))
-                    else:
-                        # For numeric fields, track the value width
-                        max_widths[key] = max(max_widths.get(key, 0), len(value))
-            
-            # Second pass: format with appropriate padding
-            for indent_level, fields, closing in candidates_data:
-                formatted_fields = []
-                for key, value in fields:
-                    if key == "move":
-                        # Pad the move value to max width
-                        move_str = value.strip('"')
-                        padded_value = f'"{move_str:<{max_widths[key]}}"'
-                        formatted_fields.append(f'"{key}": {padded_value}')
-                    else:
-                        # Right-align numeric values to their max width
-                        padded_value = f'{value:>{max_widths.get(key, len(value))}}'
-                        formatted_fields.append(f'"{key}": {padded_value}')
+        # Parse candidate objects and their fields
+        candidates = []
+        while line_idx < len(lines) and lines[line_idx].strip() not in (']', '],'):
+            if lines[line_idx].strip() != '{':
+                line_idx += 1
+                continue
                 
-                compact_obj = '{ ' + ', '.join(formatted_fields) + ' }'
-                result_lines.append(' ' * indent_level + compact_obj + (',' if closing == '},' else ''))
-            
-            # Add the closing bracket
-            if i < len(lines):
-                result_lines.append(lines[i])
-                i += 1
-        else:
-            result_lines.append(line)
-            i += 1
+            indent = len(lines[line_idx]) - len(lines[line_idx].lstrip())
+            line_idx += 1
+            fields = {}
+            while line_idx < len(lines) and '}' not in lines[line_idx]:
+                if '":' in lines[line_idx] and (parts := lines[line_idx].strip().rstrip(',').split('":', 1)):
+                    fields[parts[0].strip('"')] = parts[1].strip()
+                line_idx += 1
+            candidates.append((indent, fields, lines[line_idx].strip()))
+            line_idx += 1
+        
+        # Calculate max widths by field type
+        widths = {}
+        for _, fields, _ in candidates:
+            for k, v in fields.items():
+                if k == "move":
+                    widths[k] = max(widths.get(k, 0), len(v.strip('"')))
+                elif k == "wdl" and (m := re.match(r'\[(\d+),\s*(\d+),\s*(\d+)\]', v)):
+                    for idx, s in enumerate(['w', 'd', 'l'], 1):
+                        widths[f'wdl_{s}'] = max(widths.get(f'wdl_{s}', 0), len(m.group(idx)))
+                elif k in ["policy", "q_value"] and '.' in v:
+                    int_p, dec_p = v.split('.', 1)
+                    widths[f'{k}_i'] = max(widths.get(f'{k}_i', 0), len(int_p))
+                    widths[f'{k}_d'] = max(widths.get(f'{k}_d', 0), len(dec_p))
+                else:
+                    widths[k] = max(widths.get(k, 0), len(v))
+        
+        # Format candidates with padding
+        for indent, fields, closing in candidates:
+            parts = []
+            for k, v in fields.items():
+                if k == "move":
+                    parts.append(f'"{k}": "{v.strip('"'):<{widths[k]}}"')
+                elif k == "wdl" and (m := re.match(r'\[(\d+),\s*(\d+),\s*(\d+)\]', v)):
+                    w, d, l = (m.group(idx).rjust(widths[f'wdl_{s}']) for idx, s in [(1,'w'), (2,'d'), (3,'l')])
+                    parts.append(f'"{k}": [{w}, {d}, {l}]')
+                elif k in ["policy", "q_value"] and '.' in v:
+                    int_p, dec_p = v.split('.', 1)
+                    parts.append(f'"{k}": {int_p.rjust(widths[f"{k}_i"])}.{dec_p.ljust(widths[f"{k}_d"])}')
+                else:
+                    parts.append(f'"{k}": {v:>{widths.get(k, len(v))}}')
+            result_lines.append(' ' * indent + '{ ' + ', '.join(parts) + ' }' + (',' if closing == '},' else ''))
+        
+        if line_idx < len(lines):
+            result_lines.append(lines[line_idx])
+            line_idx += 1
     
     return '\n'.join(result_lines)
 
 
-# Regex patterns from parse_lc0_output.py
+# Regex patterns
 MULTIPV_RE = re.compile(r"multipv (\d+)")
 WDL_RE = re.compile(r"wdl (\d+) (\d+) (\d+)")
 PV_RE = re.compile(r" pv (.+)$")
-SCORE_CP_RE = re.compile(r"score cp (-?\d+)")
-SCORE_MATE_RE = re.compile(r"score mate (-?\d+)")
-NODES_RE = re.compile(r"\bnodes (\d+)")
 
 # Regex for parsing verbose move stats (info string lines)
 INFO_STRING_RE = re.compile(
@@ -424,22 +388,14 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
     """
     # Parse multipv lines for basic move info and WDL
     multipv_data = {}
-    total_nodes = None
     
     for line in lines:
-        # Get total nodes from any info line
-        if "nodes" in line and "multipv" not in line:
-            nodes_match = NODES_RE.search(line)
-            if nodes_match and total_nodes is None:
-                total_nodes = int(nodes_match.group(1))
-        
         if "multipv" not in line:
             continue
 
         multipv_match = MULTIPV_RE.search(line)
         pv_match = PV_RE.search(line)
         wdl_match = WDL_RE.search(line)
-        nodes_match = NODES_RE.search(line)
 
         # Need at least multipv and pv
         if not (multipv_match and pv_match):
@@ -450,7 +406,6 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
             continue
 
         move_uci = pv_moves[0]
-        multipv_rank = int(multipv_match.group(1))
 
         # Convert UCI to SAN
         try:
@@ -468,16 +423,11 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
             w, d, l = map(int, wdl_match.groups())
             wdl = [w, d, l]
 
-        # Track data for this move
-        if move_san not in multipv_data:
-            multipv_data[move_san] = {"rank": multipv_rank}
-        
+        move_data = multipv_data.setdefault(move_san, {})
+
         # Update with latest data
         if wdl is not None:
-            multipv_data[move_san]["wdl"] = wdl
-        if nodes_match:
-            # This is per-move nodes in the search line context
-            pass  # We'll get better visit counts from info string
+            move_data["wdl"] = wdl
 
     # Parse info string lines for detailed stats (visits, policy, Q-value)
     verbose_data = {}
@@ -519,10 +469,7 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
     # Combine data from multipv and verbose info
     candidates = []
     for move_san, mpv_data in multipv_data.items():
-        candidate = {
-            "move": move_san,
-            "rank": mpv_data["rank"],
-        }
+        candidate = {"move": move_san}
         
         # Add visits from verbose data if available
         if move_san in verbose_data:
@@ -538,20 +485,32 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
         
         candidates.append(candidate)
     
-    # Sort by rank and limit to max_candidates
-    candidates.sort(key=lambda x: x["rank"])
+    # Recalculate ranks based on final VerboseMoveStats data to ensure consistency
+    # Sorting criteria matches LC0's GetBestChildrenNoTemperature:
+    # 1. Highest visit count
+    # 2. If tied, highest Q-value
+    # 3. If tied, highest policy
+    candidates.sort(key=lambda x: (
+        -(x.get("visits", 0)),           # Negative for descending (highest first)
+        -(x.get("q_value", -999.0)),     # Negative for descending
+        -(x.get("policy", 0.0))          # Negative for descending
+    ))
+    
+    # Assign new ranks based on sorted order
+    for rank, candidate in enumerate(candidates, start=1):
+        candidate["rank"] = rank
+    
+    # Limit to max_candidates after re-ranking
     candidates = candidates[:max_candidates]
     
     # Build evaluation for the played move
     evaluation = None
     played_move_data = None
-    played_move_in_candidates = False
     
     # First, try to find the played move in candidates (has WDL data)
     for candidate in candidates:
         if candidate["move"] == played_move_san:
             played_move_data = candidate
-            played_move_in_candidates = True
             break
     
     # If not in candidates, check if it's in verbose_data (all legal moves)
@@ -588,8 +547,6 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
         
         if "visits" in played_move_data and played_move_data["visits"] is not None:
             evaluation["visits"] = played_move_data["visits"]
-        elif total_nodes:
-            evaluation["visits"] = total_nodes
         
         if "policy" in played_move_data and played_move_data["policy"] is not None:
             evaluation["policy"] = played_move_data["policy"]
@@ -622,15 +579,6 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
         # This is more principled than having the field disappear
     
     return candidates, evaluation, total_visits, visits_on_better
-
-
-def parse_candidates(lines: List[str], board: chess.Board, max_candidates: int) -> List[Dict]:
-    """Parse multipv lines into candidate moves with SAN notation.
-    
-    DEPRECATED: Use parse_analysis instead for full data extraction.
-    """
-    candidates, _, _, _ = parse_analysis(lines, board, max_candidates, "")
-    return candidates
 
 
 def _parse_elo(elo_str: Optional[str]) -> Optional[int]:
