@@ -24,28 +24,28 @@
             "ply": 1,
             "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
             "to_move": "white",
-            "total_visits": 10189,
-            "visits_on_better": 0,
+            "total_visits": 1022,
+            "visits_on_better": 654,
             "played_move": "e4",
-            "evaluation": {"rank": 1, "visits": 7234, "policy": 0.42, "q_value": 0.395, "wdl": [480, 370, 150]},
+            "evaluation": {"rank": 6, "visits": 10, "policy": 0.0725, "q_value": 0.01256, "wdl": [56, 901, 43]},
             "candidate_moves": [
-              { "move": "e4 ", "rank": 1, "visits": 7234, "policy": 0.42, "q_value": 0.395, "wdl": [480, 370, 150] },
-              { "move": "d4 ", "rank": 2, "visits": 1566, "policy": 0.18, "q_value": 0.380, "wdl": [460, 380, 160] },
-              { "move": "Nf3", "rank": 3, "visits":  892, "policy": 0.15, "q_value": 0.375, "wdl": [450, 390, 160] }
+              { "move": "Nf3", "rank": 1, "visits": 19, "policy": 0.1194, "q_value": 0.02891, "wdl": [63, 903, 34] },
+              { "move": "d4" , "rank": 2, "visits": 19, "policy": 0.1227, "q_value": 0.02861, "wdl": [63, 903, 34] },
+              { "move": "c4" , "rank": 3, "visits": 15, "policy": 0.1063, "q_value": 0.02329, "wdl": [60, 903, 37] }
             ]
           },
           {
             "ply": 2,
             "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
             "to_move": "black",
-            "total_visits": 10034,
+            "total_visits": 1024,
             "visits_on_better": 0,
             "played_move": "e5",
-            "evaluation": {"rank": 1, "visits": 6891, "policy": 0.38, "q_value": -0.395, "wdl": [150, 370, 480]},
+            "evaluation": {"rank": 1, "visits": 102, "policy": 0.5994, "q_value": -0.00719, "wdl": [46, 901, 53]},
             "candidate_moves": [
-              { "move": "e5", "rank": 1, "visits": 6891, "policy": 0.38, "q_value": -0.395, "wdl": [150, 370, 480] },
-              { "move": "c5", "rank": 2, "visits": 2145, "policy": 0.22, "q_value": -0.380, "wdl": [160, 360, 480] },
-              { "move": "e6", "rank": 3, "visits":  964, "policy": 0.16, "q_value": -0.372, "wdl": [165, 355, 480] }
+              { "move": "e5", "rank": 1, "visits": 102, "policy": 0.5994, "q_value": -0.00719, "wdl": [46, 901,  53] },
+              { "move": "c6", "rank": 2, "visits":   6, "policy": 0.0746, "q_value": -0.09848, "wdl": [33, 835, 132] },
+              { "move": "c5", "rank": 3, "visits":   5, "policy": 0.0585, "q_value": -0.0938 , "wdl": [31, 844, 125] }
             ]
           }
         ]
@@ -78,18 +78,18 @@
       "candidate_moves": "Top N alternative moves analyzed (see candidate_fields below)"
     },
     "evaluation_fields": {
-      "rank": "Rank of the played move (1 = best according to visits)",
+      "rank": "Rank of the played move (1 = best according to visits, q_value, policy)",
       "visits": "MCTS nodes visited for the played move",
       "policy": "Neural network policy (prior probability) for the played move",
       "q_value": "Q-value from MCTS search for the played move (expected value from side-to-move perspective)",
       "wdl": "Win/Draw/Loss in permille [W, D, L] for the played move from side-to-move perspective. Values sum to 1000."
     },
     "candidate_fields": {
-      "move": "Move in SAN (Standard Algebraic Notation)",
-      "rank": "Move ranking (1 = best according to visits)",
-      "visits": "MCTS nodes visited for this specific move",
-      "policy": "Neural network policy (prior probability) for this move",
-      "q_value": "Q-value from MCTS search (expected value from side-to-move perspective)",
+      "move": "Move in SAN (Standard Algebraic Notation). Spacing after the closing quote aligns punctuation vertically.",
+      "rank": "Move ranking (1 = best according to visits), right-aligned for readability",
+      "visits": "MCTS nodes visited for this specific move, right-aligned for readability",
+      "policy": "Neural network policy (prior probability) for this move (up to 4 decimal places)",
+      "q_value": "Q-value from MCTS search (expected value from side-to-move perspective, up to 5 decimal places)",
       "wdl": "Win/Draw/Loss in permille [W, D, L] for this move from side-to-move perspective. Values sum to 1000."
     }
   },
@@ -104,7 +104,9 @@
     "visits_on_better / total_visits = fraction of compute 'wasted' on better alternatives",
     "total_visits should approximately equal the node budget (e.g., 1000 or 10000)",
     "Candidate moves are sorted by rank and limited to top N (typically 5-10)",
-    "All moves use SAN (Standard Algebraic Notation), not UCI",
-    "Field order is consistent: rank, visits, policy, q_value, wdl"
+    "All moves use SAN (Standard Algebraic Notation)",
+    "Field order in candidate_moves: move, rank, visits, policy, q_value, wdl",
+    "Formatting: All punctuation aligns vertically",
+    "Policy values have up to 4 decimal places, q_value has up to 5 decimal places"
   ]
 }

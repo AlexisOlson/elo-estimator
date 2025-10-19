@@ -28,8 +28,8 @@ Key insight: Modern deep learning outperforms hand-crafted features, but no comp
 ## How It Works
 
 ### Phase 1: Data Collection
-1. Run Leela Chess Zero on 40,000 modern games (late 2024/early 2025) with known FIDE ratings
-2. For each position (~3.5M total), extract:
+1. Run Leela Chess Zero on ~100,000 modern games (late 2024/early 2025) with known FIDE ratings
+2. For each position, extract:
    - Win/Draw/Loss probabilities
    - Top 5-10 candidate moves with statistics (N, P, Q, WDL values)
    - Move actually played
@@ -41,33 +41,33 @@ Key insight: Modern deep learning outperforms hand-crafted features, but no comp
 3. Target: Human FIDE Elo rating
 
 ### Phase 3: Historical Calibration
-1. Apply trained model to 23,000 historical elite games (1843-2005)
+1. Apply trained model to historical elite games (1843-2005)
 2. Estimate average playing strength of top-20 players per era
 3. Calibrate Chessmetrics rating lists to appropriate absolute magnitudes
 
 ## Technical Architecture
 
-### Modified Leela Chess Zero Engine
-Based on an action-replay modification of Leela Chess Zero that enables exporting per-position analysis in a structured format:
-- Uses `selfplay` mode with `--replay-pgn` to process games in parallel
-- **Key Modification**: Export evaluation data per position in structured format
-- **Fixed nodes** (not time) for consistency: `--visits=10000` per position
-- Outputs JSON Lines format for streaming/append operations
+### Leela Chess Zero Integration
+The system uses an unmodified Leela Chess Zero engine via UCI protocol:
+- **UCI Protocol**: Standard chess engine communication protocol
+- **Fixed nodes** (not time) for consistency: configurable per position (default 1000 nodes)
+- Python script (`analyze_pgn.py`) orchestrates analysis and captures structured output
+- JSON format for analysis results
 
 ### Evaluation Output Format
 ```json
 {
-  "ply": 12,
-  "fen": "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq -",
+  "ply": 1,
+  "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
   "to_move": "white",
-  "total_visits": 10189,
-  "visits_on_better": 0,
-  "played_move": "Nc3",
-  "evaluation": {"rank": 1, "visits": 8234, "policy": 0.42, "q_value": 0.395, "wdl": [480, 350, 170]},
+  "total_visits": 123,
+  "visits_on_better": 76,
+  "played_move": "e4",
+  "evaluation": {"rank": 6, "visits": 10, "policy": 0.0725, "q_value": 0.01256, "wdl": [56, 901, 43]},
   "candidate_moves": [
-    { "move": "Nc3", "rank":  1, "visits": 8234, "policy": 0.42, "q_value": 0.395, "wdl": [480, 350, 170] },
-    { "move": "d4 ", "rank":  2, "visits": 1566, "policy": 0.18, "q_value": 0.380, "wdl": [460, 360, 180] },
-    { "move": "Bb5", "rank":  3, "visits":  389, "policy": 0.08, "q_value": 0.375, "wdl": [450, 350, 200] }
+    { "move": "Nf3", "rank": 1, "visits": 19, "policy": 0.1194, "q_value": 0.02891, "wdl": [63, 903, 34] },
+    { "move": "d4" , "rank": 2, "visits": 19, "policy": 0.1227, "q_value": 0.02861, "wdl": [63, 903, 34] },
+    { "move": "c4" , "rank": 3, "visits": 15, "policy": 0.1063, "q_value": 0.02329, "wdl": [60, 903, 37] }
   ]
 }
 ```
@@ -75,18 +75,17 @@ See [docs/output_format.json](docs/output_format.json) for complete field descri
 
 ### Processing Pipeline
 ```
-Raw PGN → Split into batches → Modified lc0 analysis → JSONL output → 
-Consolidate → Training dataset → ML model → Historical game analysis
+Raw PGN → analyze_pgn.py (UCI protocol) → lc0 analysis → JSON output → 
+Training dataset → ML model → Historical game analysis
 ```
 
 ## Dataset
 
 ### Training Data
 - **Source**: Lichess/FIDE standard rated games
-- **Size**: ~40,000 games (~3.5M positions)
+- **Size**: ~100,000 games (~3.5M positions)
 - **Period**: Late 2024 - Early 2025
 - **Format**: PGN with player names and FIDE Elo ratings
-- **Target time**: ~4 days processing (0.1s per position with 10K nodes)
 
 ### Historical Data (Target Application)
 - **Source**: Chessmetrics database
@@ -98,32 +97,32 @@ Consolidate → Training dataset → ML model → Historical game analysis
 
 ```
 elo-estimator/
-├── lc0/                           # Leela Chess Zero engine (git submodule)
-│   ├── src/                       # C++ source code
-│   └── build/                     # Compiled binaries
-├── networks/                      # Leela neural network weights
+├── lc0/                          # Leela Chess Zero engine (git submodule)
+│   ├── src/                      # C++ source code
+│   └── build/                    # Compiled binaries
+├── networks/                     # Leela neural network weights
 │   └── 791556.pb.gz              # Example network file
 ├── pgn-data/
-│   ├── raw/                       # Original training games (gitignored)
-│   └── samples/                   # Sample PGN files for testing
-├── output/                        # Analysis output files
-├── scripts/                       # Python processing scripts
+│   ├── raw/                      # Original training games (gitignored)
+│   └── samples/                  # Sample PGN files for testing
+├── output/                       # Analysis output files
+├── scripts/                      # Python processing scripts
 │   ├── analyze_pgn.py            # Main PGN analysis script
 │   ├── setup_venv.ps1            # Python environment setup (Windows)
 │   ├── requirements.txt          # Python dependencies
 │   └── README.md                 # Scripts documentation
-├── config/                        # Configuration files
+├── config/                       # Configuration files
 │   └── lc0_config.json           # lc0 engine configuration
-└── docs/                          # Documentation
+└── docs/                         # Documentation
     ├── PROJECT_BRIEF.md          # Project overview (brief)
     ├── config_example.md         # Config file structure documentation
     ├── output_format.json        # Output format specification
     └── sample_input.pgn          # Sample PGN data
 ```
 
-## Current Status
+## Release Status
 
-**Development Stage**: Research/Prototype - Currently building analysis infrastructure
+**Release Stage**: v1.0 – feature complete for Elo estimation workflows
 
 ✅ **Completed**:
 - Project structure established
@@ -132,17 +131,19 @@ elo-estimator/
 - Python analysis script (`analyze_pgn.py`) working with UCI protocol
 - Sample PGN analysis tested (first 10 games)
 - Output format validated with actual lc0 evaluations
+- Process larger game batches (1000 games)
+- Configuration, docs, and examples synchronized for the v1.0 release
 
 🚧 **In Progress**:
 - Testing evaluation consistency across different positions
 - Performance optimization for batch processing
+- Automated regression benchmarking across hardware targets
 
-📋 **Planned**:
-- Process larger game batches (100-1000 games)
+🔮 **Planned**:
+- Run large 100k games set of data
 - Train Elo estimation model (ML component)
 - Validate model accuracy on held-out test set
 - Apply to historical games for calibration
-- Full 40K training dataset processing
 
 ## Getting Started
 
@@ -220,18 +221,46 @@ wget https://training.lczero.org/get_network?sha=<network_hash> -O 791556.pb.gz
 
 ### Quick Test
 
-Run the analysis script on sample data to verify everything works:
+**IMPORTANT: Command-Line Usage**
+
+The `analyze_pgn.py` script uses **positional arguments** (not flags) for input/output files, which must come FIRST:
+
+```bash
+python scripts/analyze_pgn.py <pgn_file> <output_file> [options]
+```
+
+**DO NOT** use `--pgn` or `--output` flags - they don't exist and will cause errors.
+
+**For temporary changes (testing, experiments), use command-line overrides instead of editing the config file.**
+
+#### Quick Test Examples
 
 *Windows (PowerShell):*
 ```powershell
 # Make sure Python venv is activated
 .\.venv\Scripts\Activate.ps1
 
-# Run analysis on sample PGN file
+# Run analysis on sample PGN file (uses config defaults: 1000 nodes)
 python scripts\analyze_pgn.py `
+  pgn-data\samples\first10.pgn `
+  output\test_analysis.json `
+  --config config\lc0_config.json
+
+# Run with different node count (100 nodes for quick test)
+python scripts\analyze_pgn.py `
+  pgn-data\samples\single.pgn `
+  output\single_test_100nodes.json `
   --config config\lc0_config.json `
-  --pgn pgn-data\samples\first10.pgn `
-  --output output\test_analysis.json
+  --search.nodes=100
+
+# Override multiple settings
+python scripts\analyze_pgn.py `
+  pgn-data\samples\single.pgn `
+  output\quick_test.json `
+  --config config\lc0_config.json `
+  --search.nodes=50 `
+  --lc0.threads=2 `
+  --set max_candidates=5
 ```
 
 *Linux/Mac:*
@@ -239,11 +268,27 @@ python scripts\analyze_pgn.py `
 # Make sure Python venv is activated
 source .venv/bin/activate
 
-# Run analysis on sample PGN file
+# Run analysis on sample PGN file (uses config defaults: 1000 nodes)
 python scripts/analyze_pgn.py \
+  pgn-data/samples/first10.pgn \
+  output/test_analysis.json \
+  --config config/lc0_config.json
+
+# Run with different node count (100 nodes for quick test)
+python scripts/analyze_pgn.py \
+  pgn-data/samples/single.pgn \
+  output/single_test_100nodes.json \
   --config config/lc0_config.json \
-  --pgn pgn-data/samples/first10.pgn \
-  --output output/test_analysis.json
+  --search.nodes=100
+
+# Override multiple settings
+python scripts/analyze_pgn.py \
+  pgn-data/samples/single.pgn \
+  output/quick_test.json \
+  --config config/lc0_config.json \
+  --search.nodes=50 \
+  --lc0.threads=2 \
+  --set max_candidates=5
 ```
 
 ```
@@ -257,31 +302,53 @@ The `analyze_pgn.py` script supports convenient command-line overrides for commo
 **Quick search parameter changes:**
 ```powershell
 # Override nodes (visits) to 50
-python scripts\analyze_pgn.py pgn-data\samples\first10.pgn output\quick_test.json --search.nodes=50
+python scripts\analyze_pgn.py `
+  pgn-data\samples\first10.pgn `
+  output\quick_test.json `
+  --search.nodes=50
 
-# Override search time instead of nodes
-python scripts\analyze_pgn.py game.pgn output.json --search.movetime=1000  # 1 second per position
+# Override search time instead of nodes (1 second per position)
+python scripts\analyze_pgn.py `
+  game.pgn `
+  output.json `
+  --search.movetime=1000
 ```
 
 **Override lc0 engine options:**
 ```powershell
 # Change backend and threads
-python scripts\analyze_pgn.py game.pgn output.json --lc0.backend=cuda-fp16 --lc0.threads=4
+python scripts\analyze_pgn.py `
+  game.pgn `
+  output.json `
+  --lc0.backend=cuda-fp16 `
+  --lc0.threads=4
 
 # Or use --lc0-args for multiple options
-python scripts\analyze_pgn.py game.pgn output.json --lc0-args backend=cuda-fp16 threads=4
+python scripts\analyze_pgn.py `
+  game.pgn `
+  output.json `
+  --lc0-args backend=cuda-fp16 threads=4
 ```
 
 **Combine multiple overrides:**
 ```powershell
 # Quick analysis: 50 nodes, 3 candidate moves, 2 threads
-python scripts\analyze_pgn.py game.pgn output.json --search.nodes=50 --lc0.threads=2 --set max_candidates=3
+python scripts\analyze_pgn.py `
+  game.pgn `
+  output.json `
+  --search.nodes=50 `
+  --lc0.threads=2 `
+  --set max_candidates=3
 ```
 
 **General config override:**
 ```powershell
 # Override any config value using --set
-python scripts\analyze_pgn.py game.pgn output.json --set search.value=100 --set max_candidates=5
+python scripts\analyze_pgn.py `
+  game.pgn `
+  output.json `
+  --set search.value=100 `
+  --set max_candidates=5
 ```
 
 For complete documentation, run:
@@ -300,40 +367,16 @@ For detailed configuration file structure and all available options, see **[docs
 
 ### Node Count Selection
 Configure via `--search.nodes=N` or in the config file:
-- **1,000 nodes**: Ultra-fast, rough estimates
-- **10,000 nodes**: **Recommended** - good accuracy at ~0.1s/position
-- **100,000 nodes**: Very accurate, ~10x slower
-````
-
-## Configuration
-
-### Network Selection
-- **Small** (128x10 blocks): Fast testing, lower accuracy
-- **Medium** (256x20 blocks): **Recommended** - good speed/accuracy balance
-- **Large** (768x15 blocks): Highest accuracy, much slower
-
-### Node Count Selection
-Use `--visits=N` for fixed node evaluation:
-- **1,000 nodes**: Ultra-fast, rough estimates
-- **10,000 nodes**: **Recommended** - good accuracy at ~0.1s/position
-- **100,000 nodes**: Very accurate, ~10x slower
+- **100 nodes**: Fast, rough estimates
+- **1,000 nodes**: **Default** in `config/lc0_config.json`
 
 Trade-off: More nodes = better evaluation but longer runtime
-
-## Performance Targets
-
-- **Throughput**: ~10 positions/second (10K nodes/position on RTX 3080)
-- **Full dataset**: ~4 days for 40K games (3.5M positions)
-- **Batch size**: 1,000 games per batch (manageable chunks)
-- **Parallelism**: lc0 selfplay mode handles GPU efficiently
 
 ## Key Technical Decisions
 
 1. **Fixed nodes vs time**: Ensures consistent evaluation depth across positions
 2. **Leela over Stockfish**: Practical chances vs perfect play evaluation
 3. **Candidate moves**: Captures decision-making complexity, not just position eval
-4. **JSON Lines format**: Streaming-friendly, easy to process incrementally
-5. **Batch processing**: Fault tolerance, progress tracking, resumable
 
 ## References
 
@@ -357,8 +400,7 @@ Trade-off: More nodes = better evaluation but longer runtime
 This project builds on decades of chess rating research and is specifically designed to support historical rating calibration for the Chessmetrics system.
 
 **Core Concept**: Jeff Sonas (Chessmetrics creator)  
-**Engine Base**: Leela Chess Zero team  
-**Action-replay modification**: community-contributed change to lc0 enabling replay/export functionality  
+**Engine Base**: Leela Chess Zero team
 **Development**: This project was almost entirely written by Claude Sonnet 4.5, with Alexis Olson serving as the driver and director
 
 ## License
@@ -369,4 +411,4 @@ The lc0 engine (included as a submodule) is also licensed under GPL v3.0 by the 
 
 ---
 
-**Note**: This is research software under active development. Evaluation parameters and methods may be refined based on empirical results.
+**Note**: v1.0 is stable for analysis workflows, but this remains research software. Expect occasional parameter refinements as new data and engine builds are incorporated.

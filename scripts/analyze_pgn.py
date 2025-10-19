@@ -119,7 +119,9 @@ def _compact_json_dumps(obj: Any, indent: int = 2) -> str:
             parts = []
             for k, v in fields.items():
                 if k == "move":
-                    parts.append(f'"{k}": "{v.strip('"'):<{widths[k]}}"')
+                    # Pad the move string itself (not with trailing spaces, but with spaces after the quote)
+                    move_str = v.strip('"')
+                    parts.append(f'"{k}": "{move_str}"{" " * (widths[k] - len(move_str))}')
                 elif k == "wdl" and (m := re.match(r'\[(\d+),\s*(\d+),\s*(\d+)\]', v)):
                     w, d, l = (m.group(idx).rjust(widths[f'wdl_{s}']) for idx, s in [(1,'w'), (2,'d'), (3,'l')])
                     parts.append(f'"{k}": [{w}, {d}, {l}]')
@@ -496,9 +498,15 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
         -(x.get("policy", 0.0))          # Negative for descending
     ))
     
-    # Assign new ranks based on sorted order
+    # Assign new ranks based on sorted order and reorder fields
     for rank, candidate in enumerate(candidates, start=1):
-        candidate["rank"] = rank
+        # Rebuild candidate dict with rank right after move
+        move = candidate["move"]
+        reordered = {"move": move, "rank": rank}
+        for key in ["visits", "policy", "q_value", "wdl"]:
+            if key in candidate:
+                reordered[key] = candidate[key]
+        candidates[rank - 1] = reordered
     
     # Limit to max_candidates after re-ranking
     candidates = candidates[:max_candidates]

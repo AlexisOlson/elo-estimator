@@ -10,12 +10,13 @@
     "type": "nodes",
     "value": 1000
   },
-  "max_candidates": 5,
+  "max_candidates": 10,
   "extra_args": [
     "--backend=cuda-fp16",
     "--threads=1",
     "--minibatch-size=22",
-    "--wdl-draw-rate-reference=0.67",
+    "--wdl-draw-rate-reference=0.64",
+    "--wdl-calibration-elo=3300",
     "--smart-pruning-factor=0.0"
   ]
 }
@@ -37,17 +38,17 @@
 
 - **`search`** (object): Configure search parameters
   - `type`: `"nodes"`, `"movetime"`, `"depth"`, or `"infinite"`
-  - `value`: Number corresponding to the type (e.g., 1000 nodes, 5000 milliseconds)
-  - Default: `{"type": "nodes", "value": 100}`
+  - `value`: Number corresponding to the type (e.g., 10000 nodes, 5000 milliseconds)
+  - Default: `{ "type": "nodes", "value": 10000 }`
 
 - **`max_candidates`** (integer): Maximum number of candidate moves to analyze per position
   - Range: 1-500
   - Default: 10
-  - Example: `5` (top 5 moves)
+  - Example: `10` (top 10 moves)
 
 - **`extra_args`** (array of strings): Additional lc0 command-line arguments
   - All lc0 engine parameters go here
-  - Format: Each argument as a separate string with `--option=value` format
+  - Format: Each argument as a separate string with `--option=value`
   - See `lc0 --help` for all available options
 
 ### Common lc0 Parameters
@@ -73,9 +74,8 @@
 - **`--wdl-draw-rate-reference=X`**: Expected draw rate of the neural network
   - Range: 0.0-1.0
   - Network-specific value for accurate WDL rescaling
-  - BT4 networks: `0.67`
-  - Default networks: `0.50`
-  - Example: `"--wdl-draw-rate-reference=0.67"`
+  - BT4 networks: `0.64` (depends on specific network training)
+  - Example: `"--wdl-draw-rate-reference=0.64"`
 
 - **`--wdl-calibration-elo=X`**: Elo rating of the active side for WDL sharpening
   - Range: 0.0-10000.0
@@ -103,14 +103,14 @@ BT4 networks have specific optimal settings:
   "--backend=cuda-fp16",
   "--threads=1",
   "--minibatch-size=22",
-  "--wdl-draw-rate-reference=0.67",
+  "--wdl-draw-rate-reference=0.64",
   "--wdl-calibration-elo=3300",
   "--smart-pruning-factor=0.0"
 ]
 ```
 
 **Key BT4 settings:**
-- **Draw rate reference**: `0.67` - BT4 networks predict higher draw rates than standard nets
+- **Draw rate reference**: `0.64` - BT4 networks predict higher draw rates than standard nets
 - **WDL calibration Elo**: `3300` - Calibrates WDL for strong engine-level play
 - **Smart pruning**: `0.0` - Disabled for maximum accuracy in analysis
 - **Minibatch size**: `22` - Optimal for RTX 2080 (use `backendbench --clippy` for your GPU)

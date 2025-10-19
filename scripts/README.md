@@ -2,6 +2,29 @@
 
 This folder contains helper scripts and utilities for the project.
 
+## IMPORTANT: Command-Line Usage Rules
+
+**DO NOT modify `config/lc0_config.json` for temporary changes or testing!**
+
+The config file is for persistent defaults. For experiments, testing, or one-off runs, **always use command-line overrides**.
+
+### Critical Syntax Rules
+
+1. **Positional arguments FIRST** (not flags) for input/output files:
+   ```bash
+   python scripts/analyze_pgn.py <pgn_file> <output_file> [options]
+   ```
+
+2. **Wrong flags that will fail:**
+   - `--pgn` (doesn't exist)
+   - `--output` (doesn't exist)
+   - `--nodes` (use `--search.nodes=N` instead)
+
+3. **Correct override syntax (after positional args):**
+   - `--search.nodes=100` (search parameters)
+   - `--lc0.threads=4` (lc0 options)
+   - `--set max_candidates=5` (config overrides)
+
 ## Files
 
 - `setup_venv.ps1` - Creates a Python virtual environment and installs dependencies (Windows/PowerShell)
@@ -21,10 +44,18 @@ cd elo-estimator
 ### 2. Analyze a PGN file
 
 ```powershell
+# Basic usage (uses config file defaults: 1000 nodes)
 python scripts/analyze_pgn.py `
+  pgn-data/samples/first10.pgn `
+  output/analysis.json `
+  --config config/lc0_config.json
+
+# Quick test with fewer nodes (100 nodes)
+python scripts/analyze_pgn.py `
+  pgn-data/samples/single.pgn `
+  output/single_test_100nodes.json `
   --config config/lc0_config.json `
-  --pgn pgn-data/samples/first10.pgn `
-  --output output/analysis.json
+  --search.nodes=100
 ```
 
 ## Quick Start (Linux/Mac)
@@ -35,10 +66,18 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r scripts/requirements.txt
 
+# Basic usage (uses config file defaults: 1000 nodes)
 python scripts/analyze_pgn.py \
+  pgn-data/samples/first10.pgn \
+  output/analysis.json \
+  --config config/lc0_config.json
+
+# Quick test with fewer nodes (100 nodes)
+python scripts/analyze_pgn.py \
+  pgn-data/samples/single.pgn \
+  output/single_test_100nodes.json \
   --config config/lc0_config.json \
-  --pgn pgn-data/samples/first10.pgn \
-  --output output/analysis.json
+  --search.nodes=100
 ```
 
 ## Command-Line Options

@@ -13,15 +13,25 @@ networks/*.pb
 .venv/
 scripts/venv/
 scripts/__pycache__/
+__pycache__/
 *.pyc
+*.pyo
+*.pyd
 *.egg-info/
 dist/
 build/
+.pytest_cache/
+.coverage
 
 # IDEs and editors
 .vscode/
+.idea/
 .claude/
 *.swp
 *.swo
 *~
-.DS_Store
+
+# Temporary files
+*.tmp
+*.log
+*.bak
