@@ -10,7 +10,7 @@
     "--backend=cuda-fp16",
     "--threads=1",
     "--minibatch-size=22",
-    "--wdl-draw-rate-reference=0.67",
+    "--wdl-draw-rate-reference=0.64",
     "--wdl-calibration-elo=3300",
     "--smart-pruning-factor=0.0"
   ]

@@ -271,6 +271,14 @@ def analyze_pgn(
     # Collect all game data
     all_games = []
     
+    # Helper function to save progress
+    def save_progress():
+        """Save current progress to output file."""
+        with output_path.open("w", encoding="utf-8") as out_file:
+            json_str = _compact_json_dumps({"games": all_games}, indent=2)
+            out_file.write(json_str)
+            out_file.write("\n")
+    
     # Analyze each game
     for game_idx, game in enumerate(games):
         white_player = game.headers.get("White", "")
@@ -288,13 +296,21 @@ def analyze_pgn(
         board = game.board()
         ply = 1
         moves = []
-        
-        print(f"Analyzing game {game_idx + 1}...")
-        
-        for move in game.mainline_moves():
+
+        # Prepare moves list so we know total plies for nicer tick output
+        moves_list = list(game.mainline_moves())
+        total_plies = len(moves_list)
+
+        # Print game header (kept as a normal print). Per-ply ticking below is flushed.
+        print(f"Analyzing game {game_idx + 1} ({total_plies} plies)...")
+
+        for move_idx, move in enumerate(moves_list, start=1):
             fen = board.fen()
             to_move = "white" if board.turn == chess.WHITE else "black"
             played_move_san = board.san(move)
+
+            # Print a short ticking status for each ply
+            print(f"  Game {game_idx + 1} ply {move_idx}/{total_plies}: {played_move_san}", end='\r', flush=True)
             
             # Send position to lc0
             send_command(f"position fen {fen}")
@@ -375,12 +391,13 @@ def analyze_pgn(
             "moves": moves,
         }
         all_games.append(game_record)
+        
+        # Save progress after each game
+        save_progress()
+        print(f"  Progress saved ({game_idx + 1}/{len(games)} games completed)")
     
-    # Write complete JSON structure with compact WDL arrays
-    with output_path.open("w", encoding="utf-8") as out_file:
-        json_str = _compact_json_dumps({"games": all_games}, indent=2)
-        out_file.write(json_str)
-        out_file.write("\n")
+    # Final save (redundant but ensures final state is written)
+    save_progress()
     
     # Cleanup
     send_command("quit")
