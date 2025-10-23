@@ -288,6 +288,10 @@ def analyze_pgn(
                 # Print a short ticking status for each ply
                 print(f"  Game {game_idx + 1} ply {move_idx}/{total_plies}: {played_move_san}", end='\r', flush=True)
                 
+                # Clear the search tree so each position search starts fresh
+                # (some UCI engines provide a ClearTree command; caller requested it)
+                send_command("ClearTree")
+
                 # Send position to lc0
                 send_command(f"position fen {fen}")
                 send_command(f"go {search_type} {search_value}")
@@ -302,6 +306,9 @@ def analyze_pgn(
                 if evaluation and "wdl" not in evaluation:
                     # Run MultiPV=1 search with searchmoves restricted to played move
                     move_uci = board.uci(move)
+                    # For the focused search, also clear the tree first so the
+                    # search is run fresh for only the requested move.
+                    send_command("ClearTree")
                     send_command(f"position fen {fen}")
                     send_command(f"go {search_type} {search_value} searchmoves {move_uci}")
                     focused_lines = read_until("bestmove")

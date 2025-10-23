@@ -122,7 +122,7 @@ elo-estimator/
 
 ## Release Status
 
-**Release Stage**: v1.1 – feature complete for Elo estimation workflows
+**Release Stage**: v1.2 – improved evaluation consistency
 
 ✅ **Completed**:
 - Project structure established
@@ -134,9 +134,10 @@ elo-estimator/
 - Process larger game batches (1000 games)
 - Improved error handling and robustness
 - Configuration, docs, and examples synchronized for production use
+- **ClearTree** command integration for position-independent evaluations
+- Documentation cleanup and reorganization
 
 🚧 **In Progress**:
-- Testing evaluation consistency across different positions
 - Performance optimization for batch processing
 - Automated regression benchmarking across hardware targets
 
@@ -344,4 +345,4 @@ The lc0 engine (included as a submodule) is also licensed under GPL v3.0 by the 
 - **Engine**: Currently Leela-only; Stockfish support could be added for comparison
 - **Formats**: PGN input only; no direct support for EPD or FEN lists
 
-**Note**: v1.1 is stable for analysis workflows, but this remains research software. Expect occasional parameter refinements as new data and engine builds are incorporated.
+**Note**: v1.2 adds ClearTree command for evaluation consistency. This remains research software - expect occasional parameter refinements as new data and engine builds are incorporated.

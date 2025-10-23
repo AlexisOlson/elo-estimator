@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-10-23
+
+### Added
+- **analyze_pgn.py**: Added `ClearTree` UCI command before each position search to ensure fresh tree state
+  - Prevents search tree pollution between positions
+  - Improves evaluation consistency across positions
+  - Applied to both main searches and focused single-move searches
+
+### Changed
+- **Documentation**: Comprehensive cleanup and reorganization
+  - Consolidated redundant sections in README.md
+  - Separated common vs advanced lc0 parameters in config_example.md
+  - Streamlined output format notes (14 → 8 notes, removing redundancies)
+  - Removed unnecessary `--config` flags from examples (uses default path)
+  - Improved Configuration section with concrete examples
+
 ## [1.1.0] - 2025-10-19
 
 ### Changed
