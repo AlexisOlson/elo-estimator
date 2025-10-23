@@ -95,18 +95,12 @@
   },
   "notes": [
     "WDL values are in permille (parts per thousand) and sum to 1000",
-    "WDL is always from the perspective of the side to move",
-    "For Black's moves, high win values indicate Black advantage",
-    "Q-values are also from side-to-move perspective (positive = advantage)",
-    "Ranks are determined by visit counts (more visits = better rank)",
-    "evaluation.rank shows the rank of the played move (1 = best move)",
-    "visits_on_better = 0 when the best move was played (rank 1)",
-    "visits_on_better / total_visits = fraction of compute 'wasted' on better alternatives",
-    "total_visits should approximately equal the node budget (e.g., 1000 or 10000)",
-    "Candidate moves are sorted by rank and limited to top N (typically 5-10)",
+    "WDL, Q-values, and policy are from the side-to-move perspective (positive values = advantage for the side to move)",
+    "Ranks are determined by visit counts, then Q-value, then policy (matching lc0's selection criteria)",
+    "visits_on_better = 0 when rank 1 (best move) was played",
+    "total_visits ≈ node budget; visits_on_better / total_visits = fraction of search spent on superior moves",
+    "Candidate moves are sorted by rank and limited to max_candidates",
     "All moves use SAN (Standard Algebraic Notation)",
-    "Field order in candidate_moves: move, rank, visits, policy, q_value, wdl",
-    "Formatting: All punctuation aligns vertically",
-    "Policy values have up to 4 decimal places, q_value has up to 5 decimal places"
+    "Policy values have up to 4 decimal places, Q-values up to 5 decimal places"
   ]
 }

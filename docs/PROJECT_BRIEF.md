@@ -22,7 +22,6 @@ Historical chess rating systems (Chessmetrics, Elo) can't determine absolute rat
 ## Dataset
 - Training: ~100,000 games (late 2024/early 2025)
 - Known FIDE ratings for all players
-- ~3.5 million positions to evaluate
 - Historical: ~23,000 elite games (1843-2005) for calibration
 
 ## Key Capabilities Delivered
@@ -32,11 +31,10 @@ Historical chess rating systems (Chessmetrics, Elo) can't determine absolute rat
 - Incremental progress writing for long batches (safe restart)
 - Compact JSON formatting for downstream training pipelines
 
-## Command-Line Usage (IMPORTANT)
+## Command-Line Usage
 
-**DO NOT MODIFY CONFIG FILE FOR TEMPORARY CHANGES - USE COMMAND-LINE OPTIONS**
-
-The config file (`config/lc0_config.json`) is for persistent defaults. For testing, experiments, or one-off runs, **always use command-line overrides**.
+The config file (`config/lc0_config.json`) is for persistent defaults.
+For testing, experiments, or one-off runs, command-line parameters are recommended.
 
 ### Correct Command Syntax
 
@@ -75,31 +73,6 @@ python scripts/analyze_pgn.py \
   --search.nodes=50 \
   --lc0.threads=2 \
   --set max_candidates=5
-```
-
-**WRONG - These flags don't exist:**
-```bash
-# INCORRECT - will fail
-python scripts/analyze_pgn.py \
-  --config config/lc0_config.json \
-  --pgn file.pgn \
-  --output out.json
-
-python scripts/analyze_pgn.py \
-  --config config/lc0_config.json \
-  --nodes 100 \
-  file.pgn \
-  out.json
-```
-
-**WRONG - Options must come AFTER positional arguments:**
-```bash
-# INCORRECT - options before positional args may not work as expected
-python scripts/analyze_pgn.py \
-  --config config/lc0_config.json \
-  --search.nodes=100 \
-  file.pgn \
-  out.json
 ```
 
 ## Success Criteria

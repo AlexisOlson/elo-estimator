@@ -44,18 +44,16 @@ cd elo-estimator
 ### 2. Analyze a PGN file
 
 ```powershell
-# Basic usage (uses config file defaults: 1000 nodes)
+# Basic usage (uses default config: config/lc0_config.json with 100 nodes)
 python scripts/analyze_pgn.py `
   pgn-data/samples/first10.pgn `
-  output/analysis.json `
-  --config config/lc0_config.json
+  output/analysis.json
 
-# Quick test with fewer nodes (100 nodes)
+# Quick test with different node count
 python scripts/analyze_pgn.py `
   pgn-data/samples/single.pgn `
-  output/single_test_100nodes.json `
-  --config config/lc0_config.json `
-  --search.nodes=100
+  output/single_test_50nodes.json `
+  --search.nodes=50
 ```
 
 ## Quick Start (Linux/Mac)
@@ -66,18 +64,16 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r scripts/requirements.txt
 
-# Basic usage (uses config file defaults: 1000 nodes)
+# Basic usage (uses default config: config/lc0_config.json with 100 nodes)
 python scripts/analyze_pgn.py \
   pgn-data/samples/first10.pgn \
-  output/analysis.json \
-  --config config/lc0_config.json
+  output/analysis.json
 
-# Quick test with fewer nodes (100 nodes)
+# Quick test with different node count
 python scripts/analyze_pgn.py \
   pgn-data/samples/single.pgn \
-  output/single_test_100nodes.json \
-  --config config/lc0_config.json \
-  --search.nodes=100
+  output/single_test_50nodes.json \
+  --search.nodes=50
 ```
 
 ## Command-Line Options

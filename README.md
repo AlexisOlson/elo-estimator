@@ -103,9 +103,9 @@ elo-estimator/
 ├── networks/                     # Leela neural network weights
 │   └── 791556.pb.gz              # Example network file
 ├── pgn-data/
-│   ├── raw/                      # Original training games (gitignored)
-│   └── samples/                  # Sample PGN files for testing
-├── output/                       # Analysis output files
+│   ├── raw/                      # Training games
+│   └── samples/                  # Small PGN files for testing
+├── output/                       # Analysis output JSON files
 ├── scripts/                      # Python processing scripts
 │   ├── analyze_pgn.py            # Main PGN analysis script
 │   ├── setup_venv.ps1            # Python environment setup (Windows)
@@ -222,17 +222,9 @@ wget https://training.lczero.org/get_network?sha=<network_hash> -O 791556.pb.gz
 
 ### Quick Test
 
-**IMPORTANT: Command-Line Usage**
-
-The `analyze_pgn.py` script uses **positional arguments** (not flags) for input/output files, which must come FIRST:
-
 ```bash
 python scripts/analyze_pgn.py <pgn_file> <output_file> [options]
 ```
-
-**DO NOT** use `--pgn` or `--output` flags - they don't exist and will cause errors.
-
-**For temporary changes (testing, experiments), use command-line overrides instead of editing the config file.**
 
 #### Quick Test Examples
 
@@ -244,21 +236,18 @@ python scripts/analyze_pgn.py <pgn_file> <output_file> [options]
 # Run analysis on sample PGN file (uses config defaults: 1000 nodes)
 python scripts\analyze_pgn.py `
   pgn-data\samples\first10.pgn `
-  output\test_analysis.json `
-  --config config\lc0_config.json
+  output\test_analysis.json
 
 # Run with different node count (100 nodes for quick test)
 python scripts\analyze_pgn.py `
   pgn-data\samples\single.pgn `
   output\single_test_100nodes.json `
-  --config config\lc0_config.json `
   --search.nodes=100
 
 # Override multiple settings
 python scripts\analyze_pgn.py `
   pgn-data\samples\single.pgn `
   output\quick_test.json `
-  --config config\lc0_config.json `
   --search.nodes=50 `
   --lc0.threads=2 `
   --set max_candidates=5
@@ -272,112 +261,50 @@ source .venv/bin/activate
 # Run analysis on sample PGN file (uses config defaults: 1000 nodes)
 python scripts/analyze_pgn.py \
   pgn-data/samples/first10.pgn \
-  output/test_analysis.json \
-  --config config/lc0_config.json
+  output/test_analysis.json
 
 # Run with different node count (100 nodes for quick test)
 python scripts/analyze_pgn.py \
   pgn-data/samples/single.pgn \
   output/single_test_100nodes.json \
-  --config config/lc0_config.json \
   --search.nodes=100
 
 # Override multiple settings
 python scripts/analyze_pgn.py \
   pgn-data/samples/single.pgn \
   output/quick_test.json \
-  --config config/lc0_config.json \
   --search.nodes=50 \
   --lc0.threads=2 \
   --set max_candidates=5
 ```
 
-```
+Expected output: `output/test_analysis.json` with position evaluations.
 
-Expected: Creates `output/test_analysis.json` with position evaluations from the first 10 games.
-
-### Command-Line Overrides
-
-The `analyze_pgn.py` script supports convenient command-line overrides for common parameters:
-
-**Quick search parameter changes:**
-```powershell
-# Override nodes (visits) to 50
-python scripts\analyze_pgn.py `
-  pgn-data\samples\first10.pgn `
-  output\quick_test.json `
-  --search.nodes=50
-
-# Override search time instead of nodes (1 second per position)
-python scripts\analyze_pgn.py `
-  game.pgn `
-  output.json `
-  --search.movetime=1000
-```
-
-**Override lc0 engine options:**
-```powershell
-# Change backend and threads
-python scripts\analyze_pgn.py `
-  game.pgn `
-  output.json `
-  --lc0.backend=cuda-fp16 `
-  --lc0.threads=4
-
-# Or use --lc0-args for multiple options
-python scripts\analyze_pgn.py `
-  game.pgn `
-  output.json `
-  --lc0-args backend=cuda-fp16 threads=4
-```
-
-**Combine multiple overrides:**
-```powershell
-# Quick analysis: 50 nodes, 3 candidate moves, 2 threads
-python scripts\analyze_pgn.py `
-  game.pgn `
-  output.json `
-  --search.nodes=50 `
-  --lc0.threads=2 `
-  --set max_candidates=3
-```
-
-**General config override:**
-```powershell
-# Override any config value using --set
-python scripts\analyze_pgn.py `
-  game.pgn `
-  output.json `
-  --set search.value=100 `
-  --set max_candidates=5
-```
-
-For complete documentation, run:
+For complete command-line documentation:
 ```powershell
 python scripts\analyze_pgn.py --help
 ```
 
 ## Configuration
 
-For detailed configuration file structure and all available options, see **[docs/config_example.md](docs/config_example.md)**.
+The default configuration is in `config/lc0_config.json`. Key settings:
+- **Search budget**: `search.value` (default: 100 nodes) - more nodes = better quality, slower
+- **Candidate moves**: `max_candidates` (default: 10) - how many top moves to include
+- **lc0 options**: `backend`, `threads`, etc. - passed directly to the engine
 
-### Network Selection
-- **Small** (128x10 blocks): Fast testing, lower accuracy
-- **Medium** (256x20 blocks): **Recommended** - good speed/accuracy balance
-- **Large** (768x15 blocks): Highest accuracy, much slower
+Command-line overrides (recommended for testing):
+```powershell
+# Override search nodes
+--search.nodes=50
 
-### Node Count Selection
-Configure via `--search.nodes=N` or in the config file:
-- **100 nodes**: Fast, rough estimates
-- **1,000 nodes**: **Default** in `config/lc0_config.json`
+# Override lc0 options
+--lc0.backend=cuda-fp16 --lc0.threads=4
 
-Trade-off: More nodes = better evaluation but longer runtime
+# Override any config value
+--set max_candidates=5
+```
 
-## Key Technical Decisions
-
-1. **Fixed nodes vs time**: Ensures consistent evaluation depth across positions
-2. **Leela over Stockfish**: Practical chances vs perfect play evaluation
-3. **Candidate moves**: Captures decision-making complexity, not just position eval
+For detailed configuration documentation, see [docs/config_example.md](docs/config_example.md).
 
 ## References
 

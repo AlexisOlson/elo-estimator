@@ -70,7 +70,11 @@
   - Use `lc0 backendbench --clippy` to find optimal value
   - Example: `"--minibatch-size=22"` (optimal for RTX 2080 + BT4)
 
+### Advanced lc0 Parameters
+
 #### WDL (Win/Draw/Loss) Calibration
+These parameters adjust how lc0 reports win/draw/loss probabilities. Use the defaults unless you understand the calibration model.
+
 - **`--wdl-draw-rate-reference=X`**: Expected draw rate of the neural network
   - Range: 0.0-1.0
   - Network-specific value for accurate WDL rescaling
@@ -88,32 +92,11 @@
 #### Search Configuration
 - **`--smart-pruning-factor=X`**: Aggressiveness of search pruning
   - Range: 0.0-10.0
-  - `0.0` = disabled (no pruning)
-  - `1.33` = default
+  - `0.0` = disabled (no pruning, maximum accuracy)
+  - `1.33` = default (standard pruning)
   - Higher values prune more aggressively (faster but potentially less accurate)
-  - Example: `"--smart-pruning-factor=0.0"` (disable for maximum accuracy)
-
-## Network-Specific Settings
-
-### BT4 Networks
-BT4 networks have specific optimal settings:
-
-```json
-"extra_args": [
-  "--backend=cuda-fp16",
-  "--threads=1",
-  "--minibatch-size=22",
-  "--wdl-draw-rate-reference=0.64",
-  "--wdl-calibration-elo=3300",
-  "--smart-pruning-factor=0.0"
-]
-```
-
-**Key BT4 settings:**
-- **Draw rate reference**: `0.64` - BT4 networks predict higher draw rates than standard nets
-- **WDL calibration Elo**: `3300` - Calibrates WDL for strong engine-level play
-- **Smart pruning**: `0.0` - Disabled for maximum accuracy in analysis
-- **Minibatch size**: `22` - Optimal for RTX 2080 (use `backendbench --clippy` for your GPU)
+  - For evaluation analysis, consider using `0.0` for consistency
+  - Example: `"--smart-pruning-factor=0.0"`
 
 ### Minibatch Size Tuning
 
