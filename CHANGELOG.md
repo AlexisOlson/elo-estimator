@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-11-01
+
+### Added
+- **analyze_pgn.py**: Added `total_legal_moves` field to JSON output
+  - Reports the total number of legal moves available for each position
+  - Provides a measure of position complexity (branching factor)
+  - Field appears before `total_visits` in the output structure
+  - Documentation updated in README.md and docs/output_format.json
+
 ## [1.2.0] - 2025-10-23
 
 ### Added
@@ -153,5 +162,7 @@ This project was almost entirely written by Claude Sonnet 4.5, with Alexis Olson
 ### License
 GNU General Public License v3.0 - See LICENSE file for details.
 
+[1.3.0]: https://github.com/AlexisOlson/elo-estimator/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/AlexisOlson/elo-estimator/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/AlexisOlson/elo-estimator/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/AlexisOlson/elo-estimator/releases/tag/v1.0.0

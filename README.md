@@ -60,6 +60,7 @@ The system uses an unmodified Leela Chess Zero engine via UCI protocol:
   "ply": 1,
   "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
   "to_move": "white",
+  "total_legal_moves": 20,
   "total_visits": 123,
   "visits_on_better": 76,
   "played_move": "e4",
@@ -122,7 +123,7 @@ elo-estimator/
 
 ## Release Status
 
-**Release Stage**: v1.2 – improved evaluation consistency
+**Release Stage**: v1.3 – enhanced position complexity analysis
 
 ✅ **Completed**:
 - Project structure established
@@ -136,6 +137,7 @@ elo-estimator/
 - Configuration, docs, and examples synchronized for production use
 - **ClearTree** command integration for position-independent evaluations
 - Documentation cleanup and reorganization
+- **total_legal_moves** field for position complexity metrics
 
 🚧 **In Progress**:
 - Performance optimization for batch processing
@@ -345,4 +347,4 @@ The lc0 engine (included as a submodule) is also licensed under GPL v3.0 by the 
 - **Engine**: Currently Leela-only; Stockfish support could be added for comparison
 - **Formats**: PGN input only; no direct support for EPD or FEN lists
 
-**Note**: v1.2 adds ClearTree command for evaluation consistency. This remains research software - expect occasional parameter refinements as new data and engine builds are incorporated.
+**Note**: v1.3 adds position complexity metrics via `total_legal_moves` field. This remains research software - expect occasional parameter refinements as new data and engine builds are incorporated.

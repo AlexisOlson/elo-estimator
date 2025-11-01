@@ -5,13 +5,15 @@
     "type": "nodes",
     "value": 1000
   },
-  "max_candidates": 10,
+  "max_candidates": 20,
   "extra_args": [
     "--backend=cuda-fp16",
     "--threads=1",
     "--minibatch-size=22",
     "--wdl-draw-rate-reference=0.64",
-    "--wdl-calibration-elo=3300",
-    "--smart-pruning-factor=0.0"
+    "--wdl-calibration-elo=2650",
+    "--smart-pruning-factor=0.0",
+    "--root-has-own-cpuct-params=true",
+    "--cpuct-at-root=100.0"
   ]
 }

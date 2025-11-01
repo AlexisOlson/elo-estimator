@@ -14,6 +14,7 @@ Key Features:
 7. Writes complete JSON records with no intermediate files
 
 Output Fields:
+- total_legal_moves: Total number of legal moves for the position
 - total_visits: Sum of visits across all legal moves (≈ node budget)
 - visits_on_better: Visits on moves ranked better than played (0 if rank 1)
 - evaluation: Rank, visits, policy, Q-value, WDL for the played move
@@ -334,7 +335,11 @@ def analyze_pgn(
                     "fen": fen,
                     "to_move": to_move,
                 }
-                
+
+                # Add total legal moves for this position
+                total_legal_moves = len(list(board.legal_moves))
+                move_record["total_legal_moves"] = total_legal_moves
+
                 # Always include total_visits and visits_on_better if we have verbose data
                 if total_visits is not None:
                     move_record["total_visits"] = total_visits
