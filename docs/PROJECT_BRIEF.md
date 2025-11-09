@@ -25,7 +25,7 @@ Historical chess rating systems (Chessmetrics, Elo) can't determine absolute rat
 - Historical: ~23,000 elite games (1843-2005) for calibration
 
 ## Key Capabilities Delivered
-- Per-position JSON export with played move + top candidates (rank, visits, policy, Q, WDL)
+- Per-position JSON export with played move + top candidates (rank, visits, policy, Q, U, WDL)
 - PGN metadata capture (players, ratings, event info) merged into analysis output
 - Configurable search budgets, lc0 overrides, and command-line overrides
 - Incremental progress writing for long batches (safe restart)
@@ -77,7 +77,7 @@ python scripts/analyze_pgn.py \
 
 ## Success Criteria
 - Process 100K games in reasonable time
-- Extract: WDL percentages, top 10 candidate moves, N/P/Q statistics
+- Extract: WDL percentages, top 10 candidate moves, N/P/Q/U statistics
 - Generate clean training dataset linking move choices to known Elo ratings
 - Validate on subset before full-scale processing
 

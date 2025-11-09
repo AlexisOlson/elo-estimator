@@ -17,8 +17,8 @@ Output Fields:
 - total_legal_moves: Total number of legal moves for the position
 - total_visits: Sum of visits across all legal moves (≈ node budget)
 - visits_on_better: Visits on moves ranked better than played (0 if rank 1)
-- evaluation: Rank, visits, policy, Q-value, WDL for the played move
-- candidate_moves: Top N moves with rank, visits, policy, Q-value, WDL
+- evaluation: Rank, visits, policy, Q-value, U-value, WDL for the played move
+- candidate_moves: Top N moves with rank, visits, policy, Q-value, U-value, WDL
 
 Bug Fixes Applied:
 - Evaluation now shows played move data (not best move data)
@@ -108,7 +108,7 @@ def _compact_json_dumps(obj: Any, indent: int = 2) -> str:
                 elif k == "wdl" and (m := re.match(r'\[(\d+),\s*(\d+),\s*(\d+)\]', v)):
                     for idx, s in enumerate(['w', 'd', 'l'], 1):
                         widths[f'wdl_{s}'] = max(widths.get(f'wdl_{s}', 0), len(m.group(idx)))
-                elif k in ["policy", "q_value"] and '.' in v:
+                elif k in ["policy", "q_value", "u_value"] and '.' in v:
                     int_p, dec_p = v.split('.', 1)
                     widths[f'{k}_i'] = max(widths.get(f'{k}_i', 0), len(int_p))
                     widths[f'{k}_d'] = max(widths.get(f'{k}_d', 0), len(dec_p))
@@ -126,7 +126,7 @@ def _compact_json_dumps(obj: Any, indent: int = 2) -> str:
                 elif k == "wdl" and (m := re.match(r'\[(\d+),\s*(\d+),\s*(\d+)\]', v)):
                     w, d, l = (m.group(idx).rjust(widths[f'wdl_{s}']) for idx, s in [(1,'w'), (2,'d'), (3,'l')])
                     parts.append(f'"{k}": [{w}, {d}, {l}]')
-                elif k in ["policy", "q_value"] and '.' in v:
+                elif k in ["policy", "q_value", "u_value"] and '.' in v:
                     int_p, dec_p = v.split('.', 1)
                     parts.append(f'"{k}": {int_p.rjust(widths[f"{k}_i"])}.{dec_p.ljust(widths[f"{k}_d"])}')
                 else:
@@ -154,6 +154,8 @@ INFO_STRING_RE = re.compile(
     r"\(P:\s+([\d.]+)%\)"  # policy
     r".*?"  # anything
     r"\(Q:\s+([-\d.]+)\)"  # Q-value
+    r".*?"  # anything
+    r"\(U:\s+([-\d.]+)\)"  # U-value (uncertainty/utility)
 )
 
 
@@ -407,8 +409,8 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
     
     Returns:
         (candidates, evaluation, total_visits, visits_on_better) where:
-        - candidates: List of candidate move dicts with rank, visits, wdl, policy, q_value
-        - evaluation: Dict with evaluation for the played move (visits, wdl, policy, q_value)
+        - candidates: List of candidate move dicts with rank, visits, wdl, policy, q_value, u_value
+        - evaluation: Dict with evaluation for the played move (visits, wdl, policy, q_value, u_value)
         - total_visits: Sum of visits across ALL legal moves (should ≈ node budget)
         - visits_on_better: Sum of visits on moves ranked strictly better (0 if rank 1)
     """
@@ -470,7 +472,8 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
         visits = int(match.group(2))
         policy_pct = float(match.group(3))
         q_value_str = match.group(4)  # Q-value
-        
+        u_value_str = match.group(5)  # U-value
+
         # Convert UCI to SAN
         try:
             move_obj = chess.Move.from_uci(move_uci)
@@ -480,15 +483,21 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
                 move_san = move_uci
         except (ValueError, chess.InvalidMoveError):
             move_san = move_uci
-        
+
         verbose_data[move_san] = {
             "visits": visits,
             "policy": round(policy_pct / 100.0, 4),  # Convert percentage to decimal
         }
-        
+
         if q_value_str:
             try:
                 verbose_data[move_san]["q_value"] = round(float(q_value_str), 5)
+            except ValueError:
+                pass
+
+        if u_value_str:
+            try:
+                verbose_data[move_san]["u_value"] = round(float(u_value_str), 5)
             except ValueError:
                 pass
     
@@ -504,6 +513,8 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
                 candidate["policy"] = verbose_data[move_san]["policy"]
             if "q_value" in verbose_data[move_san]:
                 candidate["q_value"] = verbose_data[move_san]["q_value"]
+            if "u_value" in verbose_data[move_san]:
+                candidate["u_value"] = verbose_data[move_san]["u_value"]
         
         # Add WDL from multipv data
         if "wdl" in mpv_data:
@@ -527,7 +538,7 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
         # Rebuild candidate dict with rank right after move
         move = candidate["move"]
         reordered = {"move": move, "rank": rank}
-        for key in ["visits", "policy", "q_value", "wdl"]:
+        for key in ["visits", "policy", "q_value", "u_value", "wdl"]:
             if key in candidate:
                 reordered[key] = candidate[key]
         candidates[rank - 1] = reordered
@@ -560,6 +571,7 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
             "visits": verbose_data[played_move_san].get("visits"),
             "policy": verbose_data[played_move_san].get("policy"),
             "q_value": verbose_data[played_move_san].get("q_value"),
+            "u_value": verbose_data[played_move_san].get("u_value"),
         }
         # Note: WDL not available yet for moves outside MultiPV (will be added later)
         
@@ -572,20 +584,23 @@ def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, pl
     
     if played_move_data:
         evaluation = {}
-        
-        # Order matches candidate_moves: rank, visits, policy, q_value, wdl
+
+        # Order matches candidate_moves: rank, visits, policy, q_value, u_value, wdl
         if "rank" in played_move_data:
             evaluation["rank"] = played_move_data["rank"]
-        
+
         if "visits" in played_move_data and played_move_data["visits"] is not None:
             evaluation["visits"] = played_move_data["visits"]
-        
+
         if "policy" in played_move_data and played_move_data["policy"] is not None:
             evaluation["policy"] = played_move_data["policy"]
-        
+
         if "q_value" in played_move_data and played_move_data["q_value"] is not None:
             evaluation["q_value"] = played_move_data["q_value"]
-        
+
+        if "u_value" in played_move_data and played_move_data["u_value"] is not None:
+            evaluation["u_value"] = played_move_data["u_value"]
+
         if "wdl" in played_move_data:
             evaluation["wdl"] = played_move_data["wdl"]
     

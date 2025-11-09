@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2025-11-04
+
+### Added
+- **analyze_pgn.py**: Added `u_value` (exploration bonus) field to JSON output
+  - Captures U-value from lc0's PUCT formula: `U = Cpuct * P * sqrt(N_parent) / (1 + N_child)`
+  - Provides insight into exploration vs exploitation trade-offs during search
+  - Higher U-values indicate less-explored moves with promising policy priors
+  - Field appears after `q_value` in both `evaluation` and `candidate_moves`
+  - U-values are rounded to 5 decimal places, matching Q-value precision
+  - Documentation updated in README.md and docs/output_format.json
+
 ## [1.3.0] - 2025-11-01
 
 ### Added
@@ -162,6 +173,7 @@ This project was almost entirely written by Claude Sonnet 4.5, with Alexis Olson
 ### License
 GNU General Public License v3.0 - See LICENSE file for details.
 
+[1.4.0]: https://github.com/AlexisOlson/elo-estimator/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/AlexisOlson/elo-estimator/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/AlexisOlson/elo-estimator/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/AlexisOlson/elo-estimator/compare/v1.0.0...v1.1.0

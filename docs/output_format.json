@@ -28,11 +28,11 @@
             "total_visits": 1022,
             "visits_on_better": 654,
             "played_move": "e4",
-            "evaluation": {"rank": 6, "visits": 10, "policy": 0.0725, "q_value": 0.01256, "wdl": [56, 901, 43]},
+            "evaluation": {"rank": 6, "visits": 10, "policy": 0.0725, "q_value": 0.01256, "u_value": 0.04231, "wdl": [56, 901, 43]},
             "candidate_moves": [
-              { "move": "Nf3", "rank": 1, "visits": 19, "policy": 0.1194, "q_value": 0.02891, "wdl": [63, 903, 34] },
-              { "move": "d4" , "rank": 2, "visits": 19, "policy": 0.1227, "q_value": 0.02861, "wdl": [63, 903, 34] },
-              { "move": "c4" , "rank": 3, "visits": 15, "policy": 0.1063, "q_value": 0.02329, "wdl": [60, 903, 37] }
+              { "move": "Nf3", "rank": 1, "visits": 19, "policy": 0.1194, "q_value": 0.02891, "u_value": 0.03245, "wdl": [63, 903, 34] },
+              { "move": "d4" , "rank": 2, "visits": 19, "policy": 0.1227, "q_value": 0.02861, "u_value": 0.03341, "wdl": [63, 903, 34] },
+              { "move": "c4" , "rank": 3, "visits": 15, "policy": 0.1063, "q_value": 0.02329, "u_value": 0.03562, "wdl": [60, 903, 37] }
             ]
           },
           {
@@ -43,11 +43,11 @@
             "total_visits": 1024,
             "visits_on_better": 0,
             "played_move": "e5",
-            "evaluation": {"rank": 1, "visits": 102, "policy": 0.5994, "q_value": -0.00719, "wdl": [46, 901, 53]},
+            "evaluation": {"rank": 1, "visits": 102, "policy": 0.5994, "q_value": -0.00719, "u_value": 0.01234, "wdl": [46, 901, 53]},
             "candidate_moves": [
-              { "move": "e5", "rank": 1, "visits": 102, "policy": 0.5994, "q_value": -0.00719, "wdl": [46, 901,  53] },
-              { "move": "c6", "rank": 2, "visits":   6, "policy": 0.0746, "q_value": -0.09848, "wdl": [33, 835, 132] },
-              { "move": "c5", "rank": 3, "visits":   5, "policy": 0.0585, "q_value": -0.0938 , "wdl": [31, 844, 125] }
+              { "move": "e5", "rank": 1, "visits": 102, "policy": 0.5994, "q_value": -0.00719, "u_value": 0.01234, "wdl": [46, 901,  53] },
+              { "move": "c6", "rank": 2, "visits":   6, "policy": 0.0746, "q_value": -0.09848, "u_value": 0.03982, "wdl": [33, 835, 132] },
+              { "move": "c5", "rank": 3, "visits":   5, "policy": 0.0585, "q_value": -0.0938 , "u_value": 0.04123, "wdl": [31, 844, 125] }
             ]
           }
         ]
@@ -85,6 +85,7 @@
       "visits": "MCTS nodes visited for the played move",
       "policy": "Neural network policy (prior probability) for the played move",
       "q_value": "Q-value from MCTS search for the played move (expected value from side-to-move perspective)",
+      "u_value": "U-value (exploration bonus) from PUCT formula: U = Cpuct * P * sqrt(N_parent) / (1 + N_child). Higher values indicate less-explored moves with promising policy priors.",
       "wdl": "Win/Draw/Loss in permille [W, D, L] for the played move from side-to-move perspective. Values sum to 1000."
     },
     "candidate_fields": {
@@ -93,6 +94,7 @@
       "visits": "MCTS nodes visited for this specific move, right-aligned for readability",
       "policy": "Neural network policy (prior probability) for this move (up to 4 decimal places)",
       "q_value": "Q-value from MCTS search (expected value from side-to-move perspective, up to 5 decimal places)",
+      "u_value": "U-value (exploration bonus) from PUCT formula (up to 5 decimal places). Encourages exploration of less-visited moves with high policy priors.",
       "wdl": "Win/Draw/Loss in permille [W, D, L] for this move from side-to-move perspective. Values sum to 1000."
     }
   },
@@ -105,6 +107,6 @@
     "total_visits ≈ node budget; visits_on_better / total_visits = fraction of search spent on superior moves",
     "Candidate moves are sorted by rank and limited to max_candidates",
     "All moves use SAN (Standard Algebraic Notation)",
-    "Policy values have up to 4 decimal places, Q-values up to 5 decimal places"
+    "Policy values have up to 4 decimal places, Q-values and U-values up to 5 decimal places"
   ]
 }

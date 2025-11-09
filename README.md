@@ -64,11 +64,11 @@ The system uses an unmodified Leela Chess Zero engine via UCI protocol:
   "total_visits": 123,
   "visits_on_better": 76,
   "played_move": "e4",
-  "evaluation": {"rank": 6, "visits": 10, "policy": 0.0725, "q_value": 0.01256, "wdl": [56, 901, 43]},
+  "evaluation": {"rank": 6, "visits": 10, "policy": 0.0725, "q_value": 0.01256, "u_value": 0.04231, "wdl": [56, 901, 43]},
   "candidate_moves": [
-    { "move": "Nf3", "rank": 1, "visits": 19, "policy": 0.1194, "q_value": 0.02891, "wdl": [63, 903, 34] },
-    { "move": "d4" , "rank": 2, "visits": 19, "policy": 0.1227, "q_value": 0.02861, "wdl": [63, 903, 34] },
-    { "move": "c4" , "rank": 3, "visits": 15, "policy": 0.1063, "q_value": 0.02329, "wdl": [60, 903, 37] }
+    { "move": "Nf3", "rank": 1, "visits": 19, "policy": 0.1194, "q_value": 0.02891, "u_value": 0.03245, "wdl": [63, 903, 34] },
+    { "move": "d4" , "rank": 2, "visits": 19, "policy": 0.1227, "q_value": 0.02861, "u_value": 0.03341, "wdl": [63, 903, 34] },
+    { "move": "c4" , "rank": 3, "visits": 15, "policy": 0.1063, "q_value": 0.02329, "u_value": 0.03562, "wdl": [60, 903, 37] }
   ]
 }
 ```
@@ -123,7 +123,7 @@ elo-estimator/
 
 ## Release Status
 
-**Release Stage**: v1.3 – enhanced position complexity analysis
+**Release Stage**: v1.4 – exploration metrics and PUCT formula insights
 
 ✅ **Completed**:
 - Project structure established
@@ -138,6 +138,7 @@ elo-estimator/
 - **ClearTree** command integration for position-independent evaluations
 - Documentation cleanup and reorganization
 - **total_legal_moves** field for position complexity metrics
+- **u_value** field for exploration bonus from PUCT formula
 
 🚧 **In Progress**:
 - Performance optimization for batch processing
