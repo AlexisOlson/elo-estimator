@@ -34,6 +34,8 @@ import pathlib
 import subprocess
 import sys
 import re
+import os
+import time
 from typing import Any, Dict, List, Optional, Tuple
 
 import chess
@@ -159,12 +161,154 @@ INFO_STRING_RE = re.compile(
 )
 
 
+def try_claim_game(game_idx: int, work_dir: pathlib.Path, worker_id: str) -> bool:
+    """Try to atomically claim a game for processing.
+
+    Args:
+        game_idx: Game index (1-based)
+        work_dir: Directory for coordination files
+        worker_id: Identifier for this worker (e.g., "GPU0")
+
+    Returns:
+        True if successfully claimed, False if already claimed by another worker
+    """
+    work_dir.mkdir(parents=True, exist_ok=True)
+    lock_file = work_dir / f"game_{game_idx:06d}.lock"
+
+    try:
+        # Try to create lock file atomically (exclusive creation)
+        fd = os.open(str(lock_file), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        try:
+            # Write worker ID and timestamp to lock file
+            lock_info = {
+                "worker_id": worker_id,
+                "timestamp": time.time(),
+                "game_idx": game_idx
+            }
+            os.write(fd, json.dumps(lock_info).encode())
+        finally:
+            os.close(fd)
+        return True
+    except FileExistsError:
+        # Another worker already claimed this game
+        return False
+
+
+def is_game_complete(game_idx: int, work_dir: pathlib.Path) -> bool:
+    """Check if a game has already been completed.
+
+    Args:
+        game_idx: Game index (1-based)
+        work_dir: Directory for coordination files
+
+    Returns:
+        True if game output file exists
+    """
+    output_file = work_dir / f"game_{game_idx:06d}.json"
+    return output_file.exists()
+
+
+def release_game_lock(game_idx: int, work_dir: pathlib.Path):
+    """Release the lock file for a game after completion.
+
+    Args:
+        game_idx: Game index (1-based)
+        work_dir: Directory for coordination files
+    """
+    lock_file = work_dir / f"game_{game_idx:06d}.lock"
+    try:
+        lock_file.unlink()
+    except FileNotFoundError:
+        pass  # Already removed
+
+
+def write_game_result(game_idx: int, work_dir: pathlib.Path, game_record: Dict[str, Any]):
+    """Write a single game result to its own file.
+
+    Args:
+        game_idx: Game index (1-based)
+        work_dir: Directory for coordination files
+        game_record: Game data to write
+    """
+    output_file = work_dir / f"game_{game_idx:06d}.json"
+    with output_file.open("w", encoding="utf-8") as f:
+        json_str = _compact_json_dumps(game_record, indent=2)
+        f.write(json_str)
+        f.write('\n')
+
+
+def merge_game_files(work_dir: pathlib.Path, output_path: pathlib.Path):
+    """Merge individual game JSON files into a single output file.
+
+    Args:
+        work_dir: Directory containing individual game files
+        output_path: Path to write merged output
+
+    The function reads all game_NNNN.json files, sorts them by game index,
+    and combines them into a single JSON output matching the legacy format.
+    """
+    # Find all game files
+    game_files = sorted(work_dir.glob("game_*.json"))
+
+    if not game_files:
+        print(f"No game files found in {work_dir}")
+        return
+
+    print(f"Found {len(game_files)} game files to merge")
+
+    # Read all game records
+    games = []
+    for game_file in game_files:
+        try:
+            with game_file.open("r", encoding="utf-8") as f:
+                game_record = json.load(f)
+                games.append(game_record)
+        except (json.JSONDecodeError, IOError) as e:
+            print(f"Warning: Failed to read {game_file}: {e}")
+            continue
+
+    # Sort by game_index to ensure correct order
+    games.sort(key=lambda g: g.get("game_index", 0))
+
+    # Write merged output
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", encoding="utf-8") as out_file:
+        out_file.write('{\n  "games": [\n')
+
+        for idx, game in enumerate(games):
+            if idx > 0:
+                out_file.write(',\n')
+            json_str = _compact_json_dumps(game, indent=2)
+            # Indent the entire game object by 4 spaces
+            indented = '\n'.join('    ' + line if line else line for line in json_str.split('\n'))
+            out_file.write(indented)
+
+        out_file.write('\n  ]\n}\n')
+
+    print(f"Merged {len(games)} games into {output_path}")
+
+
 def analyze_pgn(
     config: Dict[str, Any],
     pgn_path: pathlib.Path,
     output_path: pathlib.Path,
+    work_dir: Optional[pathlib.Path] = None,
+    worker_id: Optional[str] = None,
 ):
-    """Analyze PGN file with lc0 and write SAN output directly."""
+    """Analyze PGN file with lc0 and write SAN output directly.
+
+    Args:
+        config: Configuration dict with lc0 parameters
+        pgn_path: Path to input PGN file
+        output_path: Path to output JSON file (legacy mode) or final merged output
+        work_dir: Optional work directory for distributed processing
+        worker_id: Optional worker identifier for distributed processing
+
+    When work_dir is provided, enables distributed multi-GPU mode:
+    - Each worker claims games atomically using lock files
+    - Individual game results written to work_dir/game_NNNN.json
+    - Workers skip games already completed or claimed by others
+    """
     
     lc0_path = pathlib.Path(config["lc0_path"])
     network_path = pathlib.Path(config["weights"])
@@ -178,7 +322,7 @@ def analyze_pgn(
 
     # Read PGN games
     games = []
-    with pgn_path.open() as f:
+    with pgn_path.open(encoding='latin-1') as f:
         while True:
             game = chess.pgn.read_game(f)
             if game is None:
@@ -237,29 +381,54 @@ def analyze_pgn(
     send_command("isready")
     read_until("readyok")
     
-    # Collect all game data
-    all_games = []
-    
-    # Open output file for incremental writing
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    out_file = output_path.open("w", encoding="utf-8")
-    out_file.write('{\n  "games": [\n')
-    out_file.flush()
-    
-    # Helper function to write a single game incrementally
-    def write_game(game_record, is_first):
-        """Write a single game to the output file."""
-        if not is_first:
-            out_file.write(',\n')
-        json_str = _compact_json_dumps(game_record, indent=2)
-        # Indent the entire game object by 4 spaces
-        indented = '\n'.join('    ' + line if line else line for line in json_str.split('\n'))
-        out_file.write(indented)
+    # Determine mode: distributed (work_dir) or legacy (single file)
+    distributed_mode = work_dir is not None
+
+    if distributed_mode:
+        # Distributed mode: use work directory for individual game files
+        work_dir.mkdir(parents=True, exist_ok=True)
+        if worker_id is None:
+            worker_id = f"worker_{os.getpid()}"
+        print(f"Running in distributed mode: worker_id={worker_id}, work_dir={work_dir}")
+        out_file = None
+        games_processed = 0
+    else:
+        # Legacy mode: single output file with incremental writing
+        all_games = []
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        out_file = output_path.open("w", encoding="utf-8")
+        out_file.write('{\n  "games": [\n')
         out_file.flush()
-    
+
+        # Helper function to write a single game incrementally
+        def write_game(game_record, is_first):
+            """Write a single game to the output file."""
+            if not is_first:
+                out_file.write(',\n')
+            json_str = _compact_json_dumps(game_record, indent=2)
+            # Indent the entire game object by 4 spaces
+            indented = '\n'.join('    ' + line if line else line for line in json_str.split('\n'))
+            out_file.write(indented)
+            out_file.flush()
+
     try:
         # Analyze each game
         for game_idx, game in enumerate(games):
+            game_num = game_idx + 1  # 1-based index
+
+            # In distributed mode, check if already complete or try to claim
+            if distributed_mode:
+                if is_game_complete(game_num, work_dir):
+                    print(f"[{worker_id}] Game {game_num} already complete, skipping")
+                    continue
+
+                if not try_claim_game(game_num, work_dir, worker_id):
+                    print(f"[{worker_id}] Game {game_num} claimed by another worker, skipping")
+                    continue
+
+                print(f"[{worker_id}] Claimed game {game_num}")
+
+            # Game is claimed (distributed) or ready to process (legacy)
             white_player = game.headers.get("White", "")
             black_player = game.headers.get("Black", "")
             white_elo = _parse_elo(game.headers.get("WhiteElo"))
@@ -364,10 +533,10 @@ def analyze_pgn(
                 ply += 1
             
             print(f"  Analyzed {ply - 1} positions")
-            
+
             # Build game record with metadata and moves
             game_record = {
-                "game_index": game_idx + 1,
+                "game_index": game_num,
                 "event": event,
                 "site": site,
                 "date": date,
@@ -380,22 +549,34 @@ def analyze_pgn(
                 "eco": eco,
                 "moves": moves,
             }
-            all_games.append(game_record)
-            
-            # Write game incrementally
-            write_game(game_record, is_first=(game_idx == 0))
-            print(f"  Progress saved ({game_idx + 1}/{len(games)} games completed)")
+
+            # Write output based on mode
+            if distributed_mode:
+                # Write individual game file
+                write_game_result(game_num, work_dir, game_record)
+                release_game_lock(game_num, work_dir)
+                games_processed += 1
+                print(f"[{worker_id}] Game {game_num} complete ({games_processed} processed by this worker)")
+            else:
+                # Legacy mode: incremental write to single file
+                all_games.append(game_record)
+                write_game(game_record, is_first=(game_idx == 0))
+                print(f"  Progress saved ({game_num}/{len(games)} games completed)")
     
     finally:
-        # Close the JSON structure
-        out_file.write('\n  ]\n}\n')
-        out_file.close()
-    
+        # Close output file in legacy mode
+        if not distributed_mode and out_file is not None:
+            out_file.write('\n  ]\n}\n')
+            out_file.close()
+
     # Cleanup
     send_command("quit")
     process.wait()
-    
-    print(f"\nDone! Output written to {output_path}")
+
+    if distributed_mode:
+        print(f"\n[{worker_id}] Done! Processed {games_processed} games. Results in {work_dir}/")
+    else:
+        print(f"\nDone! Output written to {output_path}")
 
 
 def parse_analysis(lines: List[str], board: chess.Board, max_candidates: int, played_move_san: str) -> Tuple[List[Dict], Optional[Dict], Optional[int], Optional[int]]:
@@ -742,14 +923,42 @@ Examples:
         help="Override config values (e.g., --set search.value=10 --set max_candidates=3). Can be used multiple times.",
         default=None,
     )
-    
+    parser.add_argument(
+        "--work-dir",
+        type=pathlib.Path,
+        help="Work directory for distributed multi-GPU processing. When specified, each worker claims games atomically and writes individual result files.",
+        default=None,
+    )
+    parser.add_argument(
+        "--worker-id",
+        type=str,
+        help="Worker identifier for distributed processing (e.g., GPU0, GPU1). Defaults to process ID if not specified.",
+        default=None,
+    )
+    parser.add_argument(
+        "--merge",
+        action="store_true",
+        help="Merge mode: combine individual game files from work-dir into single output file. Skips analysis.",
+        default=False,
+    )
+
     parser.epilog += """
-    
+
 Additional options:
   --search.nodes=N      Set UCI search to N nodes (shortcut for --set search.type=nodes --set search.value=N)
   --search.movetime=N   Set UCI search to N milliseconds
   --search.depth=N      Set UCI search to depth N
   --lc0.OPTION=VALUE    Set lc0 option (e.g., --lc0.threads=4, --lc0.backend=cuda-fp16)
+
+Multi-GPU distributed processing:
+  # Worker 1 (using GPU 0)
+  %(prog)s games.pgn output.json --work-dir=output/work --worker-id=GPU0 --lc0.backend-opts=gpu=0
+
+  # Worker 2 (using GPU 1) - run simultaneously
+  %(prog)s games.pgn output.json --work-dir=output/work --worker-id=GPU1 --lc0.backend-opts=gpu=1
+
+  # After all workers complete, merge results
+  %(prog)s games.pgn output.json --work-dir=output/work --merge
 """
     
     # Add support for --search.* and --lc0.* arguments
@@ -833,12 +1042,26 @@ Additional options:
                 resolved_config["search"]["type"] = search_type
                 resolved_config["search"]["value"] = int(value)
 
+    # Handle merge mode
+    if args.merge:
+        if args.work_dir is None:
+            raise SystemExit("--merge requires --work-dir to be specified")
+        merge_game_files(args.work_dir, args.output)
+        return
+
+    # Normal analysis mode
     required_keys = {"lc0_path", "weights"}
     missing = [key for key in required_keys if key not in resolved_config]
     if missing:
         raise SystemExit(f"Missing required config keys: {', '.join(missing)}")
 
-    analyze_pgn(resolved_config, args.pgn, args.output)
+    analyze_pgn(
+        resolved_config,
+        args.pgn,
+        args.output,
+        work_dir=args.work_dir,
+        worker_id=args.worker_id,
+    )
 
 
 if __name__ == "__main__":

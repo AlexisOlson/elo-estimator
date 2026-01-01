@@ -1,0 +1,20 @@
+{
+  "lc0_path": "/usr/local/bin/lc0",
+  "weights": "/workspace/networks/BT4-1024x15x32h-swa-6147500.pb.gz",
+  "search": {
+    "type": "nodes",
+    "value": 2000
+  },
+  "max_candidates": 20,
+  "extra_args": [
+    "--backend=cuda-fp16",
+    "--threads=1",
+    "--minibatch-size=64",
+    "--wdl-draw-rate-reference=0.64",
+    "--wdl-calibration-elo=2650",
+    "--smart-pruning-factor=0.0",
+    "--moves-left-threshold=1.0",
+    "--root-has-own-cpuct-params=true",
+    "--cpuct-at-root=100.0"
+  ]
+}

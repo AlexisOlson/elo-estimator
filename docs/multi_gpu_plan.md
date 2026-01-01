@@ -59,7 +59,6 @@ Files to bring to main:
 - `.dockerignore`
 - `config/lc0_config.vastai.json`
 - `scripts/run_multi_gpu.sh`
-- `scripts/run_multi_gpu.ps1`
 - `VASTAI_USAGE.md`
 - `docs/MULTI_GPU_USAGE.md`
 
@@ -72,7 +71,7 @@ git merge archive-experiments
 ```bash
 git checkout archive-experiments -- Dockerfile .dockerignore
 git checkout archive-experiments -- config/lc0_config.vastai.json
-git checkout archive-experiments -- scripts/run_multi_gpu.sh scripts/run_multi_gpu.ps1
+git checkout archive-experiments -- scripts/run_multi_gpu.sh
 git checkout archive-experiments -- VASTAI_USAGE.md docs/MULTI_GPU_USAGE.md
 # Then manually merge analyze_pgn.py changes
 ```
@@ -118,10 +117,10 @@ COPY config/lc0_config.vastai.json /workspace/config/lc0_config.json
 COPY VASTAI_USAGE.md /workspace/
 COPY docs/MULTI_GPU_USAGE.md /workspace/
 
-# Data directories mounted at runtime
-# /data/pgn - PGN files
-# /data/networks - Neural network weights
-# /data/output - Output directory
+# Networks and PGN data baked into image for convenience
+# /workspace/networks - Neural network weights (baked in)
+# /workspace/pgn-data - PGN files (baked in)
+# /workspace/output - Output directory (can be mounted for persistence)
 
 ENV PYTHONUNBUFFERED=1
 
@@ -138,7 +137,7 @@ CMD ["/bin/bash"]
 ```json
 {
   "lc0_path": "/usr/local/bin/lc0",
-  "weights": "/data/networks/BT4-1024x15x32h-swa-6147500.pb.gz",
+  "weights": "/workspace/networks/BT4-1024x15x32h-swa-6147500.pb.gz",
   "search": {
     "type": "nodes",
     "value": 2000
@@ -159,7 +158,7 @@ CMD ["/bin/bash"]
 
 Changes from archive version:
 - `search.value`: 2000 (was 2000, confirm)
-- `weights`: Updated path for volume mount
+- `weights`: Corrected path to `/workspace/networks/` (matches Dockerfile network location)
 - `minibatch-size`: 64 (tune for larger GPUs like A100/H100)
 
 ---
@@ -228,25 +227,25 @@ cat ${WORK_DIR}/*.lock 2>/dev/null | jq -r '.worker_id' | sort | uniq -c
 
 ## Phase 5: Testing Before Full Run
 
-### 5.1 Local Multi-GPU Test (Windows - GTX 1070 + RTX 2080)
+### 5.1 Local Multi-GPU Test
 Single command launches both workers:
-```powershell
-# Using run_multi_gpu.ps1 (from archive, spawns workers in background)
-.\scripts\run_multi_gpu.ps1 pgn-data/raw/training_2425_first1000.pgn output/test.json 2 --search.nodes=100
+```bash
+# Using run_multi_gpu.sh (spawns workers in background)
+./scripts/run_multi_gpu.sh pgn-data/raw/training_2425_first1000.pgn 2 --output-dir=output/test --search.nodes=100
 
-# Output: individual game files in output/test_work/
+# Output: individual game files in output/test/
 ```
 
 The script:
 1. Spawns N worker processes (one per GPU)
 2. Each worker claims games atomically via lock files
 3. Waits for all workers to complete
-4. Optionally merges (we'll add a `--no-merge` flag)
+4. Optionally merges with --merge=FILE flag
 
 ### 5.2 Docker/Linux Test
 ```bash
 # Single command for multi-GPU
-./scripts/run_multi_gpu.sh pgn-data/raw/training_2425_first1000.pgn output/test.json 2 --search.nodes=100
+./scripts/run_multi_gpu.sh pgn-data/raw/training_2425_first1000.pgn 2 --output-dir=output/test --search.nodes=100
 ```
 
 ### 5.3 vast.ai Test Run
@@ -296,7 +295,6 @@ The script:
 | `.dockerignore` | Docker build exclusions |
 | `config/lc0_config.vastai.json` | Container config |
 | `scripts/run_multi_gpu.sh` | Multi-GPU orchestration |
-| `scripts/run_multi_gpu.ps1` | Windows version |
 | `VASTAI_USAGE.md` | Deployment guide |
 | `docs/MULTI_GPU_USAGE.md` | Multi-GPU usage guide |
 

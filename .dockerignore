@@ -1,0 +1,36 @@
+# Git and version control
+.git
+.gitignore
+.gitmodules
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+
+# Output and data files
+output/
+
+# Build artifacts
+lc0/build/
+*.o
+*.exe
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+
+# Local settings
+.claude/
+*.local.*
+
+# Large files that shouldn't be in image
+*.json.gz
+*.7z
