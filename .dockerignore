@@ -1,0 +1,48 @@
+# Git and version control
+.git
+.gitignore
+.gitmodules
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+
+# Output and data files
+output/
+pgn-data/raw/
+pgn-data/samples/
+
+# Build artifacts
+lc0/build/
+*.o
+*.exe
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Documentation (not needed in container)
+docs/
+README.md
+CHANGELOG.md
+LICENSE
+release_notes_v1.3.0.md
+# VASTAI_USAGE.md is needed in the container
+
+# Local settings
+.claude/
+*.local.*
+
+# Large files that shouldn't be in image
+# Exclude PGN files in pgn-data directories
+pgn-data/**/*.pgn
+# training_uniform_1k_games.pgn in root is needed
+*.json.gz
+*.7z

@@ -1,0 +1,12 @@
+[Event "Quick Test - Fool's Mate"]
+[Site "Test"]
+[Date "2025.01.01"]
+[Round "1"]
+[White "White"]
+[WhiteElo "1500"]
+[Black "Black"]
+[BlackElo "1500"]
+[Result "0-1"]
+[ECO "A00"]
+
+1. f3 e5 2. g4 Qh4# 0-1

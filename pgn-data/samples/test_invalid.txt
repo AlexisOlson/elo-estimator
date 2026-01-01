@@ -1,0 +1,3 @@
+This is not a valid chess file.
+It contains random text.
+No PGN headers or FEN strings here.
