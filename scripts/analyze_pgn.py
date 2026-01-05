@@ -294,6 +294,7 @@ def analyze_pgn(
     output_path: pathlib.Path,
     work_dir: Optional[pathlib.Path] = None,
     worker_id: Optional[str] = None,
+    start_index: int = 1,
 ):
     """Analyze PGN file with lc0 and write SAN output directly.
 
@@ -303,6 +304,7 @@ def analyze_pgn(
         output_path: Path to output JSON file (legacy mode) or final merged output
         work_dir: Optional work directory for distributed processing
         worker_id: Optional worker identifier for distributed processing
+        start_index: Skip games before this index (1-based). Default 1 (start from beginning).
 
     When work_dir is provided, enables distributed multi-GPU mode:
     - Each worker claims games atomically using lock files
@@ -334,7 +336,10 @@ def analyze_pgn(
         return
     
     print(f"Found {len(games)} game(s) in PGN")
-    
+
+    if start_index > 1:
+        print(f"Skipping games 1-{start_index - 1} (starting at game {start_index})")
+
     # Start lc0 in UCI mode
     lc0_cmd = [
         str(lc0_path),
@@ -415,6 +420,10 @@ def analyze_pgn(
         # Analyze each game
         for game_idx, game in enumerate(games):
             game_num = game_idx + 1  # 1-based index
+
+            # Skip games before start_index
+            if game_num < start_index:
+                continue
 
             # In distributed mode, check if already complete or try to claim
             if distributed_mode:
@@ -941,6 +950,12 @@ Examples:
         help="Merge mode: combine individual game files from work-dir into single output file. Skips analysis.",
         default=False,
     )
+    parser.add_argument(
+        "--start-index",
+        type=int,
+        help="Skip games before this index (1-based). Useful for resuming interrupted runs without needing to upload completed game files.",
+        default=1,
+    )
 
     parser.epilog += """
 
@@ -949,6 +964,7 @@ Additional options:
   --search.movetime=N   Set UCI search to N milliseconds
   --search.depth=N      Set UCI search to depth N
   --lc0.OPTION=VALUE    Set lc0 option (e.g., --lc0.threads=4, --lc0.backend=cuda-fp16)
+  --start-index=N       Skip games before index N (1-based). Resume from game N.
 
 Multi-GPU distributed processing:
   # Worker 1 (using GPU 0)
@@ -959,6 +975,10 @@ Multi-GPU distributed processing:
 
   # After all workers complete, merge results
   %(prog)s games.pgn output.json --work-dir=output/work --merge
+
+Resuming interrupted runs:
+  # Resume from game 65001 (skip first 65000 games)
+  %(prog)s games.pgn output.json --work-dir=output/work --worker-id=GPU0 --start-index=65001
 """
     
     # Add support for --search.* and --lc0.* arguments
@@ -1061,6 +1081,7 @@ Multi-GPU distributed processing:
         args.output,
         work_dir=args.work_dir,
         worker_id=args.worker_id,
+        start_index=args.start_index,
     )
 
 

@@ -26,6 +26,7 @@ if [ "$#" -lt 1 ]; then
     echo ""
     echo "Options:"
     echo "  --merge=FILE         Merge individual games into single output file"
+    echo "  --start-index=N      Skip games before index N (resume from game N)"
     echo "  --search.nodes=N     Number of nodes to search per position"
     echo "  --lc0.OPTION=VALUE   Pass options to lc0"
     echo ""
@@ -38,6 +39,9 @@ if [ "$#" -lt 1 ]; then
     echo ""
     echo "  # With merge - combine results into single file"
     echo "  $0 games.pgn --output-dir=output/run1 --merge=results.json --search.nodes=2000"
+    echo ""
+    echo "  # Resume from game 65001"
+    echo "  $0 games.pgn --output-dir=output/run1 --start-index=65001"
     exit 1
 fi
 
@@ -92,7 +96,9 @@ if [ -n "$MERGE_FILE" ]; then
     echo "  Merge output: $MERGE_FILE"
 fi
 echo "  Number of GPUs: $NUM_GPUS"
-echo "  Extra args: $EXTRA_ARGS"
+if [ -n "$EXTRA_ARGS" ]; then
+    echo "  Extra args: $EXTRA_ARGS"
+fi
 echo ""
 
 # Create work directory
