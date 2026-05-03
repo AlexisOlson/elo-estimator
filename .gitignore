@@ -8,6 +8,7 @@ lc0/build-*/
 # Large data files (don't commit to git!)
 networks/*.pb.gz
 networks/*.pb
+pgn-data/raw/
 
 # Python
 .venv/
@@ -35,3 +36,4 @@ build/
 *.tmp
 *.log
 *.bak
+nul

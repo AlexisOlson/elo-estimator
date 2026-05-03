@@ -1,0 +1,20 @@
+# Ensure shell scripts always use Unix line endings (LF), even on Windows
+*.sh text eol=lf
+
+# Python files should use Unix line endings
+*.py text eol=lf
+
+# General text files
+*.md text
+*.txt text
+*.json text
+*.yaml text
+*.yml text
+
+# Binary files
+*.pgn binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pb binary

@@ -98,32 +98,41 @@ Training dataset → ML model → Historical game analysis
 
 ```
 elo-estimator/
-├── lc0/                          # Leela Chess Zero engine (git submodule)
-│   ├── src/                      # C++ source code
-│   └── build/                    # Compiled binaries
-├── networks/                     # Leela neural network weights
-│   └── 791556.pb.gz              # Example network file
+├── lc0/                                    # Leela Chess Zero engine (git submodule)
+│   ├── src/                                # C++ source code
+│   └── build/                              # Compiled binaries
+├── networks/                               # Leela neural network weights
+│   └── BT4-1024x15x32h-swa-6147500.pb.gz   # BT4 network used in production
 ├── pgn-data/
-│   ├── raw/                      # Training games
-│   └── samples/                  # Small PGN files for testing
-├── output/                       # Analysis output JSON files
-├── scripts/                      # Python processing scripts
-│   ├── analyze_pgn.py            # Main PGN analysis script
-│   ├── setup_venv.ps1            # Python environment setup (Windows)
-│   ├── requirements.txt          # Python dependencies
-│   └── README.md                 # Scripts documentation
-├── config/                       # Configuration files
-│   └── lc0_config.json           # lc0 engine configuration
-└── docs/                         # Documentation
-    ├── PROJECT_BRIEF.md          # Project overview (brief)
-    ├── config_example.md         # Config file structure documentation
-    ├── output_format.json        # Output format specification
-    └── sample_input.pgn          # Sample PGN data
+│   ├── raw/                                # Training games
+│   └── samples/                            # Small PGN files for testing
+├── output/                                 # Analysis output JSON files
+├── scripts/                                # Python processing scripts
+│   ├── analyze_pgn.py                      # Main PGN analysis script
+│   ├── run_multi_gpu.sh                    # Multi-GPU orchestrator
+│   ├── check_errors.py                     # Validate output for known artifacts
+│   ├── repair_errors.py                    # Detect, re-run, and verify games with errors
+│   ├── reformat_json.py                    # Reformat output JSON
+│   ├── setup_venv.ps1                      # Python environment setup (Windows)
+│   ├── requirements.txt                    # Python dependencies
+│   └── README.md                           # Scripts documentation
+├── config/                                 # Configuration files
+│   ├── lc0_config.json                     # lc0 engine configuration
+│   └── lc0_config.vastai.json              # vast.ai/container variant
+├── docs/                                   # Documentation
+│   ├── PROJECT_BRIEF.md                    # Project overview (brief)
+│   ├── MULTI_GPU_USAGE.md                  # Multi-GPU pipeline guide
+│   ├── config_example.md                   # Config file structure documentation
+│   ├── output_format.json                  # Output format specification
+│   └── sample_input.pgn                    # Sample PGN data
+├── Dockerfile                              # Container image for vast.ai runs
+├── VASTAI_USAGE.md                         # vast.ai deployment guide
+└── convert_json_to_parquet.py              # JSON → Parquet/CSV deliverable bundle
 ```
 
 ## Release Status
 
-**Release Stage**: v1.4 – exploration metrics and PUCT formula insights
+**Release Stage**: v1.5 – multi-GPU pipeline, vast.ai deployment, deliverable bundle
 
 ✅ **Completed**:
 - Project structure established
@@ -132,20 +141,26 @@ elo-estimator/
 - Python analysis script (`analyze_pgn.py`) working with UCI protocol
 - Sample PGN analysis tested (first 10 games)
 - Output format validated with actual lc0 evaluations
-- Process larger game batches (1000 games)
+- Process larger game batches (1000+ games)
 - Improved error handling and robustness
 - Configuration, docs, and examples synchronized for production use
 - **ClearTree** command integration for position-independent evaluations
 - Documentation cleanup and reorganization
-- **total_legal_moves** field for position complexity metrics
-- **u_value** field for exploration bonus from PUCT formula
+- **total_legal_moves** field for position complexity metrics (v1.3)
+- **u_value** field for exploration bonus from PUCT formula (v1.4)
+- **Multi-GPU distributed processing** with lock-file coordination (`scripts/run_multi_gpu.sh`) (v1.5)
+- **vast.ai deployment** via Docker image (`Dockerfile`, `config/lc0_config.vastai.json`) (v1.5)
+- **JSON → Parquet/CSV deliverable bundle** via `convert_json_to_parquet.py` (v1.5)
+- **Output validator** (`scripts/check_errors.py`) for the four error categories (v1.5)
+- **Automated repair** (`scripts/repair_errors.py`) — detect, re-run, verify in one command (v1.5)
+- **Resume support** via `--start-index` for interrupted runs (v1.5)
+- **WDL calibration** tuned for BT4 net (`--wdl-calibration-elo=2650`) (v1.5)
 
 🚧 **In Progress**:
+- Large-scale data collection (190K+ games processed; ongoing top-up batches)
 - Performance optimization for batch processing
-- Automated regression benchmarking across hardware targets
 
 🔮 **Planned**:
-- Run large 100k games set of data
 - Train Elo estimation model (ML component)
 - Validate model accuracy on held-out test set
 - Apply to historical games for calibration
@@ -216,12 +231,12 @@ pip install -r scripts/requirements.txt
 
 Download a neural network from [Leela Training](https://training.lczero.org/networks/) and place it in the `networks/` directory. 
 
-Recommended: BT4 networks (791556 or similar). The config assumes `networks/791556.pb.gz`.
+Recommended: BT4 networks. The config assumes `networks/BT4-1024x15x32h-swa-6147500.pb.gz`.
 
 ```bash
 # Example (Linux/Mac)
 cd networks
-wget https://training.lczero.org/get_network?sha=<network_hash> -O 791556.pb.gz
+wget https://training.lczero.org/get_network?sha=<network_hash> -O BT4-1024x15x32h-swa-6147500.pb.gz
 ```
 
 ### Quick Test
@@ -292,8 +307,8 @@ python scripts\analyze_pgn.py --help
 ## Configuration
 
 The default configuration is in `config/lc0_config.json`. Key settings:
-- **Search budget**: `search.value` (default: 100 nodes) - more nodes = better quality, slower
-- **Candidate moves**: `max_candidates` (default: 10) - how many top moves to include
+- **Search budget**: `search.value` (default: 1000 nodes) - more nodes = better quality, slower
+- **Candidate moves**: `max_candidates` (default: 20) - how many top moves to include
 - **lc0 options**: `backend`, `threads`, etc. - passed directly to the engine
 
 Command-line overrides (recommended for testing):
@@ -348,4 +363,4 @@ The lc0 engine (included as a submodule) is also licensed under GPL v3.0 by the 
 - **Engine**: Currently Leela-only; Stockfish support could be added for comparison
 - **Formats**: PGN input only; no direct support for EPD or FEN lists
 
-**Note**: v1.3 adds position complexity metrics via `total_legal_moves` field. This remains research software - expect occasional parameter refinements as new data and engine builds are incorporated.
+**Note**: This remains research software - expect occasional parameter refinements as new data and engine builds are incorporated.

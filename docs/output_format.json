@@ -1,5 +1,5 @@
 {
-  "format_version": "1.0",
+  "format_version": "1.1",
   "description": "Desired output format for chess position evaluations",
   "structure": {
     "games": "Array of game objects, each containing metadata and a list of moves",

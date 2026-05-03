@@ -10,13 +10,13 @@
     "type": "nodes",
     "value": 1000
   },
-  "max_candidates": 10,
+  "max_candidates": 20,
   "extra_args": [
     "--backend=cuda-fp16",
     "--threads=1",
     "--minibatch-size=22",
     "--wdl-draw-rate-reference=0.64",
-    "--wdl-calibration-elo=3300",
+    "--wdl-calibration-elo=2650",
     "--smart-pruning-factor=0.0"
   ]
 }
@@ -39,12 +39,12 @@
 - **`search`** (object): Configure search parameters
   - `type`: `"nodes"`, `"movetime"`, `"depth"`, or `"infinite"`
   - `value`: Number corresponding to the type (e.g., 10000 nodes, 5000 milliseconds)
-  - Default: `{ "type": "nodes", "value": 10000 }`
+  - Default: `{ "type": "nodes", "value": 1000 }`
 
 - **`max_candidates`** (integer): Maximum number of candidate moves to analyze per position
   - Range: 1-500
-  - Default: 10
-  - Example: `10` (top 10 moves)
+  - Default: 20
+  - Example: `20` (top 20 moves)
 
 - **`extra_args`** (array of strings): Additional lc0 command-line arguments
   - All lc0 engine parameters go here
@@ -85,9 +85,9 @@ These parameters adjust how lc0 reports win/draw/loss probabilities. Use the def
   - Range: 0.0-10000.0
   - Higher Elo = sharper (more decisive) WDL values
   - Use `0` to retain raw WDL without sharpening/softening
-  - Use `3300` for very strong engine-level play
+  - `2650` is tuned for the BT4 network's training distribution
   - Adjusts for time control relative to rapid
-  - Example: `"--wdl-calibration-elo=3300"`
+  - Example: `"--wdl-calibration-elo=2650"`
 
 #### Search Configuration
 - **`--smart-pruning-factor=X`**: Aggressiveness of search pruning
