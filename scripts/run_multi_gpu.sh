@@ -115,7 +115,7 @@ for ((gpu=0; gpu<NUM_GPUS; gpu++)); do
 
     echo "Launching worker $WORKER_ID (logging to $LOG_FILE)..."
 
-    PYTHONUNBUFFERED=1 python3 -u analyze_pgn.py "$PGN_FILE" "$DUMMY_OUTPUT" \
+    PYTHONUNBUFFERED=1 python3 -u "$(dirname "$0")/analyze_pgn.py" "$PGN_FILE" "$DUMMY_OUTPUT" \
         --work-dir="$WORK_DIR" \
         --worker-id="$WORKER_ID" \
         --lc0.backend-opts="gpu=$gpu" \
@@ -205,7 +205,7 @@ if [ -n "$MERGE_FILE" ]; then
     echo "All workers finished. Merging results..."
 
     # Merge results
-    python3 analyze_pgn.py "$PGN_FILE" "$MERGE_FILE" \
+    python3 "$(dirname "$0")/analyze_pgn.py" "$PGN_FILE" "$MERGE_FILE" \
         --work-dir="$WORK_DIR" \
         --merge
 
