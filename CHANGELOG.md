@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-05-03
+
+### Added
+- **Multi-GPU distributed processing** (`scripts/run_multi_gpu.sh`): Lock-file coordination across N GPU workers
+  - Each worker atomically claims unfinished games via `.lock` files in a shared `--work-dir`
+  - One JSON per game; merge optionally with `--merge=FILE`
+  - Auto-detects GPU count or accepts explicit count as positional argument
+  - Resumable: rerunning the same command skips completed games
+- **`--start-index=N` resume support** (`scripts/analyze_pgn.py`): Resume from arbitrary game index, primarily for interruptible vast.ai instances that get preempted
+- **vast.ai / Docker deployment** (`Dockerfile`, `.dockerignore`, `config/lc0_config.vastai.json`, `VASTAI_USAGE.md`, `docs/MULTI_GPU_USAGE.md`): Multi-stage CUDA image with lc0 v0.32.0, BT4 network, sample PGN data, and orchestration scripts baked in
+- **JSON → Parquet/CSV converter** (`convert_json_to_parquet.py`): Produces the games / plies / candidate_moves three-table deliverable bundle for downstream Chessmetrics and Glicko consumption
+  - `--csv` flag for CSV-only output (compatible with SQL Server `BULK INSERT`)
+  - Default emits both Parquet and CSV
+- **Output validator** (`scripts/check_errors.py`): Catches the four error categories the downstream SQL queries flag — played move not evaluated, played move not in candidate moves, candidates with 0 visits, candidates with blank evals. `--csv errors.csv` dumps per-ply errors for resubmission.
+- **Automated repair** (`scripts/repair_errors.py`): Detect → quarantine → re-run → re-verify in one command. Imports `check_game` from `check_errors.py`, validates PGN headers against the bad JSONs to catch wrong-PGN footguns, spawns multi-GPU workers via `analyze_pgn.py` (cross-platform Python orchestration, no bash dependency), and writes `repair_log.json` plus a `repair_failures.json` for any persistent failures. `--dry-run` for detect-only; `--max-attempts` configurable (default 2).
+
+### Changed
+- **WDL calibration default** (`config/lc0_config.json`): `--wdl-calibration-elo` 3300 → 2650, tuned for the BT4 network's training distribution
+- **lc0 search params** (`config/lc0_config.json`): Added `--cpuct-at-root=100.0` and `--root-has-own-cpuct-params=true` for sharper root exploration
+- **vast.ai variant config** (`config/lc0_config.vastai.json`): `--moves-left-threshold=1.0` (MLH bias disabled) and `--minibatch-size=64` for cloud GPU parallelism
+- **Documentation**: `README.md`, `docs/config_example.md`, `docs/PROJECT_BRIEF.md`, and `docs/output_format.json` updated to reflect production defaults (1000 nodes, 20 candidates, BT4 network filename, WDL calibration 2650)
+- **Output format** (`docs/output_format.json`): `format_version` bumped to `1.1` (no schema break; documents the `u_value` field added in 1.4)
+
+### Fixed
+- **`scripts/run_multi_gpu.sh` CWD bug**: Replaced bare `analyze_pgn.py` invocations with `$(dirname "$0")/analyze_pgn.py` so the script resolves its sibling regardless of working directory
+
+### Infrastructure
+- `scripts/check_errors.py` baked into Docker image for in-container output validation
+- `polars` added to `scripts/requirements.txt` (required by `convert_json_to_parquet.py`)
+- `docs/multi_gpu_plan.md` and `docs/v1.5.0_release_plan.md` moved to `docs/archive/` as historical planning artifacts
+- `CLAUDE.md` added to repo: collaborator-facing notes, production run configuration, error philosophy, and known doc drift
+
 ## [1.4.0] - 2025-11-04
 
 ### Added
@@ -158,7 +190,7 @@ elo-estimator/
 
 ---
 
-## Release Notes
+## v1.0 Release Notes
 
 This v1.0 release represents a feature-complete analysis workflow, validated with:
 - Single game analysis (smoke tests)
@@ -173,6 +205,7 @@ This project was almost entirely written by Claude Sonnet 4.5, with Alexis Olson
 ### License
 GNU General Public License v3.0 - See LICENSE file for details.
 
+[1.5.0]: https://github.com/AlexisOlson/elo-estimator/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/AlexisOlson/elo-estimator/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/AlexisOlson/elo-estimator/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/AlexisOlson/elo-estimator/compare/v1.1.0...v1.2.0

@@ -111,6 +111,7 @@ elo-estimator/
 │   ├── analyze_pgn.py                      # Main PGN analysis script
 │   ├── run_multi_gpu.sh                    # Multi-GPU orchestrator
 │   ├── check_errors.py                     # Validate output for known artifacts
+│   ├── repair_errors.py                    # Detect, re-run, and verify games with errors
 │   ├── reformat_json.py                    # Reformat output JSON
 │   ├── setup_venv.ps1                      # Python environment setup (Windows)
 │   ├── requirements.txt                    # Python dependencies
@@ -131,7 +132,7 @@ elo-estimator/
 
 ## Release Status
 
-**Release Stage**: v1.4 – exploration metrics and PUCT formula insights
+**Release Stage**: v1.5 – multi-GPU pipeline, vast.ai deployment, deliverable bundle
 
 ✅ **Completed**:
 - Project structure established
@@ -140,20 +141,26 @@ elo-estimator/
 - Python analysis script (`analyze_pgn.py`) working with UCI protocol
 - Sample PGN analysis tested (first 10 games)
 - Output format validated with actual lc0 evaluations
-- Process larger game batches (1000 games)
+- Process larger game batches (1000+ games)
 - Improved error handling and robustness
 - Configuration, docs, and examples synchronized for production use
 - **ClearTree** command integration for position-independent evaluations
 - Documentation cleanup and reorganization
-- **total_legal_moves** field for position complexity metrics
-- **u_value** field for exploration bonus from PUCT formula
+- **total_legal_moves** field for position complexity metrics (v1.3)
+- **u_value** field for exploration bonus from PUCT formula (v1.4)
+- **Multi-GPU distributed processing** with lock-file coordination (`scripts/run_multi_gpu.sh`) (v1.5)
+- **vast.ai deployment** via Docker image (`Dockerfile`, `config/lc0_config.vastai.json`) (v1.5)
+- **JSON → Parquet/CSV deliverable bundle** via `convert_json_to_parquet.py` (v1.5)
+- **Output validator** (`scripts/check_errors.py`) for the four error categories (v1.5)
+- **Automated repair** (`scripts/repair_errors.py`) — detect, re-run, verify in one command (v1.5)
+- **Resume support** via `--start-index` for interrupted runs (v1.5)
+- **WDL calibration** tuned for BT4 net (`--wdl-calibration-elo=2650`) (v1.5)
 
 🚧 **In Progress**:
+- Large-scale data collection (190K+ games processed; ongoing top-up batches)
 - Performance optimization for batch processing
-- Automated regression benchmarking across hardware targets
 
 🔮 **Planned**:
-- Run large 100k games set of data
 - Train Elo estimation model (ML component)
 - Validate model accuracy on held-out test set
 - Apply to historical games for calibration

@@ -57,6 +57,7 @@ WORKDIR /workspace
 COPY scripts/analyze_pgn.py /workspace/
 COPY scripts/run_multi_gpu.sh /workspace/
 COPY scripts/check_errors.py /workspace/
+COPY scripts/repair_errors.py /workspace/
 COPY config/lc0_config.vastai.json /workspace/config/lc0_config.json
 COPY VASTAI_USAGE.md /workspace/
 COPY docs/MULTI_GPU_USAGE.md /workspace/
