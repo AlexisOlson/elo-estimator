@@ -17,7 +17,7 @@ Historical chess rating systems (Chessmetrics, Elo) can't determine absolute rat
 - **Base Code**: lc0 v0.32.0 (unmodified, UCI protocol)
 - **Processing**: Python (python-chess, UCI communication)
 - **Input**: PGN format chess games with player ratings
-- **Output**: JSON format with evaluations per position (schema v1.0)
+- **Output**: JSON format with evaluations per position (schema v1.1)
 
 ## Dataset
 - Training: ~100,000 games (late 2024/early 2025)
@@ -51,7 +51,6 @@ python scripts/analyze_pgn.py <pgn_file> <output_file> [options]
 python scripts/analyze_pgn.py \
   pgn-data/samples/single.pgn \
   output/single_test_100nodes.json \
-  --config config/lc0_config.json \
   --search.nodes=100
 ```
 
@@ -60,7 +59,6 @@ python scripts/analyze_pgn.py \
 python scripts/analyze_pgn.py \
   pgn-data/samples/first10.pgn \
   output/analysis.json \
-  --config config/lc0_config.json \
   --lc0.threads=4
 ```
 
@@ -69,11 +67,12 @@ python scripts/analyze_pgn.py \
 python scripts/analyze_pgn.py \
   pgn-data/samples/single.pgn \
   output/test.json \
-  --config config/lc0_config.json \
   --search.nodes=50 \
   --lc0.threads=2 \
   --set max_candidates=5
 ```
+
+For multi-GPU runs (production path), see [MULTI_GPU_USAGE.md](MULTI_GPU_USAGE.md).
 
 ## Success Criteria
 - Process 100K games in reasonable time
